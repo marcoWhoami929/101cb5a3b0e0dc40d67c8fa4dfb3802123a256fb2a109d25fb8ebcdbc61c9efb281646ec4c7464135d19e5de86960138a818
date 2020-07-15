@@ -3,6 +3,7 @@
 require_once "../controladores/inventarios.php";
 require_once "../modelos/inventarios.php";
 require_once "../modelos/administradores.php";
+error_reporting(0);
 
 class AjaxFuncionesInventarios{
 
@@ -21,32 +22,61 @@ class AjaxFuncionesInventarios{
 
 		$respuesta = ModeloInventarios::mdlActualizarDiasFamilias($tabla, $item, $valor, $item2, $valor2);
 
-		if ($respuesta == "ok") {
+		echo json_encode($respuesta);
 
-			$item3 = "idFamilia";
-			$valor3 = $this->idFamilia;
+	}
+	/*-----------ACTUALIZAR STOCK MINIMOS POR TIENDA Y POR PRODUCTO--------------*/
+	public $idProducto;
+	public $elegirAlmacen;
+	public function ajaxRecalcularStock(){
 
-			$respuestaFinales = ModeloInventarios::mdlMostrarFinales($item3, $valor3);
+		$item = "idProducto";
+		$valor = $this->idProducto;
 
-			for($i = 0; $i < count($respuestaFinales); $i++){
+		$almacen = $this->elegirAlmacen;
 
-				$idProducto = $respuestaFinales[$i]["idProducto"];
-			
-				$inicial = $respuestaFinales[$i]["inicial"];
-				$salidas = $respuestaFinales[$i]["salidas"];
-				$final = $respuestaFinales[$i]["final"];
-
-				$consumo = ($inicial + $salidas) - $final;
-
-				$stockMinimo = $consumo * $valor2;
-
-				$datos = array("id" => $idProducto,
-							   "stockMinimoGral1" => $stockMinimo );
-
-				$respuestaActualizarStockMinimo = ModeloInventarios::mdlActualizarStockMinimo($tabla2, $datos);
-			}
-			
+		if ($almacen == "almacengeneral1") {
+			$campo = "stockMinimoGral1";
+		}else if($almacen == "almacengeneral2"){
+			$campo = "stockMinimoGral2";
+		}else if($almacen == "almacensanmanuel1"){
+			$campo = "stockMinimoSM1";
+		}else if($almacen == "almacensanmanuel2"){
+			$campo = "stockMinimoSM2";
+		}else if($almacen == "almacenreforma1"){
+			$campo = "stockMinimoRf1";
+		}else if($almacen == "almacenreforma2"){
+			$campo = "stockMinimoRf1";
+		}else if($almacen == "almacensantiago1"){
+			$campo = "stockMinimoSg1";
+		}else if($almacen == "almacensantiago2"){
+			$campo = "stockMinimoSg1";
+		}else if($almacen == "almacencapu1"){
+			$campo = "stockMinimoCp1";
+		}else if($almacen == "almacencapu2"){
+			$campo = "stockMinimoCp2";
+		}else if($almacen == "almacenlastorres1"){
+			$campo = "stockMinimoTr1";
+		}else if($almacen == "almacenlastorres2"){
+			$campo = "stockMinimoTr2";
 		}
+
+		$fechaActual = "2020-07-11";
+		$fechaSum = date("Y-m-d",strtotime($fechaActual."+ 1 days"));
+		$fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 6 days"));
+			
+		$table = $almacen." as al INNER JOIN productos AS p ON al.idProducto = p.id";
+		$campos = "SUM(al.salidasUnidades) AS totalSalidas";
+		$parametros = "WHERE p.id = ".$valor." AND al.fecha BETWEEN "."'".$fechaMenosSeis."'"." AND "."'".$fechaActual."'"; 
+
+		$respuestaFinales = ModeloInventarios::mdlMostrarFinalesFechaActual($table, $campos, $parametros);
+			
+		$totalSalidas = $respuestaFinales["totalSalidas"];
+		$stockMinimo = $totalSalidas / 6;
+
+		$tabla = "productos";
+		$parametro = "".$campo." = ".round($stockMinimo)." WHERE id = ".$valor."";
+		$respuesta  = ModeloInventarios::mdlActualizarStockMinimo($tabla, $parametro);
 
 		echo json_encode($respuesta);
 
@@ -88,10 +118,20 @@ class AjaxFuncionesInventarios{
 /*-----------ACTUALIZAR LOS DIAS DE SURTIMIENTO DEL PROVEEDOR--------------*/
 if(isset($_POST["idFamilia"])){
 
-    $editar2 = new AjaxFuncionesInventarios();
-    $editar2 -> idFamilia = $_POST["idFamilia"];
-    $editar2 -> editarDias = $_POST["editarDias"];
-    $editar2 -> ajaxActualizarDias();
+    $editarDias = new AjaxFuncionesInventarios();
+    $editarDias -> idFamilia = $_POST["idFamilia"];
+    $editarDias -> editarDias = $_POST["editarDias"];
+    $editarDias -> idProducto = $_POST["idProducto"];
+    $editarDias -> ajaxActualizarDias();
+
+}
+
+if(isset($_POST["idProducto"])){
+
+    $recalcularStock = new AjaxFuncionesInventarios();
+    $recalcularStock -> idProducto = $_POST["idProducto"];
+    $recalcularStock -> elegirAlmacen = $_POST["elegirAlmacen"];
+    $recalcularStock -> ajaxRecalcularStock();
 
 }
 /*-----------ACTUALIZAR LOS DATOS DEL USUARIO--------------*/

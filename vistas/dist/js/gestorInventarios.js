@@ -34,6 +34,55 @@ tableAdministradores = $(".tableAdministradores").DataTable({
    }
 
 });
+
+$(document).ready(function(){
+
+  $('body').on('click', '#pills-tab a', function(){
+
+    var areaInventario = $(this).attr('identificador');
+     var area = localStorage.getItem("areaInventario");
+     for (var i = 1; i <= 2; i++) {
+      var tabla = area+i;
+      var nombreTabla = tabla.toLowerCase();
+
+      
+      tabla = $(".tablaPorAgotarse"+tabla+"").DataTable({
+       "ajax":"ajax/tablaProductosPorAgotarse.ajax.php?almacen="+nombreTabla,
+       "deferRender": true,
+       "retrieve": true,
+       "processing": true,
+       "language": {
+
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+          "sFirst":    "Primero",
+          "sLast":     "Último",
+          "sNext":     "Siguiente",
+          "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        }
+
+       }
+
+    });
+        
+     }
+  })
+});
 /*=============================================
 TABLA IMPORTACIONES
 =============================================*/
@@ -80,14 +129,19 @@ TABLA ALMACENES
 /*=====  Obtener identificador de tabs   ======*/
 
 $(document).ready(function(){
+
+  var perfilUsuario = $('#perfilUsuario').val();
+  if (perfilUsuario == 'Administrador General') {
+    
+  }
   $('body').on('click', '#pills-tab a', function(){
+
     var areaInventario = $(this).attr('identificador');
     localStorage.setItem("areaInventario", areaInventario);
      var area = localStorage.getItem("areaInventario");
      for (var i = 1; i <= 2; i++) {
       var tabla = area+i;
       var nombreTabla = tabla.toLowerCase();
-
       
       tabla = $(".tablaAlmacen"+tabla+"").DataTable({
        "ajax":"ajax/tablaAlmacenes.ajax.php?almacen="+nombreTabla,
@@ -129,7 +183,7 @@ $(document).ready(function(){
 /**
  * TABLA PRODUCTOS POR AGOTARSE
  */
-$(document).ready(function(){
+/*$(document).ready(function(){
 
   tablePorAgotarse = $(".tablePorAgotarse").DataTable({
     "ajax":"ajax/tablaProductosPorAgotarse.ajax.php",
@@ -165,7 +219,7 @@ $(document).ready(function(){
 
   });
 
-});
+});*/
 /**
  * TABLA PEDIDO SEMANAL
  */
@@ -212,11 +266,12 @@ $(document).ready(function(){
 $("#editarTiempo").click(function(){
   var idFamilia = $("#elegirFamilia").val();
   var editarDias = $("#editarDias").val();
-  
+  var idProducto = $("#elegirProducto").val();
 
   var datos = new FormData();
   datos.append("idFamilia",idFamilia);
   datos.append("editarDias",editarDias);
+  datos.append("idProducto",idProducto);
 
   $.ajax({
     url:"ajax/funcionesInventario.ajax.php",  
@@ -256,6 +311,53 @@ $("#editarTiempo").click(function(){
     }
   })
 });
+$("#recalcularStok").click(function(){
+  var idProducto = $("#elegirProducto").val();
+  var elegirAlmacen = $("#elegirAlmacen").val();
+  
+  var datos = new FormData();
+  datos.append("idProducto",idProducto);
+  datos.append("elegirAlmacen",elegirAlmacen);
+
+  $.ajax({
+    url:"ajax/funcionesInventario.ajax.php",  
+    method:"POST",
+    data:datos,
+    cache:false,
+    contentType: false,
+    processData: false,
+    dataType: "json",
+    success:function(respuesta){
+   
+      if (respuesta == "ok") {
+        swal({
+            type: "success",
+            title: "Los datos han sido guardados",
+            showConfirmButton: true,
+            confirmButtonText: "Cerrar"
+            }).then(function(result) {
+              if (result.value) {
+                window.location = "configuraciones";
+
+              }
+            })
+      }else{
+        swal({
+            type: "warning",
+            title: "No se pudo Procesar",
+            showConfirmButton: true,
+            confirmButtonText: "Cerrar"
+            }).then(function(result) {
+              if (result.value) {
+                window.location = "configuraciones";
+
+              }
+            })
+      }
+    }
+  })
+});
+
 /**
  * ACTIVAR O DESACTIVAR USUARIO
  */

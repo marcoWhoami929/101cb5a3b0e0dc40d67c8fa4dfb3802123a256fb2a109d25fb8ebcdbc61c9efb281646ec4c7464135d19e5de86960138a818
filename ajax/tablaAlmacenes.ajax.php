@@ -13,7 +13,37 @@ class TablaAlmacenes{
 
 		$almacen = "almacen".$_GET["almacen"];
 
- 		$almacenes = ControladorInventarios::ctrMostrarDatosAlmacenes($almacen);
+		if ($almacen == "almacengeneral1") {
+				$campo = "stockMinimoGral1";
+			}else if($almacen == "almacengeneral2"){
+				$campo = "stockMinimoGral2";
+			}else if($almacen == "almacensanmanuel1"){
+				$campo = "stockMinimoSM1";
+			}else if($almacen == "almacensanmanuel2"){
+				$campo = "stockMinimoSM2";
+			}else if($almacen == "almacenreforma1"){
+				$campo = "stockMinimoRf1";
+			}else if($almacen == "almacenreforma2"){
+				$campo = "stockMinimoRf1";
+			}else if($almacen == "almacensantiago1"){
+				$campo = "stockMinimoSg1";
+			}else if($almacen == "almacensantiago2"){
+				$campo = "stockMinimoSg1";
+			}else if($almacen == "almacencapu1"){
+				$campo = "stockMinimoCp1";
+			}else if($almacen == "almacencapu2"){
+				$campo = "stockMinimoCp2";
+			}else if($almacen == "almacenlastorres1"){
+				$campo = "stockMinimoTr1";
+			}else if($almacen == "almacenlastorres2"){
+				$campo = "stockMinimoTr2";
+			}
+
+		$tabla = $almacen." as alm INNER JOIN productos as prod ON alm.idProducto = prod.id";
+		$campos = "alm.id,prod.codigoProducto,prod.nombreProducto, SUM(alm.entradasUnidades) AS totalEntradas, alm.entradasUnidades,SUM(alm.salidasUnidades) AS totalSalidas,alm.salidasUnidades, prod.".$campo." AS stockMinimo, alm.existenciasUnidades, alm.entradasImportes,alm.salidasImportes,alm.existenciaImportes,alm.ultimoCosto,alm.totalUltCosto";
+		$parametros = "GROUP BY prod.id";
+
+ 		$almacenes = ControladorInventarios::ctrMostrarDatosAlmacenes($tabla, $campos, $parametros);
  		$totalPromedio = ControladorInventarios::ctrCalcularTotalesPromedio($almacen);
 
 
@@ -32,7 +62,7 @@ class TablaAlmacenes{
 			$salidas = $almacenes[$i]["salidasUnidades"];
 			$valorTotal = $costoPromedio * $salidas;
 
-			$valorTotalPromedio  =$totalPromedio["totalPromedio"];
+			$valorTotalPromedio  = $totalPromedio["totalPromedio"];
 
 			$participacionRelativaInventario = $valorTotal / $valorTotalPromedio;
 
@@ -54,30 +84,37 @@ class TablaAlmacenes{
 
 				$participacionAcumuladaInventario2 = $participacionRelativaInventario;
 
-				$participacionFinal +=  $participacionAcumuladaInventario2*100;
+				$participacionFinal += $participacionAcumuladaInventario2*100;
 			}
-
+			$stockMinimo = $almacenes[$i]["stockMinimo"];
 			if ($participacionFinal <= 85) {
 					
 				  $clasificacion = "<span class='badge badge-pill badge-success'>A</span>";		
-
+				  $stockMaximo = $stockMinimo * 1.5;
 			}else if($participacionFinal <= 95){
 
 				  $clasificacion = "<span class='badge badge-pill badge-warning'>B</span>";
-
+				  $stockMaximo = $stockMinimo * 1.25;
 			}else{
 
-				  $clasificacion = "<span class='badge badge-pill badge-danger'>C</span>";	
+				  $clasificacion = "<span class='badge badge-pill badge-danger'>C</span>";
+				  $stockMaximo = $stockMinimo * 1;
 			}
-		
+			$seguro = ($stockMaximo - $stockMinimo)/2;
+			$stockSeguridad = $seguro +$stockMinimo;
 
 			$datosJson	 .= '[
 				      "'.$almacenes[$i]["id"].'",
 				      "'.$almacenes[$i]["codigoProducto"].'",
 				      "'.$almacenes[$i]["nombreProducto"].'",
+				      "'.$almacenes[$i]["totalEntradas"].'",
 				      "'.$almacenes[$i]["entradasUnidades"].'",
+				      "'.$almacenes[$i]["totalSalidas"].'",
 				      "'.$almacenes[$i]["salidasUnidades"].'",
 				      "'.$almacenes[$i]["existenciasUnidades"].'",
+				      "'.$stockMinimo.'",
+				      "'.round($stockSeguridad).'",
+				      "'.round($stockMaximo).'",
 				      "$ '.number_format($almacenes[$i]["entradasImportes"],2).'",
 				      "$ '.number_format($almacenes[$i]["salidasImportes"],2).'",
 				      "$ '.number_format($almacenes[$i]["existenciaImportes"],2).'",
