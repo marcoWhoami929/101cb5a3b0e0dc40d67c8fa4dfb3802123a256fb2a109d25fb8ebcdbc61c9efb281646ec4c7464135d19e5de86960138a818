@@ -31,75 +31,115 @@
 									
 									<div class="card-body">
 										<div class="row">
+                      <div  class="col-lg-6 col-md-6 col-sm-6">
 
-                                         <div  class="col-lg-6 col-md-6 col-sm-6">
-                                            <select name="almacenElegido" id="almacenElegido" class="form-control" onchange="elegirAlmacen();">
-                                                <option value="">Elegir Almacén</option>
-                                                <option value="general1">Almacén General 1</option>
-                                                <option value="general2">Almacén General 2</option>
-                                                <option value="sanmanuel1">Sucursal San Manuel 1</option>
-                                                <option value="sanmanuel2">Sucursal San Manuel 2</option>
-                                                <option value="santiago1">Sucursal Santiago 1</option>
-                                                <option value="santiago2">Sucursal Santiago 2</option>
-                                                <option value="reforma1">Sucursal Reforma 1</option>
-                                                <option value="reforma2">Sucursal Reforma 2</option>
-                                                <option value="capu1">Sucursal Capu 1</option>
-                                                <option value="capu2">Sucursal Capu 2</option>
-                                                <option value="lastorres1">Sucursal Las Torres 1</option>
-                                                <option value="lastorres2">Sucursal Las Torres 2</option>
+                        <?php 
+                            if ($_SESSION["grupo"] == "Administrador") {
 
+                              echo '
+                                <select name="almacenElegido" id="almacenElegido" class="form-control" onchange="elegirAlmacen();">
 
+                                  <option value="">Elegir Almacén</option>
+                                  <option value="general1">Almacén General 1</option>
+                                  <option value="general2">Almacén General 2</option>
+                                  <option value="sanmanuel1">Sucursal San Manuel 1</option>
+                                  <option value="sanmanuel2">Sucursal San Manuel 2</option>
+                                  <option value="santiago1">Sucursal Santiago 1</option>
+                                  <option value="santiago2">Sucursal Santiago 2</option>
+                                  <option value="reforma1">Sucursal Reforma 1</option>
+                                  <option value="reforma2">Sucursal Reforma 2</option>
+                                  <option value="capu1">Sucursal Capu 1</option>
+                                  <option value="capu2">Sucursal Capu 2</option>
+                                  <option value="lastorres1">Sucursal Las Torres 1</option>
+                                  <option value="lastorres2">Sucursal Las Torres 2</option>
 
-                                            </select>
-                                        </div>
-                                        <div  class="col-lg-6 col-md-6 col-sm-6">
-                                            <form action="importacionAlmacenes.php" method="post" enctype="multipart/form-data" id="importacionAlmacenes">
+                                </select>';
 
-                                                <div  class="col-lg-12 col-md-12 col-sm-12">
-                                                    <div class="col-lg-12 col-md-12 col-sm-12">
-                                                        <input type="hidden" name="nombreAlmacen" id="nombreAlmacen">
-                                                        <input type="hidden" name="idUsuario" id="idUsuario" value="<?php echo $_SESSION["id"]?>">
-                                                        <input type="file" name="file" id="inputFile" />
-                                                        <input type="submit" class="btn btn-success" name="import_data" value="IMPORTAR">
-                                                    </div>
+                            }else if($_SESSION["grupo"] == "Sucursales" && $_SESSION["nombre"] == "Sucursal San Manuel"){
+                              echo '
+                                <select name="almacenElegido" id="almacenElegido" class="form-control" onchange="elegirAlmacen();">
+                                  <option value="">Elegir Almacén</option>
+                                  <option value="sanmanuel1">Sucursal San Manuel 1</option>
+                                  <option value="sanmanuel2">Sucursal San Manuel 2</option>
+                                </select>';
+                            }else if($_SESSION["grupo"] == "Sucursales" && $_SESSION["nombre"] == "Sucursal Santiago"){
+                              echo '
+                                <select name="almacenElegido" id="almacenElegido" class="form-control" onchange="elegirAlmacen();">
+                                  <option value="">Elegir Almacén</option>
+                                  <option value="santiago1">Sucursal Santiago 1</option>
+                                  <option value="santiago2">Sucursal Santiago 2</option>
+                                </select>';
+                            }else if($_SESSION["grupo"] == "Sucursales" && $_SESSION["nombre"] == "Sucursal Las Torres"){
+                              echo '
+                                <select name="almacenElegido" id="almacenElegido" class="form-control" onchange="elegirAlmacen();">
+                                  <option value="">Elegir Almacén</option>
+                                  <option value="lastorres1">Sucursal Las Torres 1</option>
+                                  <option value="lastorres2">Sucursal Las Torres 2</option>
+                                </select>';
+                            }else if($_SESSION["grupo"] == "Sucursales" && $_SESSION["nombre"] == "Sucursal Reforma"){
+                              echo '
+                                <select name="almacenElegido" id="almacenElegido" class="form-control" onchange="elegirAlmacen();">
+                                  <option value="">Elegir Almacén</option>
+                                  <option value="reforma1">Sucursal Reforma 1</option>
+                                  <option value="reforma2">Sucursal Reforma 2</option>
+                                </select>';
+                            }else if($_SESSION["grupo"] == "Sucursales" && $_SESSION["nombre"] == "Sucursal Capu"){
+                              echo '
+                                <select name="almacenElegido" id="almacenElegido" class="form-control" onchange="elegirAlmacen();">
+                                  <option value="">Elegir Almacén</option>
+                                  <option value="capu1">Sucursal Capu 1</option>
+                                  <option value="capu2">Sucursal Capu 2</option>
+                                </select>';
+                            }
+                         ?>
+                        
+                      </div>
+                        
+                      <div  class="col-lg-6 col-md-6 col-sm-6">
+                        <form action="importacionAlmacenes.php" method="post" enctype="multipart/form-data" id="importacionAlmacenes">
+                          <div  class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
 
-                                                </div>
+                              <input type="hidden" name="nombreAlmacen" id="nombreAlmacen">
+                              <input type="hidden" name="idUsuario" id="idUsuario" value="<?php echo $_SESSION["id"]?>">
+                              <input type="file" name="file" id="inputFile" />
+                              <input type="submit" class="btn btn-success" name="import_data" value="IMPORTAR">
 
-                                            </form>
-                                        </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
 
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-lg-12 col-md-12 col-sm-12">
-                                            <table class="table table-bordered table-striped dt-responsive tablaImportaciones" width="100%" id="importaciones" style="border: 2px solid #1F262D">
+                    </div><br>
+                    <div class="row">
+                      <div class="col-lg-12 col-md-12 col-sm-12">
+                        <table class="table table-bordered table-striped dt-responsive tablaImportaciones" width="100%" id="importaciones" style="border: 2px solid #1F262D">
 
-                                              <thead style="background:#1F262D;color: white">
+                          <thead style="background:#1F262D;color: white">
+                            <tr>
 
-                                                 <tr>
+                              <th style="border:none">Folio</th>
+                              <th style="border:none">Descripción</th>
+                              <th style="border:none">Fecha</th>
+                              <th style="border:none">Usuario</th>
 
-                                                   <th style="border:none">Folio</th>
-                                                   <th style="border:none">Descripción</th>
-                                                   <th style="border:none">Fecha</th>
-                                                   <th style="border:none">Usuario</th>
+                            </tr> 
+                          </thead>
 
-                                               </tr> 
+                        </table>
+                      </div>
+                    </div>
 
-                                           </thead>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                                       </table>
-                                   </div>
-
-                               </div>
-
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-
-       </div>
-   </div>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
     /**

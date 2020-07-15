@@ -33,11 +33,11 @@ class ControladorInventarios{
 
 
 	}
-	static public function ctrMostrarDatosAlmacenes($almacen){
+	static public function ctrMostrarDatosAlmacenes($tabla, $campos, $parametros){
 
-			$tabla = $almacen;
+			$tabla = $tabla;
 
-			$respuesta = ModeloInventarios::mdlMostrarDatosAlmacenes($tabla);
+			$respuesta = ModeloInventarios::mdlMostrarDatosAlmacenes($tabla, $campos, $parametros);
 
 			return $respuesta;
 
@@ -53,21 +53,23 @@ class ControladorInventarios{
 
 
 	}
+	/**
+	 *CONTROLADOR PARA MOSTRAR LOS PRODUCTOS POR AGOTARSE
+	 */
+	static public function ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros){
 
-	static public function ctrMostrarProductosPorAgotarse(){
+		$tabla = $tabla;
 
-		$tabla = "almacengeneral1";
-
-		$respuesta = ModeloInventarios::mdlMostrarProductosPorAgotarse($tabla);
+		$respuesta = ModeloInventarios::mdlMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
 		return $respuesta;
 	}
 
-	static public function ctrMostrarFamilias(){
+	static public function ctrMostrarDatosF($tabla, $campos){
 
-		$tabla = "familias";
+		$tabla = $tabla;
 
-		$respuesta = ModeloInventarios::mdlMostrarFamilias($tabla);
+		$respuesta = ModeloInventarios::mdlMostrarFamilias($tabla, $campos);
 
 		return $respuesta;
 	}

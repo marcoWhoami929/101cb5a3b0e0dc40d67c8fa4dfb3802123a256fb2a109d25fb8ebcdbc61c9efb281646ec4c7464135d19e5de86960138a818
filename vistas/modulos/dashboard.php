@@ -30,8 +30,13 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
+                        <input type="hidden" name="nombreUsuario" id="nombreUsuario" value="<?php echo $_SESSION["nombre"]?>">
+                        <input type="hidden" name="perfilUsuario" id="perfilUsuario" value="<?php echo $_SESSION["perfil"]?>">
                         <?php 
                             if ($_SESSION["grupo"] == "Administrador") {
+
+                                $nombreUser = $_SESSION["nombre"];
+                                $perfilUser = $_SESSION["perfil"];
                                 echo'
                                 <div class="d-md-flex align-items-center">
                                     <div>
@@ -41,6 +46,8 @@
                                 </div>
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <input type="hidden" name="nombreUsuario" id="nombreUsuario" value="'.$nombreUser.'">
+                                    <input type="hidden" name="perfilUsuario" id="perfilUsuario" value="'.$perfilUser.'">
                                           <li class="nav-item">
                                             <a class="nav-link active" id="tabTablero" data-toggle="pill" href="#pillTablero" role="tab" aria-selected="true">Tablero</a>
                                         </li>
@@ -65,12 +72,64 @@
                                     </ul>
                                 </div>
                                 ';
-                            } if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal San Manuel") {
+                            }else if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal San Manuel") {
                                echo '
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
                                             <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#pillSanManuel" role="tab"  aria-selected="true" identificador = "SanManuel">Ver Tablas de Almacen</a>
+                                        </li>                                 
+                                    </ul>
+                                </div>
+
+                               ';
+                               echo '<style>#contentGr { display:none;}</style>';
+
+                            }else if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal Reforma") {
+                               echo '
+                                <div class="row">
+                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#pillReforma" role="tab"  aria-selected="false" identificador = "Reforma">Ver Tablas de Almacen</a>
+                                        </li>                                 
+                                    </ul>
+                                </div>
+
+                               ';
+                               echo '<style>#contentGr { display:none;}</style>';
+
+                            }else if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal Santiago") {
+                               echo '
+                                <div class="row">
+                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#pillSantiago" role="tab"  aria-selected="false" identificador = "Santiago">Ver Tablas de Almacen</a>
+                                        </li>                                 
+                                    </ul>
+                                </div>
+
+                               ';
+                               echo '<style>#contentGr { display:none;}</style>';
+
+                            }else if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal Capu") {
+                               echo '
+                                <div class="row">
+                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#pillCapu" role="tab"  aria-selected="false" identificador = "Capu">Ver Tablas de Almacen</a>
+                                        </li>                                 
+                                    </ul>
+                                </div>
+
+                               ';
+                               echo '<style>#contentGr { display:none;}</style>';
+
+                            }else if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal Las Torres") {
+                               echo '
+                                <div class="row">
+                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                        <li class="nav-item">
+                                             <a class="nav-link" id="tabTorres" data-toggle="pill" href="#pillTorres" role="tab"  aria-selected="false" identificador = "LasTorres">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -100,7 +159,7 @@
                             <div class="row">
                              <div class="col-lg-2 col-md-2 col-sm-2">
                                 <div  id="contenedorSemaforo">
-                                   <ul class="semaforo verde">
+                                   <ul class="semaforo">
                                     <li></li>
                                     <li></li>
                                     <li></li>
@@ -527,78 +586,221 @@
     
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <h3>Productos por Agotarse</h3>
-            <table class="table table-bordered table-striped dt-responsive tablePorAgotarse" width="100%" id="porAgotarse" style="border: 2px solid #1F262D">
+            <div class="card border-dark mb-3" >
+                <div class="card-header">
+                    <h3>Productos por Agotarse Almacen General 1
+                        <button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#gr1" style="float: right;"><i class="fas fa-minus-square"></i>
+                        </button>
+                    </h3>
+                </div>
+                
+                <div class="card-body collapse"  id="gr1">
+                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral1" width="100%" id="porAgotarse" style="border: 2px solid #1F262D">
 
-                <thead style="background:#1F262D;color: white">
+                        <thead style="background:#1F262D;color: white">
 
-                   <tr>
-                        <th style="border:none">#</th>
-                        <th style="border:none">Codigo</th>
-                        <th style="border:none">Producto</th>
-                        <th style="border:none">Stock Minimo</th>
-                        <th style="border:none">Existencias</th>
-                        <th style="border:none">Faltante Unidades</th>
-                        <th style="border:none">Faltante Monto</th>
-                        <th style="border:none">Estado</th>
-                    </tr> 
+                            <tr>
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <th style="border:none">Faltante Monto</th>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
 
-                </thead>
+                        </thead>
+                        <tfoot>
+                    
+                            <?php 
+                                //$fechaActual = date("Y-m-d");
+                                $fechaActual = "2020-07-11";
+                                $fechaFinal = date("Y-m-d", strtotime($fechaActual));
+                                $tabla = "productos AS p INNER JOIN almacengeneral1 AS a1 ON p.id = a1.idProducto";
+                                $campos = "SUM(p.stockMinimoGral1) AS totalStockMinimo, SUM(a1.existenciasUnidades) AS existenciasUnidades, SUM(a1.ultimoCosto) AS ultimoCosto, a1.fecha";
+                                $parametros = "WHERE a1.existenciasUnidades != 0 AND a1.fecha = "."'".$fechaFinal."'";
 
-            </table>
+                                $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
+
+                             ?>
+                                <tr>
+                                    <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
+                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
+                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
+                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
+                                </tr>
+                                <tr>
+                                
+
+                                <?php
+                                    $ultimoCosto = $totales[0]["ultimoCosto"];
+                                    $totalStockMinimo = $totales[0]["totalStockMinimo"];
+                                    $totalExistencias = $totales[0]["existenciasUnidades"];
+                                    $totalFaltantes = $totalStockMinimo - $totalExistencias;
+                                    $totalFaltanteMonto = $ultimoCosto * $totalFaltantes;
+                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
+                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
+                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
+                               
+                                 ?>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+            </div>
         </div>
-
+        <style>
+            .verticalText {
+                writing-mode: vertical-lr;
+                transform: rotate(180deg);
+            }
+        </style>
 
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <h3>Almacén 1</h3>
-            <table class="table table-bordered table-striped dt-responsive tablaAlmacenGeneral1" width="100%" id="almacenGeneral1" style="border: 2px solid #1F262D">
+            <div class="card border-dark mb-3" >
+                <div class="card-header">
+                    <h3>Almacén 1
+                        <button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#al1" style="float: right;"><i class="fas fa-minus-square"></i>
+                        </button>
+                    </h3>
+                </div>
+                
+                <div class="card-body collapse"  id="al1">
 
-                <thead style="background:#1F262D;color: white">
+                    <table class="table table-bordered table-striped dt-responsive tablaAlmacenGeneral1" width="100%" id="almacenGeneral1" style="border: 2px solid #1F262D">
 
-                   <tr>
-                     <th style="border:none">#</th>
-                     <th style="border:none">Codigo</th>
-                     <th style="border:none">Producto</th>
-                     <th style="border:none">Entradas</th>
-                     <th style="border:none">Salidas</th>
-                     <th style="border:none">Existencias</th>
-                     <th style="border:none">Entradas</th>
-                     <th style="border:none">Salidas</th>
-                     <th style="border:none">Existencias</th>
-                     <th style="border:none">Clasificacion</th>
-                   
+                        <thead style="background:#1F262D;color: white">
 
+                           <tr>
+                                <th style="border:none">#</th>
+                                <th style="border:none"><span class="verticalText">Codigo</span></th>
+                                <th style="border:none"><span class="verticalText">Producto</span></th>
+                                <th style="border:none"><span class="verticalText">Total Entradas</span></th>
+                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <th style="border:none"><span class="verticalText">Total Salidas</span></th>
+                                <th style="border:none"><span class="verticalText">Salidas</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
+                                <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
+                                <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
+                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <th style="border:none"><span class="verticalText">Salidas</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Clasificacion</span></th>
+                            </tr> 
 
-                    </tr> 
-
-                </thead>
-
-            </table>
+                        </thead>
+                    </table>
+                </div>
+            </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <h3>Almacén 2</h3>
-            <table class="table table-bordered table-striped dt-responsive tablaAlmacenGeneral2" width="100%" id="almacenGeneral2" style="border: 2px solid #1F262D">
+            <div class="card border-dark mb-3" >
+                <div class="card-header">
+                    <h3>Productos por Agotarse Almacen General 2
+                        <button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#gr2" style="float: right;"><i class="fas fa-minus-square"></i>
+                        </button>
+                    </h3>
+                </div>
+                
+                <div class="card-body collapse"  id="gr2">
+                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral2" width="100%" id="porAgotarse" style="border: 2px solid #1F262D">
 
-                <thead style="background:#1F262D;color: white">
+                        <thead style="background:#1F262D;color: white">
 
-                   <tr>
-                     <th style="border:none">#</th>
-                     <th style="border:none">Codigo</th>
-                     <th style="border:none">Producto</th>
-                     <th style="border:none">Entradas</th>
-                     <th style="border:none">Salidas</th>
-                     <th style="border:none">Existencias</th>
-                     <th style="border:none">Entradas</th>
-                     <th style="border:none">Salidas</th>
-                     <th style="border:none">Existencias</th>
-                     <th style="border:none">Clasificacion</th>
-                     
+                            <tr>
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <th style="border:none">Faltante Monto</th>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
 
-                    </tr> 
+                        </thead>
+                        <tfoot>
+                    
+                            <?php 
+                                //$fechaActual = date("Y-m-d");
+                                $fechaActual = "2020-07-11";
+                                $fechaFinal = date("Y-m-d", strtotime($fechaActual));
+                                $tabla = "productos AS p INNER JOIN almacengeneral2 AS a2 ON p.id = a2.idProducto";
+                                $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(a2.existenciasUnidades) AS existenciasUnidades, SUM(a2.ultimoCosto) AS ultimoCosto, a2.fecha";
+                                $parametros = "WHERE a2.fecha = "."'".$fechaFinal."'";
 
-                </thead>
+                                $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-            </table>
+                             ?>
+
+                                <th colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
+
+                                <?php
+                                    $ultimoCosto = $totales[0]["ultimoCosto"];
+                                    $totalStockMinimo = $totales[0]["totalStockMinimo"];
+                                    $totalExistencias = $totales[0]["existenciasUnidades"];
+                                    if ($totalStockMinimo > $totalExistencias) {
+                                        $totalFaltantes = $totalStockMinimo - $totalExistencias;
+                                    }else{
+                                        $totalFaltantes = $totalExistencias - $totalStockMinimo;
+                                    }
+                                    
+                                    $totalFaltanteMonto = $ultimoCosto * $totalFaltantes;
+                                    
+                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
+                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
+                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
+                               
+                                 ?>
+
+                        </tfoot>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card border-dark mb-3" >
+                <div class="card-header">
+                    <h3>Almacén 2
+                        <button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#al2" style="float: right;"><i class="fas fa-minus-square"></i>
+                        </button>
+                    </h3>
+                </div>
+                
+                <div class="card-body collapse"  id="al2">
+                    <table class="table table-bordered table-striped dt-responsive tablaAlmacenGeneral2" width="100%" id="almacenGeneral2" style="border: 2px solid #1F262D">
+
+                        <thead style="background:#1F262D;color: white">
+
+                           <tr>
+                                <th style="border:none">#</th>
+                                <th style="border:none"><span class="verticalText">Codigo</span></th>
+                                <th style="border:none"><span class="verticalText">Producto</span></th>
+                                <th style="border:none"><span class="verticalText">Total Entradas</span></th>
+                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <th style="border:none"><span class="verticalText">Total Salidas</span></th>
+                                <th style="border:none"><span class="verticalText">Salidas</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
+                                <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
+                                <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
+                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <th style="border:none"><span class="verticalText">Salidas</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Clasificacion</span></th>
+                            </tr> 
+
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
    
@@ -606,6 +808,73 @@
 <div class="tab-pane fade" id="pillSanManuel" role="tabpanel">
     
        <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card border-dark mb-3" >
+                <div class="card-header">
+                    <h3>Productos por Agotarse Almacen San Manuel 1
+                        <button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#sm1" style="float: right;"><i class="fas fa-minus-square"></i>
+                        </button>
+                    </h3>
+                </div>
+                
+                <div class="card-body collapse"  id="sm1">
+                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseSanManuel1" width="100%" id="porAgotarse" style="border: 2px solid #1F262D">
+
+                        <thead style="background:#1F262D;color: white">
+
+                            <tr>
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <th style="border:none">Faltante Monto</th>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                    
+                            <?php 
+                                //$fechaActual = date("Y-m-d");
+                                /*$fechaActual = "2020-07-11";
+                                $fechaFinal = date("Y-m-d", strtotime($fechaActual));
+                                $tabla = "productos AS p INNER JOIN almacensanmanuel1 AS a1 ON p.id = a1.idProducto";
+                                $campos = "SUM(p.stockMinimoSM1) AS totalStockMinimo, SUM(a1.existenciasUnidades) AS existenciasUnidades, SUM(a1.ultimoCosto) AS ultimoCosto, a1.fecha";
+                                $parametros = "WHERE a1.existenciasUnidades != 0 AND a1.fecha = "."'".$fechaFinal."'";
+
+                                $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
+
+                             ?>
+                                <tr>
+                                    <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
+                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
+                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
+                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
+                                </tr>
+                                <tr>
+                                
+
+                                <?php
+                                    $ultimoCosto = $totales[0]["ultimoCosto"];
+                                    $totalStockMinimo = $totales[0]["totalStockMinimo"];
+                                    $totalExistencias = $totales[0]["existenciasUnidades"];
+                                    $totalFaltantes = $totalStockMinimo - $totalExistencias;
+                                    $totalFaltanteMonto = $ultimoCosto * $totalFaltantes;
+                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
+                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
+                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';*/
+                               
+                                 ?>
+                            </tr>
+                        </tfoot>
+
+                    </table>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-12 col-md-12 col-sm-12">
             <h3>Almacén 1</h3>
             <table class="table table-bordered table-striped dt-responsive tablaAlmacenSanManuel1" width="100%" id="almacenSanManuel1" style="border: 2px solid #1F262D">

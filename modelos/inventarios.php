@@ -28,7 +28,7 @@ class ModeloInventarios{
 	}
 	static public function mdlMostrarListaImportaciones($tabla){
 
-			$stmt = Conexion::conectar()->prepare("SELECT imp.id,imp.descripcion,imp.fechaImportacion,adm.nombre as usuario FROM  $tabla as imp INNER JOIN administradores as adm ON imp.idUsuario = adm.id");
+			$stmt = Conexion::conectar()->prepare("SELECT imp.id,imp.descripcion,imp.fechaImportacion,adm.nombre as usuario FROM  $tabla as imp INNER JOIN administradores as adm ON imp.idUsuario = adm.id ORDER BY imp.fechaImportacion DESC");
 
 			$stmt -> execute();
 
@@ -36,10 +36,10 @@ class ModeloInventarios{
 
 
 	}
-	static public function mdlMostrarDatosAlmacenes($tabla){
+	static public function mdlMostrarDatosAlmacenes($tabla, $campos, $parametros){
 
-			$stmt = Conexion::conectar()->prepare("SELECT alm.id,prod.codigoProducto,prod.nombreProducto,alm.entradasUnidades,alm.salidasUnidades,alm.existenciasUnidades,alm.entradasImportes,alm.salidasImportes,alm.existenciaImportes,alm.ultimoCosto,alm.totalUltCosto FROM  $tabla as alm INNER JOIN productos as prod ON alm.idProducto = prod.id");
-
+			$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
+			
 			$stmt -> execute();
 
 			return $stmt->fetchAll();
@@ -57,19 +57,22 @@ class ModeloInventarios{
 
 	}
 
-	static public function mdlMostrarProductosPorAgotarse($tabla){
+	static public function mdlMostrarProductosPorAgotarse($tabla, $campos, $parametros){
 
-		$stmt = Conexion::conectar()->prepare("SELECT p.codigoProducto, p.nombreProducto, p.stockMinimoGral1, a1.inventarioInicialUnidades, a1.ultimoCosto FROM productos AS p LEFT OUTER JOIN $tabla AS a1 ON p.id = a1.idProducto WHERE a1.inventarioInicialUnidades != 0 ");
-
+		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
+		//var_dump($stmt);
 		$stmt -> execute();
 
 		return $stmt->fetchAll();
 
+		$stmt -> close();
+		$stmt = null;
+
 	}
 
-	static public function mdlMostrarFamilias($tabla){
+	static public function mdlMostrarFamilias($tabla, $campos){
  
-		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
+		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla");
 
 		$stmt -> execute();
 
@@ -103,26 +106,21 @@ class ModeloInventarios{
 	/**
 	 * MODELO PARA MOSTRAR INVENTARIO INICIAL, COMOPRAS(SALIDAS) E INVENTARIO FINAL
 	 */
-	static public function mdlMostrarFinales($item3, $valor3){
- 
-		$stmt = Conexion::conectar()->prepare("SELECT a1.idProducto, a1.inventarioInicialUnidades AS inicial, a1.salidasUnidades AS salidas, a1.existenciasUnidades AS final FROM almacengeneral1 AS a1 LEFT OUTER JOIN productos AS p ON a1.idProducto = p.id RIGHT OUTER JOIN familias as f ON p.idFamilia = f.id WHERE a1.salidasUnidades != 0 AND f.id = :$item3");
+	static public function mdlMostrarFinalesFechaActual($table, $campos, $parametros){
 
-		$stmt -> bindParam(":".$item3, $valor3, PDO::PARAM_INT);
+		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $table $parametros");
 
 		$stmt -> execute();
 
-		return $stmt->fetchAll();
+		return $stmt->fetch();
 
 	}
 	/**
 	 * MODELO PARA ACTUALIZAR EL STOCK MINIMO CUANDO SE ACTUALIZAN LOS DIAS DE SURTIMIENTO
 	 */
-	static public function mdlActualizarStockMinimo($tabla2, $datos){
+	static public function mdlActualizarStockMinimo($tabla, $parametro){
  
-		$stmt = Conexion::conectar()->prepare("UPDATE $tabla2 SET stockMinimoGral1 = :stockMinimoGral1 WHERE id = :id");
-
-		$stmt -> bindParam(":id", $datos["id"], PDO::PARAM_INT);
-		$stmt -> bindParam(":stockMinimoGral1", $datos["stockMinimoGral1"], PDO::PARAM_INT);
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $parametro");
 
 		if($stmt -> execute()){
 
@@ -136,6 +134,20 @@ class ModeloInventarios{
 
 		$stmt -> close();
 		$stmt = null;
+
+	}
+	/*
+	OBTENER EL NUMERO DE PRODUCTOS POR FAMILIA
+	 */
+	static public function mdlObtenerTotalProductosFamilia($item,$valor){
+
+		$stmt = Conexion::conectar()->prepare("SELECT COUNT(id) as total FROM productos WHERE $item = :$item");
+
+		$stmt -> bindParam(":".$item,$valor,PDO::PARAM_INT);
+
+		$stmt-> execute();
+
+		return $stmt -> fetch();
 
 	}
 

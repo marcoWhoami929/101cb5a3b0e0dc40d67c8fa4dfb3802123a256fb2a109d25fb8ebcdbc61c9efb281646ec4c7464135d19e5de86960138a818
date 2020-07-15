@@ -36,11 +36,13 @@
 					                     		<div class="col-lg-2 col-md-2 col-sm-2 ">
 						                     		<span><strong>Seleciona Una Familia:</strong></span>
 						                     		<?php 
-						                     			error_reporting(E_ALL);
+						                     			error_reporting(0);
 														require_once "controladores/inventarios.php";
 														require_once "modelos/inventarios.php";
 
-														$verFamilias = ControladorInventarios::ctrMostrarFamilias();
+														$tabla = "familias";
+														$campos = "*";
+														$verFamilias = ControladorInventarios::ctrMostrarDatosF($tabla, $campos);
 
 														echo '<select class="form-control" id="elegirFamilia">';
 
@@ -53,10 +55,28 @@
 											                }
 										      
 										                echo '</select>';
-
+										                //$fechaActual = "2020-07-12";
+										                //$fechaSum = date("Y-m-d",strtotime($fechaActual."+ 1 days"));
 														//$fechaActual = date("Y-m-d");
+														//$fechaMenosUno = date("Y-m-d",strtotime($fechaSum."- 6 days"));
+														//echo $fechaMenosUno; 
+														
+														//$dias = array("domingo","lunes","martes","miércoles","jueves","viernes","sábado");
+														//echo "Buenos días, hoy es ".$dias[date('w')];
 
-														//echo date("Y-m-d",strtotime($fechaActual."- 2 days")); 
+															/*$fechats = strtotime($fechaActual);
+															switch (date('w', $fechats)){
+															    case 0: $day = "Domingo"; break;
+															    case 1: $day = "Lunes"; break;
+															    case 2: $day = "Martes"; break;
+															    case 3: $day = "Miercoles"; break;
+															    case 4: $day = "Jueves"; break;
+															    case 5: $day = "Viernes"; break;
+															    case 6: $day = "Sabado"; break;
+															} 
+
+															echo $day;*/
+													
 
 						                     		 ?>
 
@@ -71,7 +91,79 @@
 					                        	
 					                        	<div class="col-lg-3 col-md-3 col-sm-3 ">
 					                        		<span><strong><br></strong></span>
-													<button type="button" class="btn btn-secondary" id="editarTiempo">Enviar</button>
+													<button type="button" class="btn btn-secondary" id="editarTiempo">Envia</button>
+					                        	</div>
+					                      	</div>
+
+	                    				</div>
+	                    				<br>
+	                  				</div>
+	                			</div>
+	              			</div>
+	            		</div>
+	          		</div>
+
+	          		<div class="card">
+						<div class="">
+							<div class="row">
+								<div class="col-lg-12 col-md-12 col-sm-12 border-right p-r-0">
+									<div class="card-body">
+										<div class="row">
+
+					                     	<div class="row col-lg-12 col-md-12 col-sm-12">
+					                     		
+					                        	<div class="col-lg-2 col-md-2 col-sm-2 ">
+						                     		<span><strong>Selecionar Producto:</strong></span>
+						                     		<?php 
+						                     			error_reporting(E_ALL);
+														require_once "controladores/inventarios.php";
+														require_once "modelos/inventarios.php";
+
+														$tabla = "productos";
+														$campos = "*";
+
+														$verFamilias = ControladorInventarios::ctrMostrarDatosF($tabla, $campos);
+
+														echo '<select class="selectpicker form-control" data-live-search="true" id="elegirProducto">';
+
+															for($i = 0; $i < count($verFamilias); $i++){
+
+																$id = $verFamilias[$i]["id"];
+																$nombre = $verFamilias[$i]["nombreProducto"];
+
+											                    echo '<option value="'.$id.'">'.$nombre.'</option>';
+											                }
+										      
+										                echo '</select>';
+
+						                     		 ?>
+
+						                     		 
+					                        	</div>
+					                        	<div class="col-lg-2 col-md-2 col-sm-2 ">
+						                     		<span><strong>Elegir almacen:</strong></span>
+						                     		<select name="elegirAlmacen" id="elegirAlmacen" class="form-control">
+
+						                                  <option value="">Elegir Almacén</option>
+						                                  <option value="almacengeneral1">Almacén General 1</option>
+						                                  <option value="almacengeneral2">Almacén General 2</option>
+						                                  <option value="almacensanmanuel1">Sucursal San Manuel 1</option>
+						                                  <option value="almacensanmanuel2">Sucursal San Manuel 2</option>
+						                                  <option value="almacenreforma1">Sucursal Reforma 1</option>
+						                                  <option value="almacenreforma2">Sucursal Reforma 2</option>
+						                                  <option value="almacensantiago1">Sucursal Santiago 1</option>
+						                                  <option value="almacensantiago2">Sucursal Santiago 2</option>
+						                                  <option value="almacencapu1">Sucursal Capu 1</option>
+						                                  <option value="almacencapu2">Sucursal Capu 2</option>
+						                                  <option value="almacenlastorres1">Sucursal Las Torres 1</option>
+						                                  <option value="almacenlastorres2">Sucursal Las Torres 2</option>
+
+						                                </select>
+						                     	</div>
+					                        	
+					                        	<div class="col-lg-3 col-md-3 col-sm-3 ">
+					                        		<span><strong><br></strong></span>
+													<button type="button" class="btn btn-secondary" id="recalcularStok">Recalcular</button>
 					                        	</div>
 					                      	</div>
 
