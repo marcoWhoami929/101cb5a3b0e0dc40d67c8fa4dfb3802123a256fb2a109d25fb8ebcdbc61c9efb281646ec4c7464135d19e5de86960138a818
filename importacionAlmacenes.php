@@ -58,8 +58,11 @@ if(isset($_POST['import_data'])){
           $almacenDatos = $almacen;
 
           //var_dump("Almacen Datos",$almacenDatos);
-
-          $idDisponible = ControladorInventarios::ctrBuscarFolioDisponible();
+          //
+          $table = "importaciones";
+          $select = "IF(MAX(id) IS NULL,1,MAX(id)+1) as idDisponible";
+          $conditions = "";
+          $idDisponible = ControladorInventarios::ctrBuscarFolioDisponible($table, $select, $conditions);
                    
           $idImportacion = $idDisponible["idDisponible"];
 

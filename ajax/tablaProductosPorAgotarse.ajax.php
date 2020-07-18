@@ -8,15 +8,20 @@ class TablaProductosPorAgotarse{
 
 	public function mostrarTablas(){
 
+		$tablaInicial = "almacen".$_GET["almacen"];
 		//$fechaActual = date("Y-m-d");
 		$fechaActual = "2020-07-11";
 		$fechaFinal = date("Y-m-d", strtotime($fechaActual));
 
-		$tablaInicial = "almacen".$_GET["almacen"];
+		$table = $tablaInicial;
+		$select = "MAX(idImportacion) AS ultimoId";
+		$conditions = "WHERE fecha = '".$fechaFinal."'";
+		$idDisponible = ControladorInventarios::ctrBuscarFolioDisponible($table, $select, $conditions);
+		$ultimoId = $idDisponible["ultimoId"];
 
 		$tabla = "productos AS p INNER JOIN ".$tablaInicial." AS al ON p.id = al.idProducto";
 		$campos = "p.codigoProducto, p.nombreProducto, p.stockMinimoGral1, al.existenciasUnidades, al.ultimoCosto, al.fecha";
-    	$parametros = "WHERE al.existenciasUnidades != 0 AND al.fecha = "."'".$fechaFinal."'";	
+    	$parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";	
 
  		$porAgotarse = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
  		//var_dump($porAgotarse);
@@ -27,13 +32,14 @@ class TablaProductosPorAgotarse{
 	 	for($i = 0; $i < count($porAgotarse); $i++){
 
 	 		$stockMinimo = $porAgotarse[$i]["stockMinimoGral1"];
-	 		$existencias = $porAgotarse[$i]["existenciasUnidades"];
+	 		$existencias = number_format($porAgotarse[$i]["existenciasUnidades"],2);
 	 		$ultimoCosto = $porAgotarse[$i]["ultimoCosto"];
 
 	 		if ($stockMinimo > $existencias) {
-	 			$faltantantesUnidad = $stockMinimo - $existencias;
+	 			$faltantantesU = $stockMinimo - $existencias;
+	 			$faltantantesUnidad = number_format($faltantantesU,2);
 	 			$faltanteM = $ultimoCosto * $faltantantesUnidad;
-	 			$faltanteMonto = "$ ".$faltanteM;
+	 			$faltanteMonto = "$ ".number_format($faltanteM,2);
 	 		}else{
 	 			$faltantantesUnidad = "<button class='btn btn-info btn-xs'>No hay Faltante</button>";
 	 			$faltanteMonto = "<button class='btn btn-info btn-xs'>No hay Faltante</button>";
@@ -46,7 +52,7 @@ class TablaProductosPorAgotarse{
 	 			$indicadorColor = "<button class='btn btn-danger btn-xs'>Pedir</button>";
 	 		}else if($existencias == $indicador2){
 	 			$indicadorColor = "<button class='btn btn-warning btn-xs'>Surtir</button>";
-	 		}else if($existencias > $indicador2){
+	 		}else if($existencias >= $indicador2){
 	 			$indicadorColor = "<button class='btn btn-success btn-xs'>En Stock</button>";
 	 		}
 

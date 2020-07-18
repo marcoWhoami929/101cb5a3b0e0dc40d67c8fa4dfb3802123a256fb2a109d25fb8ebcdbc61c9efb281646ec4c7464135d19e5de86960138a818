@@ -69,7 +69,7 @@
 		MODAL AGREGAR PERFIL
 		======================================-->
 		<div id="modalAgregarPerfil" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
+  			<div class="modal-dialog" >
     			<div class="modal-content">
 
       				<form role="form" method="post" enctype="multipart/form-data">
