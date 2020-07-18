@@ -13,11 +13,11 @@ class ControladorInventarios{
 
 
 	}
-	static public function ctrBuscarFolioDisponible(){
+	static public function ctrBuscarFolioDisponible($table, $select, $conditions){
 
-			$tabla = "importaciones";
+			$tabla = $table;
 
-			$respuesta = ModeloInventarios::mdlBuscarFolioDisponible($tabla);
+			$respuesta = ModeloInventarios::mdlBuscarFolioDisponible($tabla, $select, $conditions);
 
 			return $respuesta;
 
@@ -45,14 +45,14 @@ class ControladorInventarios{
 	}
 	static public function ctrCalcularTotalesPromedio($almacen){
 
-			$tabla = $almacen;
+		$tabla = $almacen;
 
-			$respuesta = ModeloInventarios::mdlCalcularTotalesPromedio($tabla);
+		$respuesta = ModeloInventarios::mdlCalcularTotalesPromedio($tabla);
 
-			return $respuesta;
-
+		return $respuesta;
 
 	}
+
 	/**
 	 *CONTROLADOR PARA MOSTRAR LOS PRODUCTOS POR AGOTARSE
 	 */
@@ -70,6 +70,17 @@ class ControladorInventarios{
 		$tabla = $tabla;
 
 		$respuesta = ModeloInventarios::mdlMostrarFamilias($tabla, $campos);
+
+		return $respuesta;
+	}
+	/**
+	 *CONTROLADOR PARA MOSTRAR LOS PRODUCTOS Y EXISTENCIAS
+	 */
+	static public function ctrMostrarProductosYexistencias($tabla, $campos, $parametros){
+
+		$tabla = $tabla;
+
+		$respuesta = ModeloInventarios::mdlMostrarProductosYexistencias($tabla, $campos, $parametros);
 
 		return $respuesta;
 	}

@@ -3,7 +3,7 @@ error_reporting(0);
 require_once "../controladores/inventarios.php";
 require_once "../modelos/inventarios.php";
 
-class TablaProductosPorAgotarse{
+class TablaFisicoVSadmin{
 
  	/*=============================================
   	TABLA IMPORTACIONES
@@ -11,10 +11,20 @@ class TablaProductosPorAgotarse{
 
 	public function mostrarTablas(){
 
-		$tablaInicial = "almacen".$_GET["almacen"];
-		//$fechaActual = date("Y-m-d");
-		$fechaActual = "2020-07-11";
-		$fechaFinal = date("Y-m-d", strtotime($fechaActual));
+		$nombreUsuario = $_GET["nombreUsuario"];
+
+		 if($nombreUsuario == "Sucursal San Manuel"){
+			$tabla = "almacensanmanuel1";
+		}else if($nombreUsuario == "Sucursal Reforms"){
+			$tabla = "almacenreforma1";
+		}else if($nombreUsuario == "Sucursal Santiago"){
+			$tabla = "almacensantiago1";
+		}else if($nombreUsuario == "Sucursal Capu"){
+			$tabla = "almacencapu1";
+		}else if($nombreUsuario == "Sucursal Las Torres"){
+			$tabla = "almacenlastorres1";
+		}
+
 
 		$table = $tablaInicial;
 		$select = "MAX(idImportacion) AS ultimoId";
@@ -28,42 +38,16 @@ class TablaProductosPorAgotarse{
 
  		$porAgotarse = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
  		//var_dump($porAgotarse);
+ 		/*
  		$datosJson = '{
 		 
 	 	"data": [ ';
 
 	 	for($i = 0; $i < count($porAgotarse); $i++){
 
-	 		$stockMinimo = $porAgotarse[$i]["stockMinimoGral1"];
-	 		$existencias = number_format($porAgotarse[$i]["existenciasUnidades"],2);
-	 		$ultimoCosto = $porAgotarse[$i]["ultimoCosto"];
-
-	 		if ($stockMinimo > $existencias) {
-	 			$faltantantesU = $stockMinimo - $existencias;
-	 			$faltantantesUnidad = number_format($faltantantesU,2);
-	 			$faltanteM = $ultimoCosto * $faltantantesUnidad;
-	 			$faltanteMonto = "$ ".number_format($faltanteM,2);
-	 		}else{
-	 			$faltantantesUnidad = "<button class='btn btn-info btn-xs'>No hay Faltante</button>";
-	 			$faltanteMonto = "<button class='btn btn-info btn-xs'>No hay Faltante</button>";
-	 		}
-
-	 		$indicador = $stockMinimo - 1;
-	 		$indicador2 = $stockMinimo - 2;
-
-	 		if ($existencias <= $indicador) {
-	 			$indicadorColor = "<button class='btn btn-danger btn-xs'>Pedir</button>";
-	 		}else if($existencias == $indicador2){
-	 			$indicadorColor = "<button class='btn btn-warning btn-xs'>Surtir</button>";
-	 		}else if($existencias >= $indicador2){
-	 			$indicadorColor = "<button class='btn btn-success btn-xs'>En Stock</button>";
-	 		}
-
-	 		$fech = $porAgotarse[$i]["fecha"];
-	 		$fecha = date("d/m/Y", strtotime($fech));
 	 		/*=============================================
 			DEVOLVER DATOS JSON
-			=============================================*/
+			=============================================*//*
 
 			$datosJson	 .= '[
 				      "'.($i+1).'",
@@ -85,17 +69,42 @@ class TablaProductosPorAgotarse{
 			  
 		}'; 
 
-		echo $datosJson;
+		echo $datosJson;*/
+
 
  	}
-
 }
 
 /*=============================================
  TABLA DE IMPORTACIONES
 =============================================*/ 
-$activar = new TablaProductosPorAgotarse();
+$activar = new TablaFisicoVSadmin();
 $activar -> mostrarTablas();
 
 
 
+/*if ($nombreUsuario == "almacengeneral1") {
+			$nombreUsuario = "almacengeneral1";
+		}else if($nombreUsuario == "almacengeneral2"){
+			$nombreUsuario = "almacengeneral2";
+		}else if($nombreUsuario == "almacensanmanuel1"){
+			$nombreUsuario = "almacensanmanuel1";
+		}else if($nombreUsuario == "almacensanmanuel2"){
+			$nombreUsuario = "almacensanmanuel2";
+		}else if($nombreUsuario == "almacenreforma1"){
+			$nombreUsuario = "almacenreforma1";
+		}else if($nombreUsuario == "almacenreforma2"){
+			$nombreUsuario = "almacenreforma2";
+		}else if($nombreUsuario == "almacensantiago1"){
+			$nombreUsuario = "almacensantiago1";
+		}else if($nombreUsuario == "almacensantiago2"){
+			$nombreUsuario = "almacensantiago2";
+		}else if($nombreUsuario == "almacencapu1"){
+			$nombreUsuario = "almacencapu1";
+		}else if($nombreUsuario == "almacencapu2"){
+			$nombreUsuario = "almacencapu2";
+		}else if($nombreUsuario == "almacenlastorres1"){
+			$nombreUsuario = "almacenlastorres1";
+		}else if($nombreUsuario == "almacenlastorres2"){
+			$nombreUsuario = "almacenlastorres2";
+		}*/

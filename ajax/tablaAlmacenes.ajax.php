@@ -9,7 +9,10 @@ class TablaAlmacenes{
   	TABLA ALMACENES
   	=============================================*/ 
 
-	public function mostrarTablas(){	
+	public function mostrarTablas(){
+		//$fechaActual = date("Y-m-d");
+		$fechaActual = "2020-07-11";
+		$fechaFinal = date("Y-m-d", strtotime($fechaActual));	
 
 		$almacen = "almacen".$_GET["almacen"];
 
@@ -40,12 +43,12 @@ class TablaAlmacenes{
 			}
 
 		$tabla = $almacen." as alm INNER JOIN productos as prod ON alm.idProducto = prod.id";
-		$campos = "alm.id,prod.codigoProducto,prod.nombreProducto, SUM(alm.entradasUnidades) AS totalEntradas, alm.entradasUnidades,SUM(alm.salidasUnidades) AS totalSalidas,alm.salidasUnidades, prod.".$campo." AS stockMinimo, alm.existenciasUnidades, alm.entradasImportes,alm.salidasImportes,alm.existenciaImportes,alm.ultimoCosto,alm.totalUltCosto";
-		$parametros = "GROUP BY prod.id";
+
+		$campos = "COUNT(IF(alm.salidasUnidades > 0,1,null)) AS conteo, alm.id, alm.idProducto, prod.codigoProducto, prod.nombreProducto, SUM(alm.entradasUnidades) AS totalEntradas, alm.entradasUnidades,SUM(alm.salidasUnidades) AS totalSalidas,alm.salidasUnidades, prod.".$campo." AS stockMinimo, SUM(alm.existenciasUnidades) AS totalExistencias, MAX(alm.existenciasUnidades) AS existenciasUnidades, MAX(alm.entradasImportes) AS entradasImportes, MAX(alm.salidasImportes) AS salidasImportes, MAX(alm.existenciaImportes) AS existenciaImportes, MAX(alm.ultimoCosto) AS ultimoCosto, MAX(alm.totalUltCosto) AS totalUltCosto";
+		$parametros = "GROUP BY alm.idProducto";
 
  		$almacenes = ControladorInventarios::ctrMostrarDatosAlmacenes($tabla, $campos, $parametros);
  		$totalPromedio = ControladorInventarios::ctrCalcularTotalesPromedio($almacen);
-
 
  		$datosJson = '{
 		 
@@ -56,7 +59,6 @@ class TablaAlmacenes{
 	 		/*=============================================
 			DEVOLVER DATOS JSON
 			=============================================*/
-
 
 			$costoPromedio = $almacenes[$i]["ultimoCosto"];
 			$salidas = $almacenes[$i]["salidasUnidades"];
@@ -101,7 +103,25 @@ class TablaAlmacenes{
 				  $stockMaximo = $stockMinimo * 1;
 			}
 			$seguro = ($stockMaximo - $stockMinimo)/2;
-			$stockSeguridad = $seguro +$stockMinimo;
+			$stockSeguridad = $seguro + $stockMinimo;
+
+			$conteo = $almacenes[$i]["conteo"];
+			$divicion = (1/6) * $conteo;
+			$porcentaje = $divicion * 100;
+
+			if ($porcentaje > 74.999 && $porcentaje <= 100) {
+				$clasificacionJ = "<span class='badge badge-pill badge-success'>A</span>";
+				$rotacion = "<button class='btn btn-success btn-xs'>Buena</button>";	
+			}else if ($porcentaje < 75 && $porcentaje > 49.999) {
+				$clasificacionJ = "<span class='badge badge-pill badge-warning'>B</span>";
+				$rotacion = "<button class='btn btn-warning btn-xs'>Mediana</button>";	
+			}else if ($porcentaje < 50 && $porcentaje > 24.999) {
+				$clasificacionJ = "<span class='badge badge-pill badge-danger'>C</span>";
+				$rotacion = "<button class='btn btn-danger btn-xs'>Regular</button>";
+			}else if($porcentaje < 25 && $porcentaje >= 0){
+				$clasificacionJ = "<span class='badge badge-pill badge-primary'>D</span>";
+				$rotacion = "<button class='btn btn-primary btn-xs'>Mala</button>";
+			}
 
 			$datosJson	 .= '[
 				      "'.$almacenes[$i]["id"].'",
@@ -111,13 +131,17 @@ class TablaAlmacenes{
 				      "'.$almacenes[$i]["entradasUnidades"].'",
 				      "'.$almacenes[$i]["totalSalidas"].'",
 				      "'.$almacenes[$i]["salidasUnidades"].'",
-				      "'.$almacenes[$i]["existenciasUnidades"].'",
+				      "'.number_format($almacenes[$i]["totalExistencias"],2).'",
+				      "'.number_format($almacenes[$i]["existenciasUnidades"],2).'",
 				      "'.$stockMinimo.'",
 				      "'.round($stockSeguridad).'",
 				      "'.round($stockMaximo).'",
 				      "$ '.number_format($almacenes[$i]["entradasImportes"],2).'",
 				      "$ '.number_format($almacenes[$i]["salidasImportes"],2).'",
 				      "$ '.number_format($almacenes[$i]["existenciaImportes"],2).'",
+				      "'.number_format($porcentaje,3).'",
+				      "'.$rotacion.'",
+				      "'.$clasificacionJ.'",
 				      "'.$clasificacion.'"
 
 

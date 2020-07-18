@@ -16,9 +16,9 @@ class ModeloInventarios{
 
 
 	}
-	static public function mdlBuscarFolioDisponible($tabla){
+	static public function mdlBuscarFolioDisponible($tabla, $select, $conditions){
 
-			$stmt = Conexion::conectar()->prepare("SELECT IF(MAX(id) IS NULL,1,MAX(id)+1) as idDisponible from $tabla");
+			$stmt = Conexion::conectar()->prepare("SELECT $select from $tabla $conditions");
 
 			$stmt -> execute();
 
@@ -46,6 +46,7 @@ class ModeloInventarios{
 
 
 	}
+
 	static public function mdlCalcularTotalesPromedio($tabla){
 
 			$stmt = Conexion::conectar()->prepare("SELECT SUM(ultimoCosto*salidasUnidades) as totalPromedio FROM  $tabla");
@@ -148,6 +149,21 @@ class ModeloInventarios{
 		$stmt-> execute();
 
 		return $stmt -> fetch();
+
+	}
+	/**
+	 *MODELO PARA MOSTRAR PRODUCTOS Y EXIXTENCIAS
+	 */
+	static public function mdlMostrarProductosYexistencias($tabla, $campos, $parametros){
+
+		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
+		//var_dump($stmt);
+		$stmt -> execute();
+
+		return $stmt->fetchAll();
+
+		$stmt -> close();
+		$stmt = null;
 
 	}
 

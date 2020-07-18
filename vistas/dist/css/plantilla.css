@@ -80,3 +80,8 @@ background: #ff9933;
 .verde li:nth-of-type(3) {
 background: #00ff00;
 }
+
+.verticalText {
+        writing-mode: vertical-lr;
+        transform: rotate(180deg);
+    }
