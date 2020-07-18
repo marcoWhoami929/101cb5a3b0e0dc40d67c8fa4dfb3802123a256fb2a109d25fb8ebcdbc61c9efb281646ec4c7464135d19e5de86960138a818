@@ -1,4 +1,8 @@
+<?php
+$sesion = $_SESSION["id"];
+echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion."');</script>";
 
+?>
 <div class="preloader">
     <div class="lds-ripple">
         <div class="lds-pos"></div>
@@ -44,11 +48,11 @@
                                         <h5 class="card-subtitle">A continución se detallarán los puntos mas importantes del control de inventario y se requiere mas información acerca del segmento dar click en la pestaña del segmento requerido.</h5>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row body">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                     <input type="hidden" name="nombreUsuario" id="nombreUsuario" value="'.$nombreUser.'">
                                     <input type="hidden" name="perfilUsuario" id="perfilUsuario" value="'.$perfilUser.'">
-                                          <li class="nav-item">
+                                        <li class="nav-item">
                                             <a class="nav-link active" id="tabTablero" data-toggle="pill" href="#pillTablero" role="tab" aria-selected="true">Tablero</a>
                                         </li>
                                         <li class="nav-item">
@@ -77,7 +81,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#pillSanManuel" role="tab"  aria-selected="true" identificador = "SanManuel">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#pillSanManuel" role="tab"  aria-selected="true" identificador = "SanManuel">Visualizar</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -90,7 +94,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#pillReforma" role="tab"  aria-selected="false" identificador = "Reforma">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#pillReforma" role="tab"  aria-selected="false" identificador = "Reforma">Visualizar</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -103,7 +107,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#pillSantiago" role="tab"  aria-selected="false" identificador = "Santiago">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#pillSantiago" role="tab"  aria-selected="false" identificador = "Santiago">Visualizar</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -116,7 +120,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#pillCapu" role="tab"  aria-selected="false" identificador = "Capu">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#pillCapu" role="tab"  aria-selected="false" identificador = "Capu">Visualizar</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -129,7 +133,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
-                                             <a class="nav-link" id="tabTorres" data-toggle="pill" href="#pillTorres" role="tab"  aria-selected="false" identificador = "LasTorres">Ver Tablas de Almacen</a>
+                                             <a class="nav-link" id="tabTorres" data-toggle="pill" href="#pillTorres" role="tab"  aria-selected="false" identificador = "LasTorres">Visualizar</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -594,8 +598,8 @@
                     </h3>
                 </div>
                 
-                <div class="card-body collapse"  id="gr1">
-                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral1" width="100%" id="porAgotarse" style="border: 2px solid #1F262D">
+                <div class="card-body collapse table-responsive"  id="gr1">
+                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral1" width="100%" id="porAgotarse2" style="border: 2px solid #1F262D">
 
                         <thead style="background:#1F262D;color: white">
 
@@ -668,7 +672,7 @@
                     </h3>
                 </div>
                 
-                <div class="card-body collapse"  id="al1">
+                 <div class="card-body collapse table-responsive"  id="al1">
 
                     <table class="table table-bordered table-striped dt-responsive tablaAlmacenGeneral1" width="100%" id="almacenGeneral1" style="border: 2px solid #1F262D">
 
@@ -682,6 +686,7 @@
                                 <th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Total Salidas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
+                                <th style="border:none"><span class="verticalText">Total Existencias</span></th>
                                 <th style="border:none"><span class="verticalText">Existencias</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
@@ -689,6 +694,9 @@
                                 <th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
                                 <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">% Rotación</span></th>
+                                <th style="border:none"><span class="verticalText">Rotación</span></th>
+                                <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
                                 <th style="border:none"><span class="verticalText">Clasificacion</span></th>
                             </tr> 
 
@@ -707,7 +715,7 @@
                 </div>
                 
                 <div class="card-body collapse"  id="gr2">
-                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral2" width="100%" id="porAgotarse" style="border: 2px solid #1F262D">
+                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral2" width="100%" style="border: 2px solid #1F262D">
 
                         <thead style="background:#1F262D;color: white">
 
@@ -818,7 +826,7 @@
                 </div>
                 
                 <div class="card-body collapse"  id="sm1">
-                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseSanManuel1" width="100%" id="porAgotarse" style="border: 2px solid #1F262D">
+                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseSanManuel1" width="100%"  style="border: 2px solid #1F262D">
 
                         <thead style="background:#1F262D;color: white">
 
@@ -1155,3 +1163,37 @@
 </div>
 
 </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        var sesion = localStorage.idSesion;
+        switch (sesion) {
+            case "5":
+                var clase = "pillSanManuel";
+                var elemento = "tabSanManuel";
+                break;
+            case "6":
+                var clase = "pillSantiago";
+                var elemento = "tabSantiago";
+                break;
+            case "7":
+                var clase = "pillTorres";
+                var elemento = "tabTorres";
+                break;
+            case "8":
+                var clase = "pillReforma";
+                var elemento = "tabReforma";
+                break;
+            case "9":
+                var clase = "pillCapu";
+                var elemento = "tabCapu";
+                break;
+           
+        }
+        var pill = document.getElementById(""+clase+"");
+        pill.setAttribute("class", "show active");
+
+        $("#"+elemento+"").trigger("click");
+
+    })
+</script>

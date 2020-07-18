@@ -73,8 +73,93 @@ class ControladorInventarios{
 
 		return $respuesta;
 	}
+	/*
+	Generar nuevo pedido
+	 */
+	static public function ctrGenerarNuevoPedido($tabla, $datos){
+
+		$tabla = $tabla;
+
+		$respuesta = ModeloInventarios::mdlGenerarNuevoPedido($tabla, $datos);
+
+		return $respuesta;
+	}
+	/*
+	INSERTAR PRODUCTOS PEDIDO
+	 */
+	static public function ctrInsertarProductosPedido($tabla, $datos){
+
+		$tabla = $tabla;
+
+		$respuesta = ModeloInventarios::mdlInsertarProductosPedido($tabla, $datos);
+
+		return $respuesta;
+	}
+	/*
+	MOSTRAR REQUISICIONES TIENDA
+	 */
+	static public function ctrMostrarRequisicionesTienda($item,$valor){
+
+		$tabla = "pedidossemanales";
+
+		$respuesta = ModeloInventarios::mdlMostrarRequisicionesTienda($tabla, $item,$valor);
+
+		return $respuesta;
+	}
+	/*
+	MOSTRAR DETALLE REQUISICION
+	 */
+	static public function ctrMostrarDetalleRequisicion($item,$valor){
+
+		$tabla = "productospedidos";
+
+		$respuesta = ModeloInventarios::mdlMostrarDetalleRequisicion($tabla, $item,$valor);
+
+		return $respuesta;
+	}
+	/*
+	MOSTRAR DATOS REQUISICION
+	 */
+	static public function ctrObtenerDatosRequisicion($tabla,$item,$valor){
 
 
+		$respuesta = ModeloInventarios::mdlObtenerDatosRequisicion($tabla, $item,$valor);
+
+		return $respuesta;
+	}
+	/*
+	MOSTRAR REQUISICIONES GENERALES
+	 */
+	static public function ctrMostrarRequisicionesGenerales(){
+
+		$tabla = "pedidossemanales";
+
+		$respuesta = ModeloInventarios::mdlMostrarRequisicionesGenerales($tabla);
+
+		return $respuesta;
+	}
+	/*
+	APROBAR REQUISICION
+	 */
+	static public function ctrAprobarRequisicion($tabla, $datos){
+
+		$tabla = $tabla;
+
+		$respuesta = ModeloInventarios::mdlAprobarRequisicion($tabla, $datos);
+
+		return $respuesta;
+	}
+	/*
+	CONCLUIR REQUISICION
+	 */
+	static public function ctrConcluirRequisicion($tabla, $datos){
+
+		$tabla = $tabla;
+
+		$respuesta = ModeloInventarios::mdlConcluirRequisicion($tabla, $datos);
+
+		return $respuesta;
+	}
 
 }
 

@@ -4,19 +4,19 @@ require_once("controladores/inventarios.php");
 require_once("modelos/inventarios.php");
 error_reporting(E_ALL);
 if(isset($_POST['import_data'])){
-	
-	$file_mimes = array(
-		'text/x-comma-separated-values',
-		'text/comma-separated-values', 
-		'application/octet-stream', 
-		'application/vnd.ms-excel', 
-		'application/x-csv', 
-		'text/x-csv', 
-		'text/csv', 
-		'application/csv', 
-		'application/excel', 
-		'application/vnd.msexcel'
-	);
+  
+  $file_mimes = array(
+    'text/x-comma-separated-values',
+    'text/comma-separated-values', 
+    'application/octet-stream', 
+    'application/vnd.ms-excel', 
+    'application/x-csv', 
+    'text/x-csv', 
+    'text/csv', 
+    'application/csv', 
+    'application/excel', 
+    'application/vnd.msexcel'
+  );
   if(!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'],$file_mimes)){
       if(is_uploaded_file($_FILES['file']['tmp_name'])){
 
@@ -32,12 +32,12 @@ if(isset($_POST['import_data'])){
           $nombreProducto = str_replace('"', 'pul', $emp_record[1]);
           if(mysqli_num_rows($existenciaProducto)){
 
-            $actualizarProducto = "UPDATE productos SET nombreProducto = '".utf8_encode($nombreProducto)."',costeo = '".$emp_record[2]."', unidad = '".$emp_record[3]."' where codigoProducto = '".$codigoProducto."' ";
+            $actualizarProducto = "UPDATE productos SET nombreProducto = '".$nombreProducto."',costeo = '".$emp_record[2]."', unidad = '".$emp_record[3]."' where codigoProducto = '".$codigoProducto."' ";
              mysqli_query($conn, $actualizarProducto) or die("database error:". mysqli_error($conn));
 
           }else{
 
-            $insertarProducto = "INSERT INTO productos(codigoProducto,nombreProducto,costeo,unidad) VALUES('".$emp_record[0]."','".utf8_encode($nombreProducto)."','".$emp_record[2]."','".$emp_record[3]."')";
+            $insertarProducto = "INSERT INTO productos(codigoProducto,nombreProducto,costeo,unidad) VALUES('".$emp_record[0]."','".$nombreProducto."','".$emp_record[2]."','".$emp_record[3]."')";
             mysqli_query($conn, $insertarProducto) or die("database error:". mysqli_error($conn));
 
           }
