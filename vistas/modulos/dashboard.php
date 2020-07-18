@@ -599,7 +599,7 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 </div>
                 
                 <div class="card-body collapse table-responsive"  id="gr1">
-                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral1" width="100%" id="porAgotarse2" style="border: 2px solid #1F262D">
+                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral1" width="100%"  style="border: 2px solid #1F262D">
 
                         <thead style="background:#1F262D;color: white">
 
@@ -617,9 +617,8 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                         </thead>
                         <tfoot>
-                    
-                            <?php
-                                //$fechaActual = date("Y-m-d");
+                                <?php 
+                                 //$fechaActual = date("Y-m-d");
                                 $fechaActual = "2020-07-11";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
@@ -629,41 +628,33 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 $idDisponible = ControladorInventarios::ctrBuscarFolioDisponible($table, $select, $conditions);
                                 $ultimoId = $idDisponible["ultimoId"];
 
-                                $tabla = "productos AS p INNER JOIN almacengeneral1 AS a1 ON p.id = a1.idProducto";
-                                $campos = "SUM(p.stockMinimoGral1) AS totalStockMinimo, SUM(a1.existenciasUnidades) AS existenciasUnidades, SUM(a1.ultimoCosto) AS ultimoCosto, a1.fecha";
-                                $parametros = "WHERE a1.existenciasUnidades != 0 AND a1.idImportacion = ".$ultimoId." AND a1.fecha = '".$fechaFinal."'";
+                                $tabla = "productos AS p INNER JOIN almacengeneral1 AS al ON p.id = al.idProducto";
+                                $campos = "SUM(p.stockMinimoGral1) AS totalStockMinimo, SUM(al.ultimoCosto * (p.stockMinimoGral1-al.existenciasUnidades) ) as faltanteMontos,SUM(p.stockMinimoGral1-al.existenciasUnidades) as faltantes,SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                             ?>
-                                <tr>
-                                    <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Existencias</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
-                                </tr>
-                                <tr>
-                                
-
-                                <?php
-                                    $ultimoCosto = $totales[0]["ultimoCosto"];
-                                    $totalStockMinimo = $totales[0]["totalStockMinimo"];
-                                    $totalExistencias = $totales[0]["existenciasUnidades"];
-                                    $totalFaltantes = $totalStockMinimo - $totalExistencias;
-                                    $totalFaltanteMonto = $ultimoCosto * $totalFaltantes;
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
-
-                                    echo "Ultimo ID: ".$ultimoId;
-                               
-                                 ?>
+                                ?>
+                        
+                            <tr>
+                                <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
                             <tr>
-                                    <?php 
-                                    echo '<th colspan="9" style="border:none;color: blue;text-align:right;">Ultimo Id '.$ultimoId.' </th>';
+                                    <?php
+                                        $ultimoCosto = $totales[0]["ultimoCosto"];
+                                        $totalStockMinimo = $totales[0]["totalStockMinimo"];
+                                        $totalExistencias = $totales[0]["existenciasUnidades"];
+                                        $totalFaltantes =  $totales[0]["faltantes"];
+                                        $totalFaltanteMonto = $totales[0]["faltanteMontos"];
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
+                                   
                                      ?>
-                                </tr>
+                            </tr>
                         </tfoot>
 
                     </table>
@@ -685,12 +676,8 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                         </button>
                     </h3>
                 </div>
-                
-<<<<<<< HEAD
+ 
                  <div class="card-body collapse table-responsive"  id="al1">
-=======
-                <div class="card-body collapse table-responsive"  id="al1">
->>>>>>> devdiego
 
                     <table class="table table-bordered table-striped dt-responsive tablaAlmacenGeneral1" width="100%" id="almacenGeneral1" style="border: 2px solid #1F262D">
 
@@ -733,11 +720,10 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 </div>
                 
                 <div class="card-body collapse"  id="gr2">
-<<<<<<< HEAD
-                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral2" width="100%" style="border: 2px solid #1F262D">
-=======
-                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral2" width="100%" id="porAgotarse2" style="border: 2px solid #1F262D">
->>>>>>> devdiego
+
+        
+                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral2" width="100%"  style="border: 2px solid #1F262D">
+
 
                         <thead style="background:#1F262D;color: white">
 
@@ -754,9 +740,8 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                             </tr> 
 
                         </thead>
-                        <tfoot>
-                    
-                            <?php 
+                         <tfoot>
+                                <?php 
                                  //$fechaActual = date("Y-m-d");
                                 $fechaActual = "2020-07-11";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
@@ -768,47 +753,32 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 $ultimoId = $idDisponible["ultimoId"];
 
                                 $tabla = "productos AS p INNER JOIN almacengeneral2 AS al ON p.id = al.idProducto";
-                                $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
+                                $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.ultimoCosto * (p.stockMinimoGral1-al.existenciasUnidades) ) as faltanteMontos,SUM(p.stockMinimoGral2-al.existenciasUnidades) as faltantes,SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
                                 $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                             ?>
-
-                                <tr>
-                                    <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Existencias</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
-                                </tr>
-                                <tr>
-
-                                <?php
-                                    $ultimoCosto = $totales[0]["ultimoCosto"];
-                                    $totalStockMinimo = $totales[0]["totalStockMinimo"];
-                                    $totalExistencias = $totales[0]["existenciasUnidades"];
-                                    if ($totalStockMinimo > $totalExistencias) {
-                                        $totalFaltantes = $totalStockMinimo - $totalExistencias;
-                                    }else{
-                                        $totalFaltantes = $totalExistencias - $totalStockMinimo;
-                                    }
-                                    
-                                    $totalFaltanteMonto = $ultimoCosto * $totalFaltantes;
-                                    
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
-
-
-                               
-                                 ?>
-                                </tr>
-                                <tr>
-                                    <?php 
-                                    echo '<th colspan="9" style="border:none;color: blue;text-align:right;">Ultimo Id '.$ultimoId.' </th>';
+                                ?>
+                        
+                            <tr>
+                                <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
+                            </tr>
+                            <tr>
+                                    <?php
+                                        $ultimoCosto = $totales[0]["ultimoCosto"];
+                                        $totalStockMinimo = $totales[0]["totalStockMinimo"];
+                                        $totalExistencias = $totales[0]["existenciasUnidades"];
+                                        $totalFaltantes =  $totales[0]["faltantes"];
+                                        $totalFaltanteMonto = $totales[0]["faltanteMontos"];
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
+                                   
                                      ?>
-                                </tr>
-
+                            </tr>
                         </tfoot>
 
                     </table>
@@ -870,15 +840,11 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                         <button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#porAgotarseSM1" style="float: right;"><i class="fas fa-minus-square"></i></button>
                     </h3>
                 </div>
-<<<<<<< HEAD
-                
-                <div class="card-body collapse"  id="sm1">
-                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseSanManuel1" width="100%"  style="border: 2px solid #1F262D">
-=======
-                    
+
+         
                 <div class="card-body collapse table-responsive"  id="porAgotarseSM1">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseSanManuel1" width="100%" id="porAgotarseSanManuel1" style="border: 2px solid #1F262D">
->>>>>>> devdiego
+
 
                         <thead style="background:#1F262D;color: white">
 
@@ -1998,7 +1964,9 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
     $(document).ready(function(){
 
         var sesion = localStorage.idSesion;
-        switch (sesion) {
+        if (sesion == 5 || sesion == 6 || sesion == 7 || sesion == 8 || sesion == 9) {
+
+            switch (sesion) {
             case "5":
                 var clase = "pillSanManuel";
                 var elemento = "tabSanManuel";
@@ -2019,12 +1987,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 var clase = "pillCapu";
                 var elemento = "tabCapu";
                 break;
+            default:
+
+                break;
            
         }
-        var pill = document.getElementById(""+clase+"");
-        pill.setAttribute("class", "show active");
+        var pilla = document.getElementById(""+clase+"");
+        pilla.setAttribute("class", "show active");
 
-        $("#"+elemento+"").trigger("click");
+        }
+        
+
 
     })
 </script>

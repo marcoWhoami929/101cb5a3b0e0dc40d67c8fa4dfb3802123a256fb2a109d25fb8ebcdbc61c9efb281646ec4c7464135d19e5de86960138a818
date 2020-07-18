@@ -80,7 +80,7 @@ background: #ff9933;
 .verde li:nth-of-type(3) {
 background: #00ff00;
 }
-<<<<<<< HEAD
+
 /*
  * ESTILOS DE PEDIDOS SEMANAL
  */ 
@@ -177,10 +177,9 @@ background: #00ff00;
     transform: translate(-50%, -50%) rotate(-360deg);
   }
 }
-=======
+
 
 .verticalText {
         writing-mode: vertical-lr;
         transform: rotate(180deg);
     }
->>>>>>> devdiego

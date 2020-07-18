@@ -151,7 +151,6 @@ class ModeloInventarios{
 		return $stmt -> fetch();
 
 	}
-<<<<<<< HEAD
 	/**	
 	 *ACTUALIZAR CANTIDAD SOLICITADA DE PEDIDO
 	 */
@@ -215,24 +214,23 @@ class ModeloInventarios{
 			return "error";	
 
 		}
-=======
+	}
 	/**
 	 *MODELO PARA MOSTRAR PRODUCTOS Y EXIXTENCIAS
 	 */
 	static public function mdlMostrarProductosYexistencias($tabla, $campos, $parametros){
 
 		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
-		//var_dump($stmt);
+		
 		$stmt -> execute();
 
 		return $stmt->fetchAll();
->>>>>>> devdiego
+
 
 		$stmt -> close();
 		$stmt = null;
 
 	}
-<<<<<<< HEAD
 	/**
 	 * INSERTAR PRODUCTOS PEDIDO
 	 */
@@ -460,8 +458,7 @@ class ModeloInventarios{
 		$stmt = null;
 
 	}
-=======
->>>>>>> devdiego
+
 
 }
 

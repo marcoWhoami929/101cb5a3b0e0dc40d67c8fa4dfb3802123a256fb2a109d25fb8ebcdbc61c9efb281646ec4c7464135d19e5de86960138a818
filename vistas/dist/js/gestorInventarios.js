@@ -35,7 +35,7 @@ tableAdministradores = $(".tableAdministradores").DataTable({
 
 });
 
-$(document).ready(function(){
+
   var perfilUsuario = $('#perfilUsuario').val();
   if (perfilUsuario == 'Administrador General') {
     
@@ -45,17 +45,13 @@ $(document).ready(function(){
 
     var areaInventario = $(this).attr('identificador');
     localStorage.setItem("areaInventario", areaInventario);
-<<<<<<< HEAD
     var area = localStorage.getItem("areaInventario");
-     
-=======
-     var area = localStorage.getItem("areaInventario");
 
->>>>>>> devdiego
      for (var i = 1; i <= 2; i++) {
       var tabla = area+i;
       var nombreTabla = tabla.toLowerCase();
-      
+     
+
       tablaPorAgotarse = $(".tablaPorAgotarse"+tabla+"").DataTable({
        "ajax":"ajax/tablaProductosPorAgotarse.ajax.php?almacen="+nombreTabla,
        "deferRender": true,
@@ -126,7 +122,6 @@ $(document).ready(function(){
         
      }
   })
-});
 /*=============================================
 TABLA IMPORTACIONES
 =============================================*/
@@ -169,9 +164,7 @@ tablaImportaciones = $(".tablaImportaciones").DataTable({
 TABLA ALMACENES
 =============================================*/
 /*=====  Obtener identificador de tabs   ======*/
-<<<<<<< HEAD
 
-=======
 $(document).ready(function(){
 
   $('body').on('click', '#pills-tab a', function(){
@@ -220,14 +213,34 @@ $(document).ready(function(){
      }
   })
 });
->>>>>>> devdiego
+
 /**
  * TABLA PEDIDO SEMANAL
  */
 $(document).ready(function(){
 
-  tablePedidoSemanal = $(".tablePedidoSemanal").DataTable({
-    //"ajax":"ajax/tablaAlmacenes.ajax.php?almacen="+nombreTabla,
+  var sucursal = localStorage.getItem("sucursal");
+  switch (sucursal) {
+    case "Sucursal San Manuel":
+      var almacen = "sanmanuel";
+      break;
+    case "Sucursal Capu":
+      var almacen = "capu";
+      break;
+    case "Sucursal Reforma":
+      var almacen = "reforma";
+      break;
+    case "Sucursal Santiago":
+      var almacen = "santiago";
+      break;
+    case "Sucursal Las Torres":
+      var almacen = "lastorres";
+      break;
+  }
+  
+
+ var tablePedidoSemanal = $(".tablePedidoSemanal").DataTable({
+    "ajax":"ajax/tablaPedidoSemanal.ajax.php?almacen="+almacen,
     "deferRender": true,
     "retrieve": true,
     "processing": true,
@@ -260,33 +273,10 @@ $(document).ready(function(){
 
   });
 
-});
 /**
  * TABLA MOSTRAR EXISTENCIAS EN TIENDAS
  */
 
-<<<<<<< HEAD
-  var sucursal = localStorage.getItem("sucursal");
-  switch (sucursal) {
-    case "Sucursal San Manuel":
-      var almacen = "sanmanuel";
-      break;
-    case "Sucursal Capu":
-      var almacen = "capu";
-      break;
-    case "Sucursal Reforma":
-      var almacen = "reforma";
-      break;
-    case "Sucursal Santiago":
-      var almacen = "santiago";
-      break;
-    case "Sucursal Las Torres":
-      var almacen = "lastorres";
-      break;
-  }
-  var tablePedidoSemanal = $(".tablePedidoSemanal").DataTable({
-    "ajax":"ajax/tablaPedidoSemanal.ajax.php?almacen="+almacen,
-=======
   tableExistenciasGenerales = $(".tableExistenciasGenerales").DataTable({
     "ajax":"ajax/tablaExistenciasGenerales.ajax.php?Productos=",
     "deferRender": true,
@@ -334,7 +324,6 @@ $(document).ready(function(){
 
   tableFisicoVSadmin = $(".tableFisicoVSadmin").DataTable({
     //"ajax":"ajax/tablaFisicoVSadmin.ajax.php?nombreUsuario="+nombreUsuario,
->>>>>>> devdiego
     "deferRender": true,
     "retrieve": true,
     "processing": true,
@@ -367,11 +356,8 @@ $(document).ready(function(){
 
   });
 
-<<<<<<< HEAD
-=======
 });
 
->>>>>>> devdiego
 /**
  * MODIFICAR DIAS QUE TARDA EL PROVEEDOR EN RESURTIR
  */
@@ -579,7 +565,6 @@ $(".tableAdministradores").on("click", ".btnEliminarPerfil", function(){
   })
 
 });
-<<<<<<< HEAD
 /**
  * ACCIONES PARA SOLICITAR PEDIDO SEMANAL
  */
@@ -1291,119 +1276,120 @@ $("#btnConcluirRequisicion").click(function(){
 })
 
 })
-=======
+
 
 /**
  * MOSTRAR LOS DATOS DE LOS USUARIOS EN LA MODAL PARA EDITAR
  */
-$(".tableExistenciasGenerales").on("click", ".btnVerExistencias", function(){
+ $(".tableExistenciasGenerales").on("click", ".btnVerExistencias", function(){
 
   var idProducto = $(this).attr("idProducto");
   var nombreProducto = $(this).attr("nombreProducto");
   //console.log(nombreProducto);
   $("#nombreProducto").val(nombreProducto);
-           
+
+
   var datos = new FormData(); 
   datos.append("Existencias",idProducto);
   $.ajax({
-      url: "ajax/tablaExistenciasGenerales.ajax.php",
-      method: "POST",
-      data: datos,
-      cache: false,
-      contentType: false,
-      processData: false,
-      success: function(respuesta) {
+    url: "ajax/tablaExistenciasGenerales.ajax.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    success: function(respuesta) {
+      
+      var json = JSON.parse(respuesta);
 
-          var json = JSON.parse(respuesta);
-          //alert(json["data"][0][0]);
 
-          var listaCabeceras = ['Almacén Gr1','Almacén GR2','Almacén SM1','Almacén SM2','Almacén SG1','Almacén SG1','Almacén RF1','Almacén RF2','Almacén CP1','Almacén CP2','Almacén LT1','Almacén LT2'];
+      var listaCabeceras = ['Almacén Gr1','Almacén GR2','Almacén SM1','Almacén SM2','Almacén SG1','Almacén SG1','Almacén RF1','Almacén RF2','Almacén CP1','Almacén CP2','Almacén LT1','Almacén LT2'];
 
-          body = document.getElementById("tableVerExistencias");
+      body = document.getElementById("tableVerExistencias");
 
-          thead = document.createElement("thead");
-          thead.setAttribute('style','background:#1F262D;color: white;');
+      thead = document.createElement("thead");
+      thead.setAttribute('style','background:#1F262D;color: white;');
 
-          theadTr = document.createElement("tr");
+      theadTr = document.createElement("tr");
 
-          
 
-          for (var h = 0; h < listaCabeceras.length; h++) {
 
-            span = document.createElement("span");
-            span.setAttribute('class','verticalText');
-                                
-              var celdaThead = document.createElement("th");
-              var textoCeldaThead = document.createTextNode(listaCabeceras[h]);
-              span.appendChild(textoCeldaThead);
-              celdaThead.appendChild(span);
-              theadTr.appendChild(celdaThead);
+      for (var h = 0; h < listaCabeceras.length; h++) {
 
-          }
-                          
-          thead.appendChild(theadTr);
-          tblBody = document.createElement("tbody");
-          var hilera = document.createElement("tr");
-           
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][0]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+        span = document.createElement("span");
+        span.setAttribute('class','verticalText');
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][1]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+        var celdaThead = document.createElement("th");
+        var textoCeldaThead = document.createTextNode(listaCabeceras[h]);
+        span.appendChild(textoCeldaThead);
+        celdaThead.appendChild(span);
+        theadTr.appendChild(celdaThead);
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][2]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+      }
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][3]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+      thead.appendChild(theadTr);
+      tblBody = document.createElement("tbody");
+      var hilera = document.createElement("tr");
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][4]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][0]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][5]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][1]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][6]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][2]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][7]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][3]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][8]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][4]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][9]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][5]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][10]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][6]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
 
-            var celda = document.createElement("td");
-            var textoCelda = document.createTextNode(json["data"][0][11]);
-            celda.appendChild(textoCelda);
-            hilera.appendChild(celda);
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][7]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
+
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][8]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
+
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][9]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
+
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][10]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
+
+      var celda = document.createElement("td");
+      var textoCelda = document.createTextNode(json["data"][0][11]);
+      celda.appendChild(textoCelda);
+      hilera.appendChild(celda);
 
             /*var listaTablas = ['almacengeneral1','almacengeneral2','almacensanmanuel1','almacensanmanuel2','almacenreforma1','almacenreforma2','almacensantiago1','almacensantiago2','almacencapu1','almacencapu2','almacenlastorres1','almacenlastorres2'];
             tfoot = document.createElement("tfoot");
@@ -1434,16 +1420,16 @@ $(".tableExistenciasGenerales").on("click", ".btnVerExistencias", function(){
               celdatfoot.appendChild(booton);
               tfoot.appendChild(celdatfoot);
 
-          }*/
+            }*/
 
-          tblBody.appendChild(hilera);
-          body.appendChild(tblBody);
-          body.appendChild(thead);
+            tblBody.appendChild(hilera);
+            body.appendChild(tblBody);
+            body.appendChild(thead);
           //body.appendChild(tfoot);
-                            
-                           
-          }
-  })
+
+
+        }
+      })
 });
 
 $("#salirVerExistencias").click(function(){
@@ -1463,4 +1449,3 @@ $("#salirVerExistencias").click(function(){
 
   //console.log(nameTable);
 }*/
->>>>>>> devdiego

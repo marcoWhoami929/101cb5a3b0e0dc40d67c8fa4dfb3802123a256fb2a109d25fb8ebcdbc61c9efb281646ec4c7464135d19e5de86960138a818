@@ -73,7 +73,6 @@ class ControladorInventarios{
 
 		return $respuesta;
 	}
-<<<<<<< HEAD
 	/*
 	Generar nuevo pedido
 	 */
@@ -125,7 +124,9 @@ class ControladorInventarios{
 
 
 		$respuesta = ModeloInventarios::mdlObtenerDatosRequisicion($tabla, $item,$valor);
-=======
+	
+		return $respuesta;
+	}
 	/**
 	 *CONTROLADOR PARA MOSTRAR LOS PRODUCTOS Y EXISTENCIAS
 	 */
@@ -134,10 +135,6 @@ class ControladorInventarios{
 		$tabla = $tabla;
 
 		$respuesta = ModeloInventarios::mdlMostrarProductosYexistencias($tabla, $campos, $parametros);
-
-		return $respuesta;
-	}
->>>>>>> devdiego
 
 		return $respuesta;
 	}

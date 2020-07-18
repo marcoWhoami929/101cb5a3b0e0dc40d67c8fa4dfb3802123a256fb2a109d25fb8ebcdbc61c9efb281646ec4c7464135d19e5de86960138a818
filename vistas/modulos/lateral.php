@@ -11,7 +11,7 @@
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="misRecordatorios" aria-expanded="false"><i class="mdi mdi-calendar-clock"></i><span class="hide-menu">Mis Recordatorios</span></a></li>
                             
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="importaciones" aria-expanded="false"><i class="mdi mdi-calendar-clock"></i><span class="hide-menu">Importación de Inventarios</span></a></li>
-                            <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="inventarioFisico" aria-expanded="false"><i class="mdi mdi-compare"></i><span class="hide-menu">Fisico VS Admin</span></a></li>
+                           
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="existenciasGenerales" aria-expanded="false"><i class="mdi mdi-search-web"></i><span class="hide-menu">Existencias Generales</span></a></li>
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="configuraciones" aria-expanded="false"><i class="mdi mdi-settings-box"></i><span class="hide-menu">Configuración</span></a></li>';
 
@@ -29,7 +29,8 @@
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="miCalendario" aria-expanded="false"><i class="mdi mdi-calendar-clock"></i><span class="hide-menu">Mis Recordatorios</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="pedidoSemanal" aria-expanded="false" sucursal="'.$_SESSION["nombre"].'"><i class="mdi mdi-clipboard-outline"></i><span class="hide-menu">Pedido Semanal</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="importaciones" aria-expanded="false"><i class="mdi mdi-calendar-clock"></i><span class="hide-menu">Importación de Inventarios</span></a></li>
-                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="fisicoVSadmin" aria-expanded="false"><i class="mdi mdi-compare"></i><span class="hide-menu">Fisico VS Admin</span></a></li>
+
+                       
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="existenciasGenerales" aria-expanded="false"><i class="mdi mdi-search-web"></i><span class="hide-menu">Existencias Generales</span></a></li>
                         ';
                     }
@@ -39,3 +40,4 @@
         </nav>
     </div>
 </aside>
+<!-- <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="fisicoVSadmin" aria-expanded="false"><i class="mdi mdi-compare"></i><span class="hide-menu">Fisico VS Admin</span></a></li>-->
