@@ -258,46 +258,58 @@ $(document).ready(function(){
 /**
  * TABLA FISICO VS ADMIN
  */
+
 $(document).ready(function(){
 
-  $("#nombreUsuario").val();
-  var nombreUsuario = $("#nombreUsuario").val();
-  //console.log(nombreUsuario);
+  $('body').on('click', '#nav-menu a', function(){
 
-  tableFisicoVSadmin = $(".tableFisicoVSadmin").DataTable({
-    //"ajax":"ajax/tablaFisicoVSadmin.ajax.php?nombreUsuario="+nombreUsuario,
-    "deferRender": true,
-    "retrieve": true,
-    "processing": true,
-    "language": {
+    $("#nombreUsuario").val();
+    var nombreUsuario = $("#nombreUsuario").val();
 
-    "sProcessing":     "Procesando...",
-    "sLengthMenu":     "Mostrar _MENU_ registros",
-    "sZeroRecords":    "No se encontraron resultados",
-    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
-    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
-    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-    "sInfoPostFix":    "",
-    "sSearch":         "Buscar:",
-    "sUrl":            "",
-    "sInfoThousands":  ",",
-    "sLoadingRecords": "Cargando...",
-    "oPaginate": {
+    var areaFisico = $(this).attr('identificadorFisico');
+    localStorage.setItem("areaFisico", areaFisico);
+     var area = localStorage.getItem("areaFisico");
+     
+     for (var i = 1; i <= 2; i++) {
+      var tabla = area+i;
+      var nombreTabla = tabla.toLowerCase();
+      
+      tableFisicoVSadmin = $(".tableFisicoVSadmin"+tabla+"").DataTable({
+       "ajax":"ajax/tablaFisicoVSadmin.ajax.php?almacen="+nombreTabla,
+       "deferRender": true,
+       "retrieve": true,
+       "processing": true,
+       "language": {
+
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
           "sFirst":    "Primero",
           "sLast":     "Último",
           "sNext":     "Siguiente",
           "sPrevious": "Anterior"
-    },
-    "oAria": {
-      "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-      "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-    }
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        }
 
-    }
+       }
 
-  });
-
+    });
+        
+     }
+  })
 });
 
 /**

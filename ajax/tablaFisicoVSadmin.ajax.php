@@ -11,54 +11,37 @@ class TablaFisicoVSadmin{
 
 	public function mostrarTablas(){
 
-		$nombreUsuario = $_GET["nombreUsuario"];
+		$tablaInicial = "almacen".$_GET["almacen"];
 
-		 if($nombreUsuario == "Sucursal San Manuel"){
-			$tabla = "almacensanmanuel1";
-		}else if($nombreUsuario == "Sucursal Reforms"){
-			$tabla = "almacenreforma1";
-		}else if($nombreUsuario == "Sucursal Santiago"){
-			$tabla = "almacensantiago1";
-		}else if($nombreUsuario == "Sucursal Capu"){
-			$tabla = "almacencapu1";
-		}else if($nombreUsuario == "Sucursal Las Torres"){
-			$tabla = "almacenlastorres1";
-		}
+		$tabla = $tablaInicial." AS al INNER JOIN productos AS p ON al.idProducto = p.id";
+		$campos = "al.id, p.nombreProducto, al.entradasUnidades, al.salidasUnidades, al.existenciasUnidades";
+    	$parametros = "WHERE idImportacion = (SELECT MAX(idImportacion) FROM ".$tablaInicial.")";	
 
-
-		$table = $tablaInicial;
-		$select = "MAX(idImportacion) AS ultimoId";
-		$conditions = "WHERE fecha = '".$fechaFinal."'";
-		$idDisponible = ControladorInventarios::ctrBuscarFolioDisponible($table, $select, $conditions);
-		$ultimoId = $idDisponible["ultimoId"];
-
-		$tabla = "productos AS p INNER JOIN ".$tablaInicial." AS al ON p.id = al.idProducto";
-		$campos = "p.codigoProducto, p.nombreProducto, p.stockMinimoGral1, al.existenciasUnidades, al.ultimoCosto, al.fecha";
-    	$parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";	
-
- 		$porAgotarse = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
- 		//var_dump($porAgotarse);
- 		/*
+ 		$fisicoVSadmin = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
+ 		//var_dump($fisicoVSadmin);
+ 		
  		$datosJson = '{
 		 
 	 	"data": [ ';
 
-	 	for($i = 0; $i < count($porAgotarse); $i++){
+	 	for($i = 0; $i < count($fisicoVSadmin); $i++){
+
+					                	
+	 		$input = "<input class='form-control input-md' name='cantidadFisico' id='cantidadFisico' style='width:50%;'>";
+	 		$send = "<button type='button' class='btn btn-success btn-md btnSend' idProducto='".$fisicoVSadmin[$i]["id"]."' nombreProducto='".$fisicoVSadmin[$i]["nombreProducto"]."'><i class='far fa-paper-plane'></i></button>";
 
 	 		/*=============================================
 			DEVOLVER DATOS JSON
-			=============================================*//*
+			=============================================*/
 
 			$datosJson	 .= '[
 				      "'.($i+1).'",
-				      "'.$porAgotarse[$i]["codigoProducto"].'",
-				      "'.$porAgotarse[$i]["nombreProducto"].'",
-				      "'.$stockMinimo.'",
-				      "'.$existencias.'",
-				      "'.$faltantantesUnidad.'",
-				      "'.$faltanteMonto.'",
-				      "'.$fecha.'",
-				      "'.$indicadorColor.'"
+				      "'.$fisicoVSadmin[$i]["nombreProducto"].'",
+				      "'.$fisicoVSadmin[$i]["entradasUnidades"].'",
+				      "'.$fisicoVSadmin[$i]["salidasUnidades"].'",
+				      "'.$fisicoVSadmin[$i]["existenciasUnidades"].'",
+				      "'.$input.'",
+				      "'.$send.'"
 				    ],';
 
 	 	}
@@ -69,7 +52,7 @@ class TablaFisicoVSadmin{
 			  
 		}'; 
 
-		echo $datosJson;*/
+		echo $datosJson;
 
 
  	}
