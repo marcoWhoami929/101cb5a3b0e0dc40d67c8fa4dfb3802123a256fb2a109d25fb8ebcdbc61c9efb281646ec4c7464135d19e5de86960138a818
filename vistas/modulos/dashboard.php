@@ -1,4 +1,8 @@
+<?php
+$sesion = $_SESSION["id"];
+echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion."');</script>";
 
+?>
 <div class="preloader">
     <div class="lds-ripple">
         <div class="lds-pos"></div>
@@ -44,11 +48,11 @@
                                         <h5 class="card-subtitle">A continución se detallarán los puntos mas importantes del control de inventario y se requiere mas información acerca del segmento dar click en la pestaña del segmento requerido.</h5>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row body">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                     <input type="hidden" name="nombreUsuario" id="nombreUsuario" value="'.$nombreUser.'">
                                     <input type="hidden" name="perfilUsuario" id="perfilUsuario" value="'.$perfilUser.'">
-                                          <li class="nav-item">
+                                        <li class="nav-item">
                                             <a class="nav-link active" id="tabTablero" data-toggle="pill" href="#pillTablero" role="tab" aria-selected="true">Tablero</a>
                                         </li>
                                         <li class="nav-item">
@@ -77,7 +81,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#pillSanManuel" role="tab"  aria-selected="true" identificador = "SanManuel">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#pillSanManuel" role="tab"  aria-selected="true" identificador = "SanManuel">Visualizar</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -90,7 +94,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#pillReforma" role="tab"  aria-selected="false" identificador = "Reforma">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#pillReforma" role="tab"  aria-selected="false" identificador = "Reforma">Visualizar</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -103,7 +107,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#pillSantiago" role="tab"  aria-selected="false" identificador = "Santiago">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#pillSantiago" role="tab"  aria-selected="false" identificador = "Santiago">Visualizar</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -116,7 +120,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#pillCapu" role="tab"  aria-selected="false" identificador = "Capu">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#pillCapu" role="tab"  aria-selected="false" identificador = "Capu">Visualizar</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -129,7 +133,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                         <li class="nav-item">
-                                             <a class="nav-link" id="tabTorres" data-toggle="pill" href="#pillTorres" role="tab"  aria-selected="false" identificador = "LasTorres">Ver Tablas de Almacen</a>
+                                             <a class="nav-link" id="tabTorres" data-toggle="pill" href="#pillTorres" role="tab"  aria-selected="false" identificador = "LasTorres">Visualizar</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -595,7 +599,7 @@
                 </div>
                 
                 <div class="card-body collapse table-responsive"  id="gr1">
-                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral1" width="100%" id="porAgotarse2" style="border: 2px solid #1F262D">
+                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral1" width="100%"  style="border: 2px solid #1F262D">
 
                         <thead style="background:#1F262D;color: white">
 
@@ -613,9 +617,8 @@
 
                         </thead>
                         <tfoot>
-                    
-                            <?php
-                                //$fechaActual = date("Y-m-d");
+                                <?php 
+                                 //$fechaActual = date("Y-m-d");
                                 $fechaActual = "2020-07-11";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
@@ -625,41 +628,33 @@
                                 $idDisponible = ControladorInventarios::ctrBuscarFolioDisponible($table, $select, $conditions);
                                 $ultimoId = $idDisponible["ultimoId"];
 
-                                $tabla = "productos AS p INNER JOIN almacengeneral1 AS a1 ON p.id = a1.idProducto";
-                                $campos = "SUM(p.stockMinimoGral1) AS totalStockMinimo, SUM(a1.existenciasUnidades) AS existenciasUnidades, SUM(a1.ultimoCosto) AS ultimoCosto, a1.fecha";
-                                $parametros = "WHERE a1.existenciasUnidades != 0 AND a1.idImportacion = ".$ultimoId." AND a1.fecha = '".$fechaFinal."'";
+                                $tabla = "productos AS p INNER JOIN almacengeneral1 AS al ON p.id = al.idProducto";
+                                $campos = "SUM(p.stockMinimoGral1) AS totalStockMinimo, SUM(al.ultimoCosto * (p.stockMinimoGral1-al.existenciasUnidades) ) as faltanteMontos,SUM(p.stockMinimoGral1-al.existenciasUnidades) as faltantes,SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                             ?>
-                                <tr>
-                                    <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Existencias</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
-                                </tr>
-                                <tr>
-                                
-
-                                <?php
-                                    $ultimoCosto = $totales[0]["ultimoCosto"];
-                                    $totalStockMinimo = $totales[0]["totalStockMinimo"];
-                                    $totalExistencias = $totales[0]["existenciasUnidades"];
-                                    $totalFaltantes = $totalStockMinimo - $totalExistencias;
-                                    $totalFaltanteMonto = $ultimoCosto * $totalFaltantes;
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
-
-                                    echo "Ultimo ID: ".$ultimoId;
-                               
-                                 ?>
+                                ?>
+                        
+                            <tr>
+                                <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
                             <tr>
-                                    <?php 
-                                    echo '<th colspan="9" style="border:none;color: blue;text-align:right;">Ultimo Id '.$ultimoId.' </th>';
+                                    <?php
+                                        $ultimoCosto = $totales[0]["ultimoCosto"];
+                                        $totalStockMinimo = $totales[0]["totalStockMinimo"];
+                                        $totalExistencias = $totales[0]["existenciasUnidades"];
+                                        $totalFaltantes =  $totales[0]["faltantes"];
+                                        $totalFaltanteMonto = $totales[0]["faltanteMontos"];
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
+                                   
                                      ?>
-                                </tr>
+                            </tr>
                         </tfoot>
 
                     </table>
@@ -681,8 +676,8 @@
                         </button>
                     </h3>
                 </div>
-                
-                <div class="card-body collapse table-responsive"  id="al1">
+ 
+                 <div class="card-body collapse table-responsive"  id="al1">
 
                     <table class="table table-bordered table-striped dt-responsive tablaAlmacenGeneral1" width="100%" id="almacenGeneral1" style="border: 2px solid #1F262D">
 
@@ -725,7 +720,10 @@
                 </div>
                 
                 <div class="card-body collapse"  id="gr2">
-                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral2" width="100%" id="porAgotarse2" style="border: 2px solid #1F262D">
+
+        
+                    <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral2" width="100%"  style="border: 2px solid #1F262D">
+
 
                         <thead style="background:#1F262D;color: white">
 
@@ -742,9 +740,8 @@
                             </tr> 
 
                         </thead>
-                        <tfoot>
-                    
-                            <?php 
+                         <tfoot>
+                                <?php 
                                  //$fechaActual = date("Y-m-d");
                                 $fechaActual = "2020-07-11";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
@@ -756,47 +753,32 @@
                                 $ultimoId = $idDisponible["ultimoId"];
 
                                 $tabla = "productos AS p INNER JOIN almacengeneral2 AS al ON p.id = al.idProducto";
-                                $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
+                                $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.ultimoCosto * (p.stockMinimoGral1-al.existenciasUnidades) ) as faltanteMontos,SUM(p.stockMinimoGral2-al.existenciasUnidades) as faltantes,SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
                                 $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                             ?>
-
-                                <tr>
-                                    <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Existencias</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
-                                    <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
-                                </tr>
-                                <tr>
-
-                                <?php
-                                    $ultimoCosto = $totales[0]["ultimoCosto"];
-                                    $totalStockMinimo = $totales[0]["totalStockMinimo"];
-                                    $totalExistencias = $totales[0]["existenciasUnidades"];
-                                    if ($totalStockMinimo > $totalExistencias) {
-                                        $totalFaltantes = $totalStockMinimo - $totalExistencias;
-                                    }else{
-                                        $totalFaltantes = $totalExistencias - $totalStockMinimo;
-                                    }
-                                    
-                                    $totalFaltanteMonto = $ultimoCosto * $totalFaltantes;
-                                    
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
-                                    echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
-
-
-                               
-                                 ?>
-                                </tr>
-                                <tr>
-                                    <?php 
-                                    echo '<th colspan="9" style="border:none;color: blue;text-align:right;">Ultimo Id '.$ultimoId.' </th>';
+                                ?>
+                        
+                            <tr>
+                                <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
+                            </tr>
+                            <tr>
+                                    <?php
+                                        $ultimoCosto = $totales[0]["ultimoCosto"];
+                                        $totalStockMinimo = $totales[0]["totalStockMinimo"];
+                                        $totalExistencias = $totales[0]["existenciasUnidades"];
+                                        $totalFaltantes =  $totales[0]["faltantes"];
+                                        $totalFaltanteMonto = $totales[0]["faltanteMontos"];
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
+                                        echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
+                                   
                                      ?>
-                                </tr>
-
+                            </tr>
                         </tfoot>
 
                     </table>
@@ -858,9 +840,11 @@
                         <button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#porAgotarseSM1" style="float: right;"><i class="fas fa-minus-square"></i></button>
                     </h3>
                 </div>
-                    
+
+         
                 <div class="card-body collapse table-responsive"  id="porAgotarseSM1">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseSanManuel1" width="100%" id="porAgotarseSanManuel1" style="border: 2px solid #1F262D">
+
 
                         <thead style="background:#1F262D;color: white">
 
@@ -1976,3 +1960,44 @@
 </div>
 
 </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        var sesion = localStorage.idSesion;
+        if (sesion == 5 || sesion == 6 || sesion == 7 || sesion == 8 || sesion == 9) {
+
+            switch (sesion) {
+            case "5":
+                var clase = "pillSanManuel";
+                var elemento = "tabSanManuel";
+                break;
+            case "6":
+                var clase = "pillSantiago";
+                var elemento = "tabSantiago";
+                break;
+            case "7":
+                var clase = "pillTorres";
+                var elemento = "tabTorres";
+                break;
+            case "8":
+                var clase = "pillReforma";
+                var elemento = "tabReforma";
+                break;
+            case "9":
+                var clase = "pillCapu";
+                var elemento = "tabCapu";
+                break;
+            default:
+
+                break;
+           
+        }
+        var pilla = document.getElementById(""+clase+"");
+        pilla.setAttribute("class", "show active");
+
+        }
+        
+
+
+    })
+</script>

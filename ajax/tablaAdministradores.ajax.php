@@ -5,9 +5,6 @@ require_once "../modelos/administradores.php";
 
 class TablaProductosPorAgotarse{
 
- 	/*=============================================
-  	TABLA IMPORTACIONES
-  	=============================================*/ 
 
 	public function mostrarTablas(){
 
@@ -71,9 +68,6 @@ class TablaProductosPorAgotarse{
 
 }
 
-/*=============================================
- TABLA DE IMPORTACIONES
-=============================================*/ 
 $activar = new TablaProductosPorAgotarse();
 $activar -> mostrarTablas();
 
