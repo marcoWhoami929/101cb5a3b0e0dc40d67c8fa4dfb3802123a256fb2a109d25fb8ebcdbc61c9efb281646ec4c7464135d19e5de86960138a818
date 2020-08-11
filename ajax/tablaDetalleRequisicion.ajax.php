@@ -37,7 +37,9 @@ class TablaDetalleRequisicion{
 
 			$cantidadAprobada = "<input type='text' class='form-control cantidadPedidoAprobado' id='cantidadAprobada$i' idProducto='".$detalleRequisicion[$i]["idProducto"]."' value='".$detalleRequisicion[$i]["unidadesAprobadas"]."' onChange='actualizarCantidad(this.id);' disabled>";
 
-			$datosJson	 .= '[
+			if ($_SESSION["grupo"] == "Administrador") {
+
+				$datosJson	 .= '[
 					  "'.$estatus.'",
 					  "'.$detalleRequisicion[$i]["codigo"].'",
 				      "'.$detalleRequisicion[$i]["producto"].'",
@@ -50,6 +52,22 @@ class TablaDetalleRequisicion{
 				      "$ '.$detalleRequisicion[$i]["montoAprobado"].'",
 				      "$ '.$detalleRequisicion[$i]["montoPendiente"].'"
 				    ],';
+
+			}else{
+
+				$datosJson	 .= '[
+					  "'.$estatus.'",
+					  "'.$detalleRequisicion[$i]["codigo"].'",
+				      "'.$detalleRequisicion[$i]["producto"].'",
+				      "'.$detalleRequisicion[$i]["existencias"].'",
+				      "'.$detalleRequisicion[$i]["solicitado"].'",
+				      "'.$cantidadAprobada.'",
+				      "'.$detalleRequisicion[$i]["pendiente"].'"
+				    ],';
+
+			}
+
+			
 
 	 	}
 

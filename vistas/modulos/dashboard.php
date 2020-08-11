@@ -39,8 +39,6 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                         <?php 
                             if ($_SESSION["grupo"] == "Administrador") {
 
-                                $nombreUser = $_SESSION["nombre"];
-                                $perfilUser = $_SESSION["perfil"];
                                 echo'
                                 <div class="d-md-flex align-items-center">
                                     <div>
@@ -50,8 +48,6 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 </div>
                                 <div class="row body">
                                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                                    <input type="hidden" name="nombreUsuario" id="nombreUsuario" value="'.$nombreUser.'">
-                                    <input type="hidden" name="perfilUsuario" id="perfilUsuario" value="'.$perfilUser.'">
                                         <li class="nav-item">
                                             <a class="nav-link active" id="tabTablero" data-toggle="pill" href="#pillTablero" role="tab" aria-selected="true">Tablero</a>
                                         </li>
@@ -601,25 +597,12 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 <div class="card-body collapse table-responsive"  id="gr1">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral1" width="100%"  style="border: 2px solid #1F262D">
 
-                        <thead style="background:#1F262D;color: white">
+                        <thead >
 
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
-                                 //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                            <?php
+                            if ($_SESSION["grupo"] == "Administrador") { 
+                                //$fechaActual = date("Y-m-d");
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacengeneral1";
@@ -630,20 +613,20 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacengeneral1 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral1) AS totalStockMinimo, SUM(al.ultimoCosto * (p.stockMinimoGral1-al.existenciasUnidades) ) as faltanteMontos,SUM(p.stockMinimoGral1-al.existenciasUnidades) as faltantes,SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
-                        
-                            <tr>
+                                echo '<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
+                        
+                            
+                                    
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -653,8 +636,33 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+                            }
+                            ?>
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                                
                         </tfoot>
 
                     </table>
@@ -696,9 +704,18 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
@@ -725,25 +742,12 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseGeneral2" width="100%"  style="border: 2px solid #1F262D">
 
 
-                        <thead style="background:#1F262D;color: white">
+                        <thead >
 
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                         <tfoot>
-                                <?php 
+                            <?php
+                            if ($_SESSION["grupo"] == "Administrador") {  
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacengeneral2";
@@ -754,20 +758,20 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacengeneral2 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.ultimoCosto * (p.stockMinimoGral1-al.existenciasUnidades) ) as faltanteMontos,SUM(p.stockMinimoGral2-al.existenciasUnidades) as faltantes,SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
-                        
-                            <tr>
+                                
+                            echo'<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
+                            
+                                    
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -777,8 +781,34 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+                        }
+                            ?>
+
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                         <tfoot>
+                                
                         </tfoot>
 
                     </table>
@@ -812,9 +842,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
@@ -846,25 +884,12 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseSanManuel1" width="100%" id="porAgotarseSanManuel1" style="border: 2px solid #1F262D">
 
 
-                        <thead style="background:#1F262D;color: white">
+                        <thead >
 
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
+                             <?php 
+                             if ($_SESSION["grupo"] == "Administrador") {
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacensanmanuel1";
@@ -875,20 +900,20 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacensanmanuel1 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
-                        
-                            <tr>
+                               echo '<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
+                        
+                            
+                                    
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -898,8 +923,34 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+                        }
+                        ?>
+
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                               
                         </tfoot>
 
                     </table>
@@ -932,9 +983,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
@@ -957,25 +1016,12 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 <div class="card-body collapse table-responsive"  id="porAgotarseSM2">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseSanManuel2" width="100%" id="porAgotarseSanManuel2" style="border: 2px solid #1F262D">
 
-                        <thead style="background:#1F262D;color: white">
+                        <thead >
 
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
+                            <?php
+                            if ($_SESSION["grupo"] == "Administrador") { 
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacensanmanuel2";
@@ -986,20 +1032,20 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacensanmanuel2 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
+                                
                         
-                            <tr>
+                                echo '<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
+                                    
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -1009,8 +1055,34 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+                        }
+                            ?>
+
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                                
                         </tfoot>
 
                     </table>
@@ -1041,9 +1113,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
@@ -1070,25 +1150,12 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 <div class="card-body collapse table-responsive"  id="porAgotarseRF1">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseReforma1" width="100%" id="porAgotarseReforma1" style="border: 2px solid #1F262D">
 
-                        <thead style="background:#1F262D;color: white">
+                        <thead >
 
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
+                             <?php 
+                             if ($_SESSION["grupo"] == "Administrador") {
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacenreforma1";
@@ -1099,20 +1166,18 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacenreforma1 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
-                        
-                            <tr>
+                            echo '<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
+                        
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -1122,8 +1187,34 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+                        }
+                            ?>
+
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                               
                         </tfoot>
 
                     </table>
@@ -1155,9 +1246,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
@@ -1181,25 +1280,11 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 <div class="card-body collapse table-responsive"  id="porAgotarseRF2">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseReforma2" width="100%" id="porAgotarseReforma2" style="border: 2px solid #1F262D">
 
-                        <thead style="background:#1F262D;color: white">
-
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
+                        <thead >
+                            <?php 
+                            if ($_SESSION["grupo"] == "Administrador") {
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacenreforma2";
@@ -1210,20 +1295,18 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacenreforma2 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
-                        
-                            <tr>
+                            echo '<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
+                            
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -1233,8 +1316,35 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+
+                        }
+                        ?>
+
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                                
                         </tfoot>
 
                     </table>
@@ -1267,9 +1377,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
@@ -1296,25 +1414,11 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 <div class="card-body collapse table-responsive"  id="porAgotarseSG1">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseSantiago1" width="100%" id="porAgotarseSantiago1" style="border: 2px solid #1F262D">
 
-                        <thead style="background:#1F262D;color: white">
-
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
+                        <thead >
+                            <?php 
+                            if ($_SESSION["grupo"] == "Administrador") {
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacensantiago1";
@@ -1325,20 +1429,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacensantiago1 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
-                        
-                            <tr>
+                            echo ' <tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -1348,8 +1449,34 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+                        }
+                        ?>
+
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                                
                         </tfoot>
 
                     </table>
@@ -1382,9 +1509,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
@@ -1408,25 +1543,11 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 <div class="card-body collapse table-responsive"  id="porAgotarseSG2">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseSantiago2" width="100%" id="porAgotarseSantiago2" style="border: 2px solid #1F262D">
 
-                        <thead style="background:#1F262D;color: white">
-
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
+                        <thead>
+                            <?php 
+                            if ($_SESSION["grupo"] == "Administrador") {
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacensantiago2";
@@ -1437,20 +1558,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacensantiago2 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
-                        
-                            <tr>
+                            echo '<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -1460,8 +1578,35 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+
+                        }
+                        ?>
+
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                                
                         </tfoot>
 
                     </table>
@@ -1493,9 +1638,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
@@ -1522,25 +1675,11 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 <div class="card-body collapse table-responsive"  id="porAgotarseCP1">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseCapu1" width="100%" id="porAgotarseCapu1" style="border: 2px solid #1F262D">
 
-                        <thead style="background:#1F262D;color: white">
-
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
+                        <thead>
+                            <?php 
+                            if ($_SESSION["grupo"] == "Administrador") {
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacencapu1";
@@ -1551,20 +1690,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacencapu1 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
-                        
-                            <tr>
+                            echo '<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -1574,8 +1710,34 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+                        }
+                        ?>
+
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                                
                         </tfoot>
 
                     </table>
@@ -1606,9 +1768,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Existencias</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
-                                <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">Existencias</span></th>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
@@ -1632,25 +1802,11 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 <div class="card-body collapse table-responsive"  id="porAgotarseCP2">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseCapu2" width="100%" id="porAgotarseCapu2" style="border: 2px solid #1F262D">
 
-                        <thead style="background:#1F262D;color: white">
-
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
+                        <thead>
+                             <?php 
+                              if ($_SESSION["grupo"] == "Administrador") {
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacencapu2";
@@ -1661,20 +1817,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacencapu2 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
-                        
-                            <tr>
+                            echo '<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -1684,8 +1837,34 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+                        }
+                        ?>
+
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                               
                         </tfoot>
 
                     </table>
@@ -1716,9 +1895,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
@@ -1745,25 +1932,12 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 <div class="card-body collapse table-responsive"  id="porAgotarseTR1">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseLasTorres1" width="100%" id="porAgotarseLasTorres1" style="border: 2px solid #1F262D">
 
-                        <thead style="background:#1F262D;color: white">
+                        <thead>
+                            <?php 
 
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
+                            if ($_SESSION["grupo"] == "Administrador") {
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacenlastorres1";
@@ -1774,20 +1948,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacenlastorres1 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
-                                ?>
-                        
-                            <tr>
+                            echo '<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -1797,8 +1968,34 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
                                    
-                                     ?>
-                            </tr>
+                                     
+                            echo '</tr>';
+                        }
+                        ?>
+
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                                
                         </tfoot>
 
                     </table>
@@ -1830,9 +2027,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>
@@ -1855,25 +2060,11 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                 <div class="card-body collapse table-responsive"  id="porAgotarseTR2">
                     <table class="table table-bordered table-striped dt-responsive tablaPorAgotarseLasTorres2" width="100%" id="porAgotarseLasTorres2" style="border: 2px solid #1F262D">
 
-                        <thead style="background:#1F262D;color: white">
-
-                            <tr>
-                                <th style="border:none">#</th>
-                                <th style="border:none">Codigo</th>
-                                <th style="border:none">Producto</th>
-                                <th style="border:none">Stock Minimo</th>
-                                <th style="border:none">Existencias</th>
-                                <th style="border:none">Faltante Unidades</th>
-                                <th style="border:none">Faltante Monto</th>
-                                <th style="border:none">Fecha</th>
-                                <th style="border:none">Estado</th>
-                            </tr> 
-
-                        </thead>
-                        <tfoot>
-                                <?php 
+                        <thead>
+                            <?php 
+                            if ($_SESSION["grupo"] == "Administrador") {
                                  //$fechaActual = date("Y-m-d");
-                                $fechaActual = "2020-07-11";
+                                $fechaActual = "2020-08-05";
                                 $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
                                 $table = "almacenlastorres2";
@@ -1884,20 +2075,18 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
 
                                 $tabla = "productos AS p INNER JOIN almacenlastorres2 AS al ON p.id = al.idProducto";
                                 $campos = "SUM(p.stockMinimoGral2) AS totalStockMinimo, SUM(al.existenciasUnidades) AS existenciasUnidades, SUM(al.ultimoCosto) AS ultimoCosto, al.fecha";
-                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = "."'".$fechaFinal."'";
+                                $parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";
 
                                 $totales = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
-
-                                ?>
                         
-                            <tr>
+                            echo '<tr >
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
-                            <tr>
-                                    <?php
+                            <tr>';
+                                    
                                         $ultimoCosto = $totales[0]["ultimoCosto"];
                                         $totalStockMinimo = $totales[0]["totalStockMinimo"];
                                         $totalExistencias = $totales[0]["existenciasUnidades"];
@@ -1906,9 +2095,32 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">E '.number_format($totalExistencias,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FU '.number_format($totalFaltantes,2).' </th>';
                                         echo '<th colspan="2" style="border:none;color: blue;text-align:right;">FM '.number_format($totalFaltanteMonto,2).' </th>';
-                                   
-                                     ?>
-                            </tr>
+                            echo '</tr>';
+                        }
+                        ?>
+                            <tr style="background:#1F262D;color: white">
+                                <th style="border:none">#</th>
+                                <th style="border:none">Codigo</th>
+                                <th style="border:none">Producto</th>
+                                <th style="border:none">Stock Minimo</th>
+                                <th style="border:none">Existencias</th>
+                                <th style="border:none">Faltante Unidades</th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none">Faltante Monto</th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
+                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Estado</th>
+                            </tr> 
+
+                        </thead>
+                        <tfoot>
+                                
                         </tfoot>
 
                     </table>
@@ -1939,9 +2151,17 @@ echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion.
                                 <th style="border:none"><span class="verticalText">Stock Minimo</span></th>
                                 <th style="border:none"><span class="verticalText">Stock de Seguridad</span></th>
                                 <th style="border:none"><span class="verticalText">Stock Maximo</span></th>
-                                <th style="border:none"><span class="verticalText">Entradas</span></th>
+                                <?php 
+
+                                if ($_SESSION["grupo"] == "Administrador") {
+                                    echo '<th style="border:none"><span class="verticalText">Entradas</span></th>
                                 <th style="border:none"><span class="verticalText">Salidas</span></th>
-                                <th style="border:none"><span class="verticalText">Existencias</span></th>
+                                <th style="border:none"><span class="verticalText">Existencias</span></th>';
+                                }else{
+                                    
+                                }
+
+                                 ?>
                                 <th style="border:none"><span class="verticalText">% Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">Rotación</span></th>
                                 <th style="border:none"><span class="verticalText">ClasificacionJ</span></th>

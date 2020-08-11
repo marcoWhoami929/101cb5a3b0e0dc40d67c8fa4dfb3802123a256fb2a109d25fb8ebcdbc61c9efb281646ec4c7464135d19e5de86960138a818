@@ -39,25 +39,25 @@
                                 echo'
                                 
                                 <div class="row">
-                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                         
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabGeneral" data-toggle="pill" href="#pillGeneral" role="tab"  aria-selected="false" identificador = "General">Almacén General</a>
+                                            <a class="nav-link" id="tabGeneral" data-toggle="pill" href="#divGeneral" role="tab"  aria-selected="false" identificadorFisico = "General">Almacén General</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#pillSanManuel" role="tab"  aria-selected="false" identificador = "SanManuel">San Manuel</a>
+                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#divSanManuel" role="tab"  aria-selected="false" identificadorFisico = "SanManuel">San Manuel</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#pillReforma" role="tab"  aria-selected="false" identificador = "Reforma">Reforma</a>
+                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#divReforma" role="tab"  aria-selected="false" identificadorFisico = "Reforma">Reforma</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#pillSantiago" role="tab"  aria-selected="false" identificador = "Santiago">Santiago</a>
+                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#divSantiago" role="tab"  aria-selected="false" identificadorFisico = "Santiago">Santiago</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#pillCapu" role="tab"  aria-selected="false" identificador = "Capu">Capu</a>
+                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#divCapu" role="tab"  aria-selected="false" identificadorFisico = "Capu">Capu</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabTorres" data-toggle="pill" href="#pillTorres" role="tab"  aria-selected="false" identificador = "LasTorres">Las Torres</a>
+                                            <a class="nav-link" id="tabTorres" data-toggle="pill" href="#divTorres" role="tab"  aria-selected="false" identificadorFisico = "LasTorres">Las Torres</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -65,9 +65,9 @@
                             }else if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal San Manuel") {
                                echo '
                                 <div class="row">
-                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#pillSanManuel" role="tab"  aria-selected="true" identificador = "SanManuel">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#divSanManuel" role="tab"  aria-selected="true" identificadorFisico = "SanManuel">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -78,9 +78,9 @@
                             }else if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal Reforma") {
                                echo '
                                 <div class="row">
-                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#pillReforma" role="tab"  aria-selected="false" identificador = "Reforma">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#divReforma" role="tab"  aria-selected="false" identificadorFisico = "Reforma">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -91,9 +91,9 @@
                             }else if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal Santiago") {
                                echo '
                                 <div class="row">
-                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#pillSantiago" role="tab"  aria-selected="false" identificador = "Santiago">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#divSantiago" role="tab"  aria-selected="false" identificadorFisico = "Santiago">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -104,9 +104,9 @@
                             }else if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal Capu") {
                                echo '
                                 <div class="row">
-                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#pillCapu" role="tab"  aria-selected="false" identificador = "Capu">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#divCapu" role="tab"  aria-selected="false" identificadorFisico = "Capu">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -117,9 +117,9 @@
                             }else if ($_SESSION["perfil"]== "Tiendas" && $_SESSION["nombre"] == "Sucursal Las Torres") {
                                echo '
                                 <div class="row">
-                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                                         <li class="nav-item">
-                                             <a class="nav-link" id="tabTorres" data-toggle="pill" href="#pillTorres" role="tab"  aria-selected="false" identificador = "LasTorres">Ver Tablas de Almacen</a>
+                                             <a class="nav-link" id="tabTorres" data-toggle="pill" href="#divTorres" role="tab"  aria-selected="false" identificadorFisico = "LasTorres">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -129,44 +129,216 @@
 
                             }
                          ?>
-							<div class="row">
-								<div class="col-lg-12 col-md-12 col-sm-12 border-right p-r-0">
+							
 
-
-									
-									<div class="card-body">
-										<div class="row">
-
-                      						<div class="col-lg-12 col-md-12 col-sm-12">
-
-                        						<h3>Fisico VS Admin</h3>
-                        						<table class="table table-bordered table-striped dt-responsive tableFisicoVSadmin" width="100%" id="existenciasGenerales" style="border: 2px solid #1F262D">
-
-                          							<thead style="background:#1F262D;color: white">
-
-							                            <tr>
-							                            	<th style="border:none">#</th>
-							                            	<th style="border:none">Codigo</th>
-							                            	<th style="border:none">Producto</th>
-							                            	<th style="border:none">Existencias</th>
-							                            	<th style="border:none">Entradas</th>
-							                            	<th style="border:none">Salidas</th>
-							                            	<th style="border:none">Fisico</th>
-							                            </tr> 
-
-                          							</thead>
-                        						</table>
-                      						</div>
-
-                    					</div><br>
-                  					</div>
-
-                				</div>
-              				</div>
             			</div>
           			</div>
         		</div>
       		</div>
+
+			<div class="tab-pane fade" id="divGeneral" role="tabpanel">
+	    		<div class="row">
+
+	        		<div class="col-lg-12 col-md-12 col-sm-12">
+
+	        			<div class="card border-dark mb-3" >
+							<div class="card-header">
+								<h3>Fisico VS Admin General 1
+							    	<button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#gr1" style="float: right;"><i class="fas fa-minus-square"></i> </button>
+								</h3>
+							</div>
+							                
+							<div class="card-body collapse table-responsive"  id="gr1">
+		                
+								<table class="table table-bordered table-striped dt-responsive tableFisicoVSadminGeneral1" width="100%" id="fisicoVSadminGeneral1" style="border: 2px solid #1F262D">
+
+							    	<thead style="background:#1F262D;color: white">
+
+							        	<tr>
+							                <th style="border:none">#</th>
+							                <th style="border:none">Producto</th>
+							                <th style="border:none">Entradas</th>
+							                <th style="border:none">Salidas</th>
+							                <th style="border:none">Existencias</th>
+							                <th style="border:none">Fisico</th>
+							                <th style="border:none">Send</th>
+							            </tr> 
+
+							    	</thead>
+				            	</table>
+				        	</div>
+				    	</div>
+				    </div>
+
+				    <div class="col-lg-12 col-md-12 col-sm-12">
+
+	        			<div class="card border-dark mb-3" >
+							<div class="card-header">
+								<h3>Fisico VS Admin General 1
+							    	<button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#gr2" style="float: right;"><i class="fas fa-minus-square"></i> </button>
+								</h3>
+							</div>
+							                
+							<div class="card-body collapse table-responsive"  id="gr2">
+		                
+								<table class="table table-bordered table-striped dt-responsive tableFisicoVSadminGeneral2" width="100%" id="fisicoVSadminGeneral2" style="border: 2px solid #1F262D">
+
+							    	<thead style="background:#1F262D;color: white">
+
+							        	<tr>
+							                <th style="border:none">#</th>
+							                <th style="border:none">Producto</th>
+							                <th style="border:none">Entradas</th>
+							                <th style="border:none">Salidas</th>
+							                <th style="border:none">Existencias</th>
+							                <th style="border:none">Fisico</th>
+							                <th style="border:none">Send</th>
+							            </tr> 
+
+							    	</thead>
+				            	</table>
+				        	</div>
+				    	</div>
+				    </div>
+
+
+				</div>
+			</div>
+
+			<div class="tab-pane fade" id="divSanManuel" role="tabpanel">
+    			<div class="row">
+
+    				<div class="col-lg-12 col-md-12 col-sm-12">
+	        			<div class="card border-dark mb-3" >
+							<div class="card-header">
+								<h3>Fisico VS Admin San Manuel 1
+							    	<button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#SM1" style="float: right;"><i class="fas fa-minus-square"></i> </button>
+								</h3>
+							</div>
+							                
+							<div class="card-body collapse table-responsive"  id="SM1">
+		                
+								<table class="table table-bordered table-striped dt-responsive tableFisicoVSadminSanManuel1" width="100%" id="fisicoVSadminGeneral1" style="border: 2px solid #1F262D">
+
+							    	<thead style="background:#1F262D;color: white">
+
+							        	<tr>
+							                <th style="border:none">#</th>
+							                <th style="border:none">Producto</th>
+							                <th style="border:none">Entradas</th>
+							                <th style="border:none">Salidas</th>
+							                <th style="border:none">Existencias</th>
+							                <th style="border:none">Fisico</th>
+							                <th style="border:none">Send</th>
+							            </tr> 
+
+							    	</thead>
+				            	</table>
+				        	</div>
+				    	</div>
+				    </div>
+
+				    <div class="col-lg-12 col-md-12 col-sm-12">
+	        			<div class="card border-dark mb-3" >
+							<div class="card-header">
+								<h3>Fisico VS Admin San Manuel 1
+							    	<button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#SM2" style="float: right;"><i class="fas fa-minus-square"></i> </button>
+								</h3>
+							</div>
+							                
+							<div class="card-body collapse table-responsive"  id="SM2">
+		                
+								<table class="table table-bordered table-striped dt-responsive tableFisicoVSadminSanManuel2" width="100%" id="fisicoVSadminGeneral2" style="border: 2px solid #1F262D">
+
+							    	<thead style="background:#1F262D;color: white">
+
+							        	<tr>
+							                <th style="border:none">#</th>
+							                <th style="border:none">Producto</th>
+							                <th style="border:none">Entradas</th>
+							                <th style="border:none">Salidas</th>
+							                <th style="border:none">Existencias</th>
+							                <th style="border:none">Fisico</th>
+							                <th style="border:none">Send</th>
+							            </tr> 
+
+							    	</thead>
+				            	</table>
+				        	</div>
+				    	</div>
+				    </div>
+	        						
+	        	</div>
+  			</div>
+
+  			<div class="tab-pane fade" id="divSanManuel" role="tabpanel">
+    			<div class="row">
+
+    				<div class="col-lg-12 col-md-12 col-sm-12">
+	        			<div class="card border-dark mb-3" >
+							<div class="card-header">
+								<h3>Fisico VS Admin San Manuel 1
+							    	<button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#SM1" style="float: right;"><i class="fas fa-minus-square"></i> </button>
+								</h3>
+							</div>
+							                
+							<div class="card-body collapse table-responsive"  id="SM1">
+		                
+								<table class="table table-bordered table-striped dt-responsive tableFisicoVSadminSanManuel1" width="100%" id="fisicoVSadminGeneral1" style="border: 2px solid #1F262D">
+
+							    	<thead style="background:#1F262D;color: white">
+
+							        	<tr>
+							                <th style="border:none">#</th>
+							                <th style="border:none">Producto</th>
+							                <th style="border:none">Entradas</th>
+							                <th style="border:none">Salidas</th>
+							                <th style="border:none">Existencias</th>
+							                <th style="border:none">Fisico</th>
+							                <th style="border:none">Send</th>
+							            </tr> 
+
+							    	</thead>
+				            	</table>
+				        	</div>
+				    	</div>
+				    </div>
+
+				    <div class="col-lg-12 col-md-12 col-sm-12">
+	        			<div class="card border-dark mb-3" >
+							<div class="card-header">
+								<h3>Fisico VS Admin San Manuel 1
+							    	<button type="button" class="btn btn-dark" data-toggle="collapse" data-target="#SM2" style="float: right;"><i class="fas fa-minus-square"></i> </button>
+								</h3>
+							</div>
+							                
+							<div class="card-body collapse table-responsive"  id="SM2">
+		                
+								<table class="table table-bordered table-striped dt-responsive tableFisicoVSadminSanManuel2" width="100%" id="fisicoVSadminGeneral2" style="border: 2px solid #1F262D">
+
+							    	<thead style="background:#1F262D;color: white">
+
+							        	<tr>
+							                <th style="border:none">#</th>
+							                <th style="border:none">Producto</th>
+							                <th style="border:none">Entradas</th>
+							                <th style="border:none">Salidas</th>
+							                <th style="border:none">Existencias</th>
+							                <th style="border:none">Fisico</th>
+							                <th style="border:none">Send</th>
+							            </tr> 
+
+							    	</thead>
+				            	</table>
+				        	</div>
+				    	</div>
+				    </div>
+	        						
+	        	</div>
+  			</div>
+
+
+
     	</div>
   	</div>
 </div>

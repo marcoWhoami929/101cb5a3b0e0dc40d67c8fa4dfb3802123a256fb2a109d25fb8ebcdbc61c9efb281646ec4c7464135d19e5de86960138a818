@@ -10,8 +10,13 @@ class AjaxFuncionesInventarios{
 	/*-----------ACTUALIZAR LOS DIAS DE SURTIMIENTO DEL PROVEEDOR--------------*/
 	public $idFamilia;
 	public $editarDias;
+	public $elegirAlmacenGR;
+	public $elegirrPeriodo;
 
 	public function ajaxActualizarDias(){
+
+		$fechaActual = "2020-08-05";
+		//$fechaActual = date("Y-m-d");
 		$tabla = "familias";
 		$tabla2 = "productos";
 
@@ -22,6 +27,83 @@ class AjaxFuncionesInventarios{
 
 		$respuesta = ModeloInventarios::mdlActualizarDiasFamilias($tabla, $item, $valor, $item2, $valor2);
 
+		$table = "productos";
+		$campos = "id";
+		$parametros = "WHERE idFamilia = ".$valor."";
+		$respuestaIdProducto = ControladorInventarios::ctrObtenerDatos($table, $campos, $parametros);
+
+		$almacen = $this->elegirAlmacenGR;
+
+		if ($almacen == "almacengeneral1") {
+			$campo = "stockMinimoGral1";
+		}else if($almacen == "almacengeneral2"){
+			$campo = "stockMinimoGral2";
+		}else if($almacen == "almacensanmanuel1"){
+			$campo = "stockMinimoSM1";
+		}else if($almacen == "almacensanmanuel2"){
+			$campo = "stockMinimoSM2";
+		}else if($almacen == "almacenreforma1"){
+			$campo = "stockMinimoRf1";
+		}else if($almacen == "almacenreforma2"){
+			$campo = "stockMinimoRf1";
+		}else if($almacen == "almacensantiago1"){
+			$campo = "stockMinimoSg1";
+		}else if($almacen == "almacensantiago2"){
+			$campo = "stockMinimoSg1";
+		}else if($almacen == "almacencapu1"){
+			$campo = "stockMinimoCp1";
+		}else if($almacen == "almacencapu2"){
+			$campo = "stockMinimoCp2";
+		}else if($almacen == "almacenlastorres1"){
+			$campo = "stockMinimoTr1";
+		}else if($almacen == "almacenlastorres2"){
+			$campo = "stockMinimoTr2";
+		}
+
+		$dias = $this->editarDias;
+		$periodo = $this->elegirrPeriodo;
+
+		if ($periodo == "days") {
+			$fechaSuma = date("Y-m-d",strtotime($fechaActual."+ 1 ".$periodo.""));
+			$fechaAnterior = date("Y-m-d",strtotime($fechaSuma."- ".$dias."".$periodo.""));
+
+			$datoPeriodo = "fecha BETWEEN '".$fechaAnterior."' AND '".$fechaActual."'";
+
+		}else{
+
+			$fechats = strtotime($fechaActual);
+			$mes = date('n', $fechats);
+
+			$diasSuma = $mes + 1;
+			$diaAnterior = $diasSuma - $dias;
+			$datoPeriodo = "numeroMes BETWEEN ".$diaAnterior." AND ".$mes."";
+
+		}
+		$tableSuma = $almacen;
+		
+
+		for($i = 0; $i < count($respuestaIdProducto); $i++){
+			
+
+			$idProductoF = $respuestaIdProducto[$i]["id"];
+			
+			$campoSuma = "SUM(salidasUnidades) AS sumaSalidas";
+
+			$parametroSuma = "WHERE idProducto = ".$idProductoF." AND ".$datoPeriodo."";
+			
+			$respuestaSumas = ControladorInventarios::ctrObtenerDatosSumas($tableSuma, $campoSuma, $parametroSuma);
+
+			$sumaSalidas = $respuestaSumas["sumaSalidas"];
+			$stockMinimo = $sumaSalidas / $dias;
+
+			$tablaEdicion = "productos";
+			$camposEdicion = $campo." = ".round($stockMinimo)."";
+			$parametroEdicion = "WHERE id = ".$idProductoF."";
+
+			$respuestaEdicion = ControladorInventarios::ctrEditarStock($tablaEdicion, $camposEdicion, $parametroEdicion);
+
+		}
+		
 		echo json_encode($respuesta);
 
 	}
@@ -67,7 +149,7 @@ class AjaxFuncionesInventarios{
 			
 		$table = $almacen." as al INNER JOIN productos AS p ON al.idProducto = p.id";
 		$campos = "SUM(al.salidasUnidades) AS totalSalidas";
-		$parametros = "WHERE p.id = ".$valor." AND al.fecha BETWEEN "."'".$fechaMenosSeis."'"." AND "."'".$fechaActual."'"; 
+		$parametros = "WHERE p.id = ".$valor." AND al.fecha BETWEEN '".$fechaMenosSeis."' AND '".$fechaActual."'"; 
 
 		$respuestaFinales = ModeloInventarios::mdlMostrarFinalesFechaActual($table, $campos, $parametros);
 			
@@ -121,7 +203,8 @@ if(isset($_POST["idFamilia"])){
     $editarDias = new AjaxFuncionesInventarios();
     $editarDias -> idFamilia = $_POST["idFamilia"];
     $editarDias -> editarDias = $_POST["editarDias"];
-    $editarDias -> idProducto = $_POST["idProducto"];
+   	$editarDias -> elegirAlmacenGR = $_POST["elegirAlmacenGR"];
+   	$editarDias -> elegirrPeriodo = $_POST["elegirrPeriodo"];
     $editarDias -> ajaxActualizarDias();
 
 }

@@ -35,22 +35,17 @@ tableAdministradores = $(".tableAdministradores").DataTable({
 
 });
 
-
-  var perfilUsuario = $('#perfilUsuario').val();
-  if (perfilUsuario == 'Administrador General') {
-    
-  }
-
+$(document).ready(function(){
   $('body').on('click', '#pills-tab a', function(){
 
     var areaInventario = $(this).attr('identificador');
+
     localStorage.setItem("areaInventario", areaInventario);
     var area = localStorage.getItem("areaInventario");
 
-     for (var i = 1; i <= 2; i++) {
+    for (var i = 1; i <= 2; i++) {
       var tabla = area+i;
       var nombreTabla = tabla.toLowerCase();
-     
 
       tablaPorAgotarse = $(".tablaPorAgotarse"+tabla+"").DataTable({
        "ajax":"ajax/tablaProductosPorAgotarse.ajax.php?almacen="+nombreTabla,
@@ -84,7 +79,7 @@ tableAdministradores = $(".tableAdministradores").DataTable({
 
        }
 
-    });
+    })
 
       tablaAlmacen = $(".tablaAlmacen"+tabla+"").DataTable({
        "ajax":"ajax/tablaAlmacenes.ajax.php?almacen="+nombreTabla,
@@ -121,7 +116,8 @@ tableAdministradores = $(".tableAdministradores").DataTable({
     });
         
      }
-  })
+  });
+});
 /*=============================================
 TABLA IMPORTACIONES
 =============================================*/
@@ -160,59 +156,7 @@ tablaImportaciones = $(".tablaImportaciones").DataTable({
 
 });
 
-/*=============================================
-TABLA ALMACENES
-=============================================*/
-/*=====  Obtener identificador de tabs   ======*/
 
-$(document).ready(function(){
-
-  $('body').on('click', '#pills-tab a', function(){
-
-    var areaInventario = $(this).attr('identificador');
-    localStorage.setItem("areaInventario", areaInventario);
-     var area = localStorage.getItem("areaInventario");
-     for (var i = 1; i <= 2; i++) {
-      var tabla = area+i;
-      var nombreTabla = tabla.toLowerCase();
-      
-      tabla = $(".tablaAlmacen"+tabla+"").DataTable({
-       "ajax":"ajax/tablaAlmacenes.ajax.php?almacen="+nombreTabla,
-       "deferRender": true,
-       "retrieve": true,
-       "processing": true,
-       "language": {
-
-        "sProcessing":     "Procesando...",
-        "sLengthMenu":     "Mostrar _MENU_ registros",
-        "sZeroRecords":    "No se encontraron resultados",
-        "sEmptyTable":     "Ningún dato disponible en esta tabla",
-        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
-        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
-        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-        "sInfoPostFix":    "",
-        "sSearch":         "Buscar:",
-        "sUrl":            "",
-        "sInfoThousands":  ",",
-        "sLoadingRecords": "Cargando...",
-        "oPaginate": {
-          "sFirst":    "Primero",
-          "sLast":     "Último",
-          "sNext":     "Siguiente",
-          "sPrevious": "Anterior"
-        },
-        "oAria": {
-            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-        }
-
-       }
-
-    });
-        
-     }
-  })
-});
 
 /**
  * TABLA PEDIDO SEMANAL
@@ -272,6 +216,7 @@ $(document).ready(function(){
     }
 
   });
+});
 
 /**
  * TABLA MOSTRAR EXISTENCIAS EN TIENDAS
@@ -311,67 +256,95 @@ $(document).ready(function(){
 
   });
 
-});
-
 /**
  * TABLA FISICO VS ADMIN
  */
+
 $(document).ready(function(){
 
-  $("#nombreUsuario").val();
-  var nombreUsuario = $("#nombreUsuario").val();
-  //console.log(nombreUsuario);
+  $('body').on('click', '#nav-menu a', function(){
 
-  tableFisicoVSadmin = $(".tableFisicoVSadmin").DataTable({
-    //"ajax":"ajax/tablaFisicoVSadmin.ajax.php?nombreUsuario="+nombreUsuario,
-    "deferRender": true,
-    "retrieve": true,
-    "processing": true,
-    "language": {
+    $("#nombreUsuario").val();
+    var nombreUsuario = $("#nombreUsuario").val();
 
-    "sProcessing":     "Procesando...",
-    "sLengthMenu":     "Mostrar _MENU_ registros",
-    "sZeroRecords":    "No se encontraron resultados",
-    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
-    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
-    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-    "sInfoPostFix":    "",
-    "sSearch":         "Buscar:",
-    "sUrl":            "",
-    "sInfoThousands":  ",",
-    "sLoadingRecords": "Cargando...",
-    "oPaginate": {
+    var areaFisico = $(this).attr('identificadorFisico');
+    localStorage.setItem("areaFisico", areaFisico);
+     var area = localStorage.getItem("areaFisico");
+     
+     for (var i = 1; i <= 2; i++) {
+      var tabla = area+i;
+      var nombreTabla = tabla.toLowerCase();
+      
+      tableFisicoVSadmin = $(".tableFisicoVSadmin"+tabla+"").DataTable({
+       "ajax":"ajax/tablaFisicoVSadmin.ajax.php?almacen="+nombreTabla,
+       "deferRender": true,
+       "retrieve": true,
+       "processing": true,
+       "language": {
+
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
           "sFirst":    "Primero",
           "sLast":     "Último",
           "sNext":     "Siguiente",
           "sPrevious": "Anterior"
-    },
-    "oAria": {
-      "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-      "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-    }
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        }
 
-    }
+       }
 
-  });
-
+    });
+        
+     }
+  })
 });
 
 /**
  * MODIFICAR DIAS QUE TARDA EL PROVEEDOR EN RESURTIR
  */
 $("#editarTiempo").click(function(){
-  var idFamilia = $("#elegirFamilia").val();
   var editarDias = $("#editarDias").val();
-  var idProducto = $("#elegirProducto").val();
+  var idFamilia = $('#elegirFamilia option:selected').attr('idFamilia');
+  var elegirAlmacenGR = $("#elegirAlmacenGR").val();
+  var elegirrPeriodo = $("#elegirrPeriodo").val();
+
+  //alert(elegirAlmacenGR);
 
   var datos = new FormData();
   datos.append("idFamilia",idFamilia);
   datos.append("editarDias",editarDias);
-  datos.append("idProducto",idProducto);
+  datos.append("elegirAlmacenGR",elegirAlmacenGR);
+  datos.append("elegirrPeriodo",elegirrPeriodo);
 
-  $.ajax({
+  if (editarDias == "") {
+
+    swal({
+            type: "warning",
+            title: "Alto!!",
+            text: "Debe llenar los campos",
+            showConfirmButton: true,
+            confirmButtonText: "Cerrar"
+            }).then(function(result) {
+              
+            })
+
+  }else{
+
+    $.ajax({
     url:"ajax/funcionesInventario.ajax.php",  
     method:"POST",
     data:datos,
@@ -408,6 +381,11 @@ $("#editarTiempo").click(function(){
       }
     }
   })
+  }
+
+  
+
+  
 });
 $("#recalcularStok").click(function(){
   var idProducto = $("#elegirProducto").val();
@@ -741,14 +719,15 @@ function cargarCantidad(id){
                       var unidadesPedido = localStorage.getItem("unidadesPedido");
                       var montoPedido = localStorage.getItem("montoPedido");
                       $("#progresoGenerarPedido").modal("show");
-                       $("#progreso").html("Procesando pedido...");
-                  
+                      $("#progreso").html("Procesando pedido...");
+                      var comentarios = $("#comentarios").val();
                       
                       var datos = new FormData();
                       datos.append('pedidoSemanal',respuesta);
                       datos.append('sucursal',sucursal);
                       datos.append('unidadesPedido',unidadesPedido);
                       datos.append('montoPedido',montoPedido);
+                      datos.append('comentarios',comentarios);
 
                       $.ajax({
                           url: "ajax/functions.ajax.php",
@@ -1449,3 +1428,24 @@ $("#salirVerExistencias").click(function(){
 
   //console.log(nameTable);
 }*/
+/*=============================================
+ACTUALIZAR ESTATUS PRODUCTO
+=============================================*/
+$(".tablaListaRequisiciones").on("click", ".btnNivelSurtimiento", function(){
+
+  var idRequisicion = $(this).attr("idRequisicion");
+
+
+  $.ajax({
+        type: "POST",
+        url: "vistas/modulos/graficos/graficoNivelSurtimiento.php",
+        data: "idRequisicion="+idRequisicion,
+        beforeSend: function(objeto){
+          
+        },
+        success: function(datos){
+
+        }
+  });
+
+});

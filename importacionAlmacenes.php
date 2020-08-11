@@ -42,9 +42,9 @@ if(isset($_POST['import_data'])){
 
           }
 
-          /*$almacen = $_POST["almacen"];
-          $numeroAlmacen = $_POST["numeroAlmacen"];*/
           $almacen = $_POST["nombreAlmacen"];
+          $periodoImportacion = $_POST["periodoSeleccionado"];
+          $mesElegido = $_POST["mesElegido"];
 
           $idUsuario = $_POST["idUsuario"];
 
@@ -57,8 +57,7 @@ if(isset($_POST['import_data'])){
 
           $almacenDatos = $almacen;
 
-          //var_dump("Almacen Datos",$almacenDatos);
-          //
+
           $table = "importaciones";
           $select = "IF(MAX(id) IS NULL,1,MAX(id)+1) as idDisponible";
           $conditions = "";
@@ -66,11 +65,54 @@ if(isset($_POST['import_data'])){
                    
           $idImportacion = $idDisponible["idDisponible"];
 
-          //$fechaActual = date("Y-m-d");
-          $fechaActual = "2020-07-11";
+          //$fechaActual1 = date("Y-m-d");
+          $fechaActual = "2020-08-05";
+          //
+          if ($periodoImportacion == "mes") {
+            $numeroMes = $mesElegido;
+          }else{
+            $mesFecha = strtotime($fechaActual);
+            $numeroMes = date('n', $mesFecha);
+          }
                     
-          $insertarProductoAlmacen = "INSERT INTO almacen".$almacenDatos."(idProducto,inventarioInicialUnidades,entradasUnidades,salidasUnidades,existenciasUnidades,inventarioInicialImportes,entradasImportes,salidasImportes,existenciaImportes,ultimoCosto,totalUltCosto,fecha,idImportacion) VALUES('".$id."','".str_replace(",", "", $emp_record[4])."','".str_replace(",", "", $emp_record[5])."','".str_replace(",", "", $emp_record[6])."','".str_replace(",", "", $emp_record[7])."','".str_replace(",", "", $emp_record[8])."','".str_replace(",", "", $emp_record[9])."','".str_replace(",", "", $emp_record[10])."','".str_replace(",", "", $emp_record[11])."','".str_replace(",", "", $emp_record[12])."','".str_replace(",", "", $emp_record[13])."','".$fechaActual."','".$idImportacion."')";
+          $insertarProductoAlmacen = "INSERT INTO almacen".$almacenDatos."(idProducto,inventarioInicialUnidades,entradasUnidades,salidasUnidades,existenciasUnidades,inventarioInicialImportes,entradasImportes,salidasImportes,existenciaImportes,ultimoCosto,totalUltCosto,fecha,idImportacion, numeroMes) VALUES('".$id."','".str_replace(",", "", $emp_record[4])."','".str_replace(",", "", $emp_record[5])."','".str_replace(",", "", $emp_record[6])."','".str_replace(",", "", $emp_record[7])."','".str_replace(",", "", $emp_record[8])."','".str_replace(",", "", $emp_record[9])."','".str_replace(",", "", $emp_record[10])."','".str_replace(",", "", $emp_record[11])."','".str_replace(",", "", $emp_record[12])."','".str_replace(",", "", $emp_record[13])."','".$fechaActual1."','".$idImportacion."','".$numeroMes."')";
           mysqli_query($conn, $insertarProductoAlmacen) or die("database error:". mysqli_error($conn));
+
+
+          if ($periodoImportacion == "mes") {
+            $ultimoMes = "SELECT MAX(numeroMes) AS ultimoMes FROM almacen".$almacenDatos."";
+            $respuestaMes = mysqli_query($conn, $ultimoMes) or die("database error:". mysqli_error($conn));
+            $respuestaUltimoMes = mysqli_fetch_array($respuestaMes);
+
+            $fechaActual = $respuestaUltimoMes["ultimoMes"];
+            $mesF = $fechaActual +1;
+            $fechaAnterior = $mesF - 6;
+
+            $parametros = "WHERE p.id = ".$id." AND al.numeroMes BETWEEN "."'".$fechaAnterior."'"." AND "."'".$fechaActual."'";
+
+          }else{
+
+            $fechats = strtotime($fechaActual1);
+            switch (date('w', $fechats)){
+              case 0: $day = "Domingo"; break;
+              case 1: $day = "Lunes"; break;
+              case 2: $day = "Martes"; break;
+              case 3: $day = "Miercoles"; break;
+              case 4: $day = "Jueves"; break;
+              case 5: $day = "Viernes"; break;
+              case 6: $day = "Sabado"; break;
+            }
+            $fechaSum = date("Y-m-d",strtotime($fechaActual1."+ 1 days"));
+
+            if ($day == "Sabado") {
+                $fechaAnterior = date("Y-m-d",strtotime($fechaSum."- 6 days"));
+              }else{
+                $fechaAnterior = date("Y-m-d",strtotime($fechaSum."- 7 days"));
+              }
+
+              $parametros = "WHERE p.id = ".$id." AND al.fecha BETWEEN "."'".$fechaAnterior."'"." AND "."'".$fechaActual."'";
+
+          }
 
           if ($almacen == "general1") {
             $campo = "stockMinimoGral1";
@@ -83,11 +125,11 @@ if(isset($_POST['import_data'])){
           }else if($almacen == "reforma1"){
             $campo = "stockMinimoRf1";
           }else if($almacen == "reforma2"){
-            $campo = "stockMinimoRf1";
+            $campo = "stockMinimoRf2";
           }else if($almacen == "santiago1"){
             $campo = "stockMinimoSg1";
           }else if($almacen == "santiago2"){
-            $campo = "stockMinimoSg1";
+            $campo = "stockMinimoSg2";
           }else if($almacen == "capu1"){
             $campo = "stockMinimoCp1";
           }else if($almacen == "capu2"){
@@ -97,46 +139,13 @@ if(isset($_POST['import_data'])){
           }else if($almacen == "lastorres2"){
             $campo = "stockMinimoTr2";
           }
-
-          $fechats = strtotime($fechaActual);
-          switch (date('w', $fechats)){
-            case 0: $day = "Domingo"; break;
-            case 1: $day = "Lunes"; break;
-            case 2: $day = "Martes"; break;
-            case 3: $day = "Miercoles"; break;
-            case 4: $day = "Jueves"; break;
-            case 5: $day = "Viernes"; break;
-            case 6: $day = "Sabado"; break;
-          }
-
-          $fechaSum = date("Y-m-d",strtotime($fechaActual."+ 1 days"));
-
-          if ($day == "Sabado") {
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 6 days"));
-            $diasRestados = "6"; 
-          }else if($day == "Viernes"){
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 5 days"));
-            $diasRestados = "5";  
-          }else if($day == "Jueves"){
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 4 days"));
-            $diasRestados = "4";  
-          }else if($day == "Miercoles"){
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 3 days"));
-            $diasRestados = "3";  
-          }else if($day == "Martes"){
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 2 days"));
-            $diasRestados = "2";  
-          }else if($day == "Lunes"){
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 1 days"));
-            $diasRestados = "1"; 
-          }
           
-          $sumaSalidas =  "SELECT SUM(al.salidasUnidades) AS totalSalidas FROM almacen".$almacenDatos." as al INNER JOIN productos AS p ON al.idProducto = p.id WHERE p.id = ".$id." AND al.fecha BETWEEN "."'".$fechaMenosSeis."'"." AND "."'".$fechaActual."'";
+          $sumaSalidas =  "SELECT SUM(al.salidasUnidades) AS totalSalidas FROM almacen".$almacenDatos." as al INNER JOIN productos AS p ON al.idProducto = p.id ".$parametros."";
           $respuestaSalidas = mysqli_query($conn, $sumaSalidas) or die("database error:". mysqli_error($conn));
           $salidasMostradas = mysqli_fetch_array($respuestaSalidas);
 
           $totalSalidas = $salidasMostradas["totalSalidas"];
-          $stockMinimo = $totalSalidas / $diasRestados;
+          $stockMinimo = $totalSalidas / 6;
 
           $actualizarStock = "UPDATE productos SET ".$campo." = ".round($stockMinimo)." WHERE id = ".$id." ";
              mysqli_query($conn, $actualizarStock) or die("database error:". mysqli_error($conn));

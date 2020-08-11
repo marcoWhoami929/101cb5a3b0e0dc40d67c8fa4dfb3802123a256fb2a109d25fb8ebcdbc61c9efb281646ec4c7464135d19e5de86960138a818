@@ -172,6 +172,34 @@ class ControladorInventarios{
 		return $respuesta;
 	}
 
+	/*
+	OBTENER DATOS PARA RECALCULAR STOCK MINIMO
+	 */
+	static public function ctrObtenerDatos($table, $campos, $parametros){
+
+		$tabla = $table;
+
+		$respuesta = ModeloInventarios::mdlObtenerDatos($tabla, $campos, $parametros);
+
+		return $respuesta;
+	}
+	static public function ctrObtenerDatosSumas($tableSuma, $campoSuma, $parametroSuma){
+
+		$tabla = $tableSuma;
+
+		$respuesta = ModeloInventarios::mdlObtenerDatosSumas($tabla, $campoSuma, $parametroSuma);
+
+		return $respuesta;
+	}
+	static public function ctrEditarStock($tablaEdicion, $camposEdicion, $parametroEdicion){
+
+		$tabla = $tablaEdicion;
+
+		$respuesta = ModeloInventarios::mdlEditarStock($tabla, $camposEdicion, $parametroEdicion);
+
+		return $respuesta;
+	}
+
 }
 
 
