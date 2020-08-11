@@ -61,6 +61,7 @@ class TablaLlistaRequisiciones{
 	 		}else{
 	 			$concluida = $listaRequisiciones[$i]["observacionesConcluido"];
 	 		}
+	 		$nivelSurtimiento = "<button type='button' class='btn btn-secondary btn-sm btnNivelSurtimiento' idRequisicion='".$listaRequisiciones[$i]["id"]."' data-toggle='modal' data-target='#modalNivelSurtimiento'><i class='fa fa-eye fa-1x'></i>Nivel</button>";
 
 			$datosJson	 .= '[
 					  "'.$estatus.'",
@@ -72,6 +73,7 @@ class TablaLlistaRequisiciones{
 				      "$ '.$listaRequisiciones[$i]["montoSolicitado"].'",
 				      "'.$listaRequisiciones[$i]["fecha"].'",
 				      "'.$acciones.'",
+				      "'.$nivelSurtimiento.'",
 				      "'.$aprobada.'",
 				      "'.$concluida.'"
 				    ],';

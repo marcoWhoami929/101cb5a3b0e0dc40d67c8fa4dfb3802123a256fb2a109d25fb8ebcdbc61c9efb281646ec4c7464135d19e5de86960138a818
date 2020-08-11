@@ -45,7 +45,7 @@
 			                            <br>
 										<div class="row">
 
-											<div class="col-lg-12 col-md-12 col-sm-12">
+											<div class="col-lg-12 col-md-12 col-sm-12 table-responsive">
 											
 												<table class="table table-bordered table-striped dt-responsive tablaListaRequisiciones" width="100%"  style="border: 2px solid #1F262D">
 
@@ -61,6 +61,7 @@
 															<th style="border:none">monto Solicitado</th>
 															<th style="border:none">Fecha</th>
 															<th style="border:none">Detalle</th>
+															<th style="border:none">Nivel Surtimiento</th>
 															<th style="border:none">Obervaciones Aprobada</th>
 															<th style="border:none">Observaciones Concluida</th>
 														
@@ -78,6 +79,50 @@
 							</div>
 						</div>
 					</div>
+
+					<!--=====================================
+		MODAL AGREGAR PERFIL
+		======================================-->
+		<div id="modalNivelSurtimiento" class="modal fade" role="dialog">
+  			<div class="modal-dialog" >
+    			<div class="modal-content">
+
+      				<form role="form" method="post" enctype="multipart/form-data">
+			        <!-- CABEZA DEL MODAL-->
+	        			<div class="modal-header" style="background:#1F262D; color:white">
+
+	          				<h4 class="modal-title">Agregar Perfil</h4>
+	          				<button type="button" class="close" data-dismiss="modal">&times;</button>
+
+	        			</div>
+				        <!--CUERPO DEL MODAL-->
+	        			<div class="modal-body">
+	          				<div class="box-body">
+	            				
+
+	            				<div class="col-lg-12 col-md-12 col-sm-12" id="cargarSurtimiento">
+								<?php include("vistas/modulos/graficos/graficoNivelSurtimiento.php");?>
+
+	            				</div>
+
+	          				</div>
+	        			</div>
+	        			<!-- PIE DEL MODAL-->
+				        <div class="modal-footer">
+
+				          	<button type="button" class="btn btn-dark pull-left" data-dismiss="modal">Salir</button>
+				          	
+
+				        </div>
+				        
+
+
+     				</form>
+    			</div>
+  			</div>
+		</div>
+		
+
 				</div>
 			</div>
 		</div>

@@ -51,7 +51,7 @@
 															<th style="border:none">Stock Minimo</th>
 															<th style="border:none">Existencias</th>
 															<th style="border:none">Faltante Unidades</th>
-															<th style="border:none">Faltante Monto</th>
+															
 															<th style="border:none">Fecha</th>
 															<th style="border:none">Estado</th>
 														</tr> 

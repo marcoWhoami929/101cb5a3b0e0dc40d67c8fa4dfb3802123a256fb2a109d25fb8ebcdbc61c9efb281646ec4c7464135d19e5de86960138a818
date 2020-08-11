@@ -43,12 +43,20 @@ class functionsInventory{
 	public $sucursal;
 	public $unidadesPedido;
 	public $montoPedido;
+	public $comentarios;
 	public function generarNuevoPedido(){
 
 		$tabla = "pedidossemanales";
 
 		$ultimoPedido = ModeloInventarios::mdlObtenerUltimoFolioPedido();
 		$folio = $ultimoPedido["folio"];
+
+		$comment = $this->comentarios;
+		if ($comment != "") {
+			$comentarios = $comment;
+		}else {
+			$comentarios = "Sin Observaciones";
+		}
 
 		$datos = array(
 						"id"=>$folio,
@@ -59,6 +67,7 @@ class functionsInventory{
 						"montoPedido" => $this->montoPedido,
 						"montoAprobado" => $this->montoPedido,
 						"solicitado" => "1",
+						"comentarios" => $comentarios,
 						"estatus" => "1");
 
 		$generarPedido = ControladorInventarios::ctrGenerarNuevoPedido($tabla,$datos);
@@ -261,6 +270,7 @@ if (isset($_POST["sucursal"])) {
 	$generarPedido -> unidadesPedido = $_POST["unidadesPedido"];
 	$generarPedido -> montoPedido = $_POST["montoPedido"];
 	$generarPedido -> pedidoSemanal = $_POST["pedidoSemanal"];
+	$generarPedido -> comentarios = $_POST["comentarios"];
 	$generarPedido -> generarNuevoPedido();
 }
 if (isset($_POST["idRequisicion"])) {

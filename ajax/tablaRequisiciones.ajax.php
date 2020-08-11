@@ -40,6 +40,7 @@ class TablaRequisiciones{
 
 	 		$acciones = "<button type='button' class='btn btn-info btn-sm btnVisualizarDetalleRequisicion' idRequisicion='".$requisicion[$i]["id"]."'><i class='fa fa-eye fa-1x'></i>Detalle</button>";
 	 		
+	 		
 
 	 		if ($requisicion[$i]["observacionesAprobado"] == "") {
 	 			
@@ -55,17 +56,36 @@ class TablaRequisiciones{
 	 		}else{
 	 			$concluida = $requisicion[$i]["observacionesConcluido"];
 	 		}
-			$datosJson	 .= '[
+
+	 		if ($_SESSION["grupo"] == "Administrador") {
+	 			$datosJson	 .= '[
 					  "'.$estatus.'",
 				      "'.$requisicion[$i]["id"].'",
 				      "'.$requisicion[$i]["descripcion"].'",
+				      "'.$requisicion[$i]["comentarios"].'",
 				      "'.$requisicion[$i]["unidadesSolicitadas"].'",
 				      "$ '.$requisicion[$i]["montoSolicitado"].'",
+				      "'.$requisicion[$i]["fecha"].'",
+				      "'.$acciones.'",
+				      
+				      "'.$aprobada.'",
+				      "'.$concluida.'"
+				    ],';
+	 		}else{
+	 			$datosJson	 .= '[
+					  "'.$estatus.'",
+				      "'.$requisicion[$i]["id"].'",
+				      "'.$requisicion[$i]["descripcion"].'",
+				      "'.$requisicion[$i]["comentarios"].'",
+				      "'.$requisicion[$i]["unidadesSolicitadas"].'",
+				      
 				      "'.$requisicion[$i]["fecha"].'",
 				      "'.$acciones.'",
 				      "'.$aprobada.'",
 				      "'.$concluida.'"
 				    ],';
+	 		}
+			
 
 	 	}
 

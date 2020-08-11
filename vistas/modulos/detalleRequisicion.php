@@ -65,10 +65,21 @@
 															<th style="border:none"><span class="verticalTextTable">Solicitado</span></th>
 															<th style="border:none"><span class="verticalTextTable">Aprobado</span></th>
 															<th style="border:none"><span class="verticalTextTable">Pendiente</span></th>
+															<?php 
+
+															if ($_SESSION["grupo"] == "Administrador") {
+																echo '
 															<th style="border:none"><span class="verticalTextTable">Faltante Monto</span></th>
 															<th style="border:none"><span class="verticalTextTable">Monto Solicitadoo</span></th>
 															<th style="border:none"><span class="verticalTextTable">Monto Aprobado</span></th>
-															<th style="border:none"><span class="verticalTextTable">Monto Pendiente</span></th>
+															<th style="border:none"><span class="verticalTextTable">Monto Pendiente</span></th>	
+																';
+															}else{
+																
+															}
+
+															 ?>
+															
 
 														
 														</tr> 

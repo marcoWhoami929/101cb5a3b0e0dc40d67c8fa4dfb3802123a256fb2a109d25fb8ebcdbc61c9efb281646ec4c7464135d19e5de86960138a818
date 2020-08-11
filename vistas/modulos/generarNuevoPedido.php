@@ -44,6 +44,9 @@
 												<button type="button" class="btn btn-success" id="btnGenerarPedido">Generar Pedido</button>
 												<br>
 
+												<small>Agregar Observaciones <em>(opcional)</em></small>
+												<textarea class="form-control" rows="2" id="comentarios"></textarea>
+
 												<br>
 												<div class="table-responsive">
 													<table class="table table-bordered table-striped dt-responsive tablaSolicitudPedido" width="100%"  style="border: 2px solid #1F262D">
@@ -57,8 +60,8 @@
 															<th style="border:none"><span class="verticalTextTable">Existencias</span></th>
 															<th style="border:none"><span class="verticalTextTable">Sugerido</span></th>
 															<th style="border:none"><span class="verticalTextTable">Solicitado</span></th>
-															<th style="border:none"><span class="verticalTextTable">Faltante Monto</span></th>
-															<th style="border:none"><span class="verticalTextTable">Solicitado Monto</span></th>
+															<!--<th style="border:none"><span class="verticalTextTable">Faltante Monto</span></th>
+															<th style="border:none"><span class="verticalTextTable">Solicitado Monto</span></th>-->
 															<th style="border:none"><span class="verticalTextTable">estatus</span></th>
 
 														

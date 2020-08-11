@@ -42,22 +42,22 @@
                                     <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                         
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabGeneral" data-toggle="pill" href="#pillGeneral" role="tab"  aria-selected="false" identificadorFisico = "General">Almacén General</a>
+                                            <a class="nav-link" id="tabGeneral" data-toggle="pill" href="#divGeneral" role="tab"  aria-selected="false" identificadorFisico = "General">Almacén General</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#pillSanManuel" role="tab"  aria-selected="false" identificadorFisico = "SanManuel">San Manuel</a>
+                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#divSanManuel" role="tab"  aria-selected="false" identificadorFisico = "SanManuel">San Manuel</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#pillReforma" role="tab"  aria-selected="false" identificadorFisico = "Reforma">Reforma</a>
+                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#divReforma" role="tab"  aria-selected="false" identificadorFisico = "Reforma">Reforma</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#pillSantiago" role="tab"  aria-selected="false" identificadorFisico = "Santiago">Santiago</a>
+                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#divSantiago" role="tab"  aria-selected="false" identificadorFisico = "Santiago">Santiago</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#pillCapu" role="tab"  aria-selected="false" identificadorFisico = "Capu">Capu</a>
+                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#divCapu" role="tab"  aria-selected="false" identificadorFisico = "Capu">Capu</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabTorres" data-toggle="pill" href="#pillTorres" role="tab"  aria-selected="false" identificadorFisico = "LasTorres">Las Torres</a>
+                                            <a class="nav-link" id="tabTorres" data-toggle="pill" href="#divTorres" role="tab"  aria-selected="false" identificadorFisico = "LasTorres">Las Torres</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -67,7 +67,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#pillSanManuel" role="tab"  aria-selected="true" identificadorFisico = "SanManuel">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabSanManuel" data-toggle="pill" href="#divSanManuel" role="tab"  aria-selected="true" identificadorFisico = "SanManuel">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -80,7 +80,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#pillReforma" role="tab"  aria-selected="false" identificadorFisico = "Reforma">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabReforma" data-toggle="pill" href="#divReforma" role="tab"  aria-selected="false" identificadorFisico = "Reforma">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -93,7 +93,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#pillSantiago" role="tab"  aria-selected="false" identificadorFisico = "Santiago">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabSantiago" data-toggle="pill" href="#divSantiago" role="tab"  aria-selected="false" identificadorFisico = "Santiago">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -106,7 +106,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                                         <li class="nav-item">
-                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#pillCapu" role="tab"  aria-selected="false" identificadorFisico = "Capu">Ver Tablas de Almacen</a>
+                                            <a class="nav-link" id="tabCapu" data-toggle="pill" href="#divCapu" role="tab"  aria-selected="false" identificadorFisico = "Capu">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -119,7 +119,7 @@
                                 <div class="row">
                                     <ul class="nav nav-pills mb-3" id="nav-menu" role="tablist">
                                         <li class="nav-item">
-                                             <a class="nav-link" id="tabTorres" data-toggle="pill" href="#pillTorres" role="tab"  aria-selected="false" identificadorFisico = "LasTorres">Ver Tablas de Almacen</a>
+                                             <a class="nav-link" id="tabTorres" data-toggle="pill" href="#divTorres" role="tab"  aria-selected="false" identificadorFisico = "LasTorres">Ver Tablas de Almacen</a>
                                         </li>                                 
                                     </ul>
                                 </div>
@@ -136,7 +136,7 @@
         		</div>
       		</div>
 
-			<div class="tab-pane fade" id="pillGeneral" role="tabpanel">
+			<div class="tab-pane fade" id="divGeneral" role="tabpanel">
 	    		<div class="row">
 
 	        		<div class="col-lg-12 col-md-12 col-sm-12">
@@ -205,7 +205,7 @@
 				</div>
 			</div>
 
-			<div class="tab-pane fade" id="pillSanManuel" role="tabpanel">
+			<div class="tab-pane fade" id="divSanManuel" role="tabpanel">
     			<div class="row">
 
     				<div class="col-lg-12 col-md-12 col-sm-12">
@@ -271,7 +271,7 @@
 	        	</div>
   			</div>
 
-  			<div class="tab-pane fade" id="pillSanManuel" role="tabpanel">
+  			<div class="tab-pane fade" id="divSanManuel" role="tabpanel">
     			<div class="row">
 
     				<div class="col-lg-12 col-md-12 col-sm-12">

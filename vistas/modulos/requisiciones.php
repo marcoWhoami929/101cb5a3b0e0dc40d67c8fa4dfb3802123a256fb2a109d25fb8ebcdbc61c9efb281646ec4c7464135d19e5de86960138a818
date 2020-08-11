@@ -55,8 +55,17 @@
 															<th style="border:none">Estatus</th>
 															<th style="border:none">Id</th>
 															<th style="border:none">Descripción</th>
+															<th style="border:none">Observacioness</th>
+															<?php 
+
+															if ($_SESSION["grupo"] == "Administrador") {
+																echo '<th style="border:none">monto Solicitado</th>';
+															}else{
+
+															}
+
+															 ?>
 															<th style="border:none">Unidades Solicitadas</th>
-															<th style="border:none">monto Solicitado</th>
 															<th style="border:none">Fecha</th>
 															<th style="border:none">Detalle</th>
 															<th style="border:none">Obervaciones Aprobada</th>
@@ -77,6 +86,9 @@
 							</div>
 						</div>
 					</div>
+
+				
+
 				</div>
 			</div>
 		</div>

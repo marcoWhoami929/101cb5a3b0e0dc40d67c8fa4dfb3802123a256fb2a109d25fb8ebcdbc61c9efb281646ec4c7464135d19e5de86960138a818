@@ -10,7 +10,7 @@ class TablaSolicitudPedido{
 	public function mostrarTablas(){
 
 		//$fechaActual = date("Y-m-d");
-		$fechaActual = "2020-07-11";
+		$fechaActual = "2020-08-05";
 		$fechaFinal = date("Y-m-d", strtotime($fechaActual));
 
 		$tablaInicial = "almacen".$_GET["almacen"]."1";

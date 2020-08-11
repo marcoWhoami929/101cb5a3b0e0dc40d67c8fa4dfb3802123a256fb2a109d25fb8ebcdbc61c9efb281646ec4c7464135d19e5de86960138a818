@@ -7,6 +7,19 @@ function elegirAlmacen(){
     $("#nombreAlmacen").val(almacen);
 
 }
+
+
+$(function(){
+        $(document).on('change','#periodoFecha',function(){
+            var value = $(this).val();
+          $('#periodoSeleccionado').val(value);
+        });
+
+        $(document).on('change','#mes',function(){
+            var value = $(this).val();
+          $('#mesElegido').val(value);
+        });
+  });
 /*==================================================
 =            MANDAR DATOS A IMPORTACION            =
 ==================================================*/
