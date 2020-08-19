@@ -66,6 +66,7 @@
 															<th style="border:none"><span class="verticalTextTable">Codigo</span></th>
 															<th style="border:none"><span class="verticalTextTable">Producto</span></th>
 															<th style="border:none"><span class="verticalTextTable">Existencias</span></th>
+															<th style="border:none"><span class="verticalTextTable">Opciones</span></th>
 															<th style="border:none"><span class="verticalTextTable">Solicitado</span></th>
 															<th style="border:none"><span class="verticalTextTable">Aprobado</span></th>
 															<th style="border:none"><span class="verticalTextTable">Pendiente</span></th>
@@ -92,6 +93,53 @@
 							</div>
 						</div>
 					</div>
+					
+					<div id="verContratipo" class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">>
+  						<div class="modal-dialog modal-lg">
+    						<div class="modal-content">
+
+      							<form role="form" method="post" enctype="multipart/form-data">
+						        <!-- CABEZA DEL MODAL-->
+				        			<div class="modal-header" style="background:#1F262D; color:white">
+
+				          				<h4 class="modal-title">Sustituir Producto</h4>
+				          				<button type="button" class="close" data-dismiss="modal">&times;</button>
+
+				        			</div>
+
+	        						<div class="modal-body">
+	          							<div class="box-body">
+	            							
+	            							<div class="form-group table-responsive">
+
+						                        <table class="table table-bordered table-striped dt-responsive" id="tableContratipo" style="border: 2px solid #1F262D">
+						                        	<thead style="background:#1F262D;color: white">
+							                        	<tr>
+							                        		<th>Codigo Similar</th>
+							                        		<th>Producto</th>
+							                        		<th>Existencias</th>
+							                        		<th>Cantidad</th>
+							                        		<th>Codigo Original</th>
+							                        		<th>Producto</th>
+							                        	</tr>
+						                            </thead>
+						                        </table>
+				                    		</div>
+			                			</div>
+			            			</div>
+
+	        						<!-- PIE DEL MODAL-->
+							        <div class="modal-footer">
+
+							          	<button type="button" class="btn btn-dark pull-left" id="salirVerExistencias" data-dismiss="modal">Salir</button>
+
+							        </div>
+     							</form>
+    						</div>
+  						</div>
+					</div>
+
+
 				</div>
 			</div>
 		</div>

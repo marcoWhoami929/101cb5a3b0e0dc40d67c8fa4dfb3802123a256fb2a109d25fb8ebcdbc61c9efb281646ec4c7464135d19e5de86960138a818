@@ -14,14 +14,37 @@ class TablaPedidoSemanal{
 
 		$tablaInicial = "almacen".$_GET["almacen"]."1";
 
+		switch ($_GET["almacen"]) {
+			case 'general':
+				$campo = "stockMinimoGral1";
+				break;
+			case 'sanmanuel':
+				$campo = "stockMinimoSM1";
+				break;
+			case 'reforma':
+				$campo = "stockMinimoRf1";
+				break;
+			case 'santiago':
+				$campo = "stockMinimoSg1";
+				break;
+			case 'capu':
+				$campo = "stockMinimoCp1";
+				break;
+			case 'lastorres':
+				$campo = "stockMinimoTr1";
+				break;
+			
+			
+		}
+
 		/*
 		$tabla = "productos AS p INNER JOIN ".$tablaInicial." AS al ON p.id = al.idProducto";
 		$campos = "p.codigoProducto, p.nombreProducto, p.stockMinimoGral1, al.existenciasUnidades, al.ultimoCosto, al.fecha";
     	$parametros = "WHERE al.existenciasUnidades != 0 AND al.fecha = "."'".$fechaFinal."'";	
 		*/
     	$tabla = "productos AS p INNER JOIN ".$tablaInicial." AS al ON p.id = al.idProducto";
-		$campos = " MAX(p.id) as idProducto,MAX(p.codigoProducto) as codigoProducto, MAX(p.nombreProducto) as nombreProducto, MAX(p.stockMinimoGral1) as stockMinimoGral1, MAX(al.existenciasUnidades) as existenciasUnidades, MAX(al.ultimoCosto) as ultimoCosto, MAX(al.fecha) as fecha";
-    	$parametros = "WHERE al.existenciasUnidades != 0 AND al.fecha = '".$fechaFinal."' group by p.codigoProducto";	
+		$campos = " MAX(p.id) as idProducto,MAX(p.codigoProducto) as codigoProducto, MAX(p.nombreProducto) as nombreProducto, MAX(p.".$campo.") as stockMinimo, MAX(al.existenciasUnidades) as existenciasUnidades, MAX(al.ultimoCosto) as ultimoCosto, MAX(al.fecha) as fecha";
+    	$parametros = "WHERE al.existenciasUnidades < p.".$campo." AND al.existenciasUnidades != 0 AND al.fecha = '".$fechaFinal."' group by p.codigoProducto";	
 
  		$porAgotarse = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
  		
@@ -31,7 +54,7 @@ class TablaPedidoSemanal{
 
 	 	for($i = 0; $i < count($porAgotarse); $i++){
 
-	 		$stockMinimo = $porAgotarse[$i]["stockMinimoGral1"];
+	 		$stockMinimo = $porAgotarse[$i]["stockMinimo"];
 	 		$existencias = $porAgotarse[$i]["existenciasUnidades"];
 	 		$ultimoCosto = $porAgotarse[$i]["ultimoCosto"];
 

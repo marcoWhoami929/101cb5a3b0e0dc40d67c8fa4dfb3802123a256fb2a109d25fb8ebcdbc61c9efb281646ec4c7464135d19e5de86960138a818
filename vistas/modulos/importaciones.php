@@ -266,6 +266,22 @@
 
 
             });
+        }else if (valores[index] == "diferencias") {
+              swal({
+
+                type: "warning",
+                title: "Alto!!",
+                text: "Se han encontrado diferencias con las existencias, Por favor Has una revisión",
+                showConfirmButton: true,
+                confirmButtonText: "Cerrar"
+
+            }).then(function(result){
+
+                var url = document.location.href;
+                var urlNew =  url.split('?')[0];
+                history.pushState(null, "", urlNew);
+                tablaImportaciones.ajax.reload();
+            });
         }
     }
 }

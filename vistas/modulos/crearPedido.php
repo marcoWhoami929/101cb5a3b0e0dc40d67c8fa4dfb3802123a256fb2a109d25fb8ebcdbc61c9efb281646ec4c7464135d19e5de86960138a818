@@ -32,13 +32,30 @@
 
 								<div class="col-lg-12 col-md-12 col-sm-12 border-right p-r-0">
 									<div class="card-body">
-										<button type="button" class="btn btn-dark" data-toggle="modal" data-target="#myModal">
-						 					<span class="mdi mdi-library-plus"></span> Agregar productos
-										</button>
+										
+										<div class="d-md-flex align-items-center">
+											<button type="button" class="btn btn-dark" data-toggle="modal" data-target="#myModal">
+						 						<span class="mdi mdi-library-plus"></span> Agregar productos
+											</button>
+											<div class="col-sm-1"></div>
+											<button type="button" class="btn btn-warning" id="btnSolicitarPedido" identificador="pedidoManual">Solicitar Pedido</button>
+											<div></div>
+											<select class="form-control col-md-3" name="statusPedido" id="statusPedido">
+												<option value="">Seleccionar Estado</option>
+												<option value="0">Urgente</option>
+												<option value="1">Extraurgente</option>
+											</select>
+
+										</div>
+										
+										<br>
+										<br>
+										<div id="resultados" class='col-md-12 table-responsive'></div>
+										
 									</div>
 								</div>
 
-								<div id="resultados" class='col-md-12'></div>
+								
 								
 	              			</div>
 	            		</div>
@@ -55,16 +72,20 @@
 						  </div>
 						  <div class="modal-body">
 							<form class="form-horizontal">
-							  <div class="form-group">
+							  <div class="input-group">
 								<div class="col-sm-6">
 								  <input type="text" class="form-control" id="q" placeholder="Buscar productos" onkeyup="load(1)">
 								  <input type="hidden" class="form-control" id="grupoSesion" value="<?php echo $_SESSION["grupo"] ?>">
 								  <input type="hidden" class="form-control" id="sesion" value="<?php echo $_SESSION["nombre"]; ?>">
-								  <input type="text" class="form-control" id="idSesion" value="<?php echo $_SESSION["id"]; ?>">
+								  <input type="hidden" class="form-control" id="idSesion" value="<?php echo $_SESSION["id"]; ?>">
 								</div>
-								<button type="button" class="btn btn-dark" onclick="load(1)"><span class='mdi mdi-magnify'></span> Buscar</button>
+
+									<button type="button" class="btn btn-dark" onclick="load(1)"><span class='mdi mdi-magnify'></span> Buscar</button>
+
+								
 							  </div>
 							</form>
+							<br>
 							<div id="loader" style="position: absolute;	text-align: center;	top: 55px;	width: 100%;display:none;"></div><!-- Carga gif animado -->
 							<div class="outer_div" ></div><!-- Datos ajax Final -->
 						  </div>
@@ -84,81 +105,76 @@
   	</div>
 </div>
 <script>
-		$(document).ready(function(){
-			load(1);
-		});
+	$(document).ready(function(){
+		load(1);
+	});
 
-		function load(page){
-			var q= $("#q").val();
-			var sesion = $("#sesion").val();
-			var grupoSesion = $("#grupoSesion").val();
-			var idUser = $("#idSesion").val();
-			var idSesion = idUser * 1;
+	function load(page){
+		var q= $("#q").val();
+		var sesion = $("#sesion").val();
+		var grupoSesion = $("#grupoSesion").val();
+		var idUser = $("#idSesion").val();
+		var idSesion = idUser * 1;
 
-			$("#loader").fadeIn('slow');
-			$.ajax({
-				url:'ajax/agregarApedido.ajax.php?action=ajax&page='+page+'&q='+q+'&sesion='+sesion+'&grupoSesion='+grupoSesion+'&idSesion='+idSesion,
-				 beforeSend: function(objeto){
-				 //$('#loader').html('<img src="./img/ajax-loader.gif"> Cargando...');
-			  },
-				success:function(data){
-					$(".outer_div").html(data).fadeIn('slow');
-					$('#loader').html('');
+		$("#loader").fadeIn('slow');
+		$.ajax({
+			url:'ajax/agregarApedido.ajax.php?action=ajax&page='+page+'&q='+q+'&sesion='+sesion+'&grupoSesion='+grupoSesion+'&idSesion='+idSesion,
+			beforeSend: function(objeto){
+				 $('#loader').html('<img src="vistas/img/loader.gif"> Cargando...');
+			},
+			success:function(data){
+				$(".outer_div").html(data).fadeIn('slow');
+				$('#loader').html('');
 					
-				}
-			})
-		}
-	</script>
-	<script>
+			}
+		})
+	}
+</script>
+<script>
 	
-	function agregar (id)
-		{
+	function agregar (id){
 			//var precio_venta=document.getElementById('precio_venta_'+id).value;
-			var cantidad=document.getElementById('cantidad_'+id).value;
-			var sesion = $("#sesion").val();
-			var grupoSesion = $("#grupoSesion").val();
-			var idUser = $("#idSesion").val();
-			var idSesion = idUser * 1;
-			//Inicia validacion
-			if (isNaN(cantidad))
-			{
+		var cantidad=document.getElementById('cantidad_'+id).value;
+		var sesion = $("#sesion").val();
+		var grupoSesion = $("#grupoSesion").val();
+		var idUser = $("#idSesion").val();
+		var idSesion = idUser * 1;
+			
+		if (isNaN(cantidad)){
 			alert('Esto no es un numero');
 			document.getElementById('cantidad_'+id).focus();
 			return false;
+		}
+			
+		$.ajax({
+        	type: "POST",
+        	url: "ajax/agregar_Pedido.ajax.php",
+        	data: "id="+id+"&cantidad="+cantidad+"&grupoSesion="+grupoSesion+"&sesion="+sesion+'&idSesion='+idSesion,
+		 	beforeSend: function(objeto){
+				//$("#resultados").html("Mensaje: Cargando...");
+		  	},
+        	success: function(datos){
+				$("#resultados").html(datos);
 			}
-			
-			//Fin validacion
-			
-			$.ajax({
-        type: "POST",
-        url: "ajax/agregar_Pedido.ajax.php",
-        data: "id="+id+"&cantidad="+cantidad+"&grupoSesion="+grupoSesion+"&sesion="+sesion+'&idSesion='+idSesion,
-		 beforeSend: function(objeto){
-			$("#resultados").html("Mensaje: Cargando...");
-		  },
-        success: function(datos){
-		$("#resultados").html(datos);
-		}
-			});
-		}
+		});
+	}
 		
-			function eliminar (id)
-		{
+	function eliminar (id){
 			
-			$.ajax({
-        type: "GET",
-        url: "ajax/agregar_Pedido.ajax.php",
-        data: "id="+id,
-		 beforeSend: function(objeto){
-			$("#resultados").html("Mensaje: Cargando...");
-		  },
-        success: function(datos){
-		$("#resultados").html(datos);
-		}
-			});
+		$.ajax({
+        	type: "GET",
+        	url: "ajax/agregar_Pedido.ajax.php",
+        	data: "id="+id,
+		 	beforeSend: function(objeto){
+				//$("#resultados").html("Mensaje: Cargando...");
+		  	},
+        	success: function(datos){
+        		
+				$("#resultados").html(datos);
+				
+			}
+		});
 
-		}
-		
-		
-	</script>
+	}
+</script>
 	
