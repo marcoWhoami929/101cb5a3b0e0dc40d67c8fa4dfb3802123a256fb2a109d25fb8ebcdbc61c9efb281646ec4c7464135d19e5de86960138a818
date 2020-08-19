@@ -55,7 +55,8 @@
 															<th style="border:none">Estatus</th>
 															<th style="border:none">Id</th>
 															<th style="border:none">Descripción</th>
-															<th style="border:none">Observacioness</th>
+															<th style="border:none">Observaciones Solicitud</th>
+															<th style="border:none">Status del Pedido</th>
 															<?php 
 
 															if ($_SESSION["grupo"] == "Administrador") {

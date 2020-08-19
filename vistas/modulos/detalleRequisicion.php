@@ -39,7 +39,12 @@
 												<br>
 												Unidades Solicitadas:<span id="unidadesPedidoAprobadas"></span>
 												<br>
-												Monto Pedido :<span id="montoPedidoAprobado"></span>
+												<?php
+												if ($_SESSION["Administrador"]) {
+													echo 'Monto Pedido :<span id="montoPedidoAprobado"></span>';
+												}else{} 
+												 ?>
+												
 												<br>
 																								<div>
 			                                    <h4 class="card-title">Estatus</h4>

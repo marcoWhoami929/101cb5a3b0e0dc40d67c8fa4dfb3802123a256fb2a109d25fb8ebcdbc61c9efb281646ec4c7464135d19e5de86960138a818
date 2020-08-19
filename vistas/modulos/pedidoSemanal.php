@@ -37,7 +37,7 @@
 												<h3>Pedido Semanal</h3>
 												<small>A continuación se detalla el pedido sugerido que el sistema proporciona.</small>
 												<br>
-												<button type="button" class="btn btn-warning" id="btnSolicitarPedido">Solicitar Pedido</button>
+												<button type="button" class="btn btn-warning" id="btnSolicitarPedido" identificador="pedidoSugerido">Solicitar Pedido</button>
 												<br>
 												<br>
 												<table class="table table-bordered table-striped dt-responsive tablePedidoSemanal" width="100%" id="pedidoSemanal" style="border: 2px solid #1F262D">

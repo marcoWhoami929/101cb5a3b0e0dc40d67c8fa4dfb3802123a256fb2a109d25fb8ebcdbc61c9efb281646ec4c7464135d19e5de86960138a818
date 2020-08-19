@@ -82,6 +82,7 @@ class TablaProductosPorAgotarse{
 	 			$indicadorColor = "<button class='btn btn-warning btn-xs'>Surtir</button>";
 	 		}else if($existencias >= $indicador2){
 	 			$indicadorColor = "<button class='btn btn-success btn-xs'>En Stock</button>";
+	 			$enStock = 1;
 	 		}
 
 	 		$fech = $porAgotarse[$i]["fecha"];
@@ -92,7 +93,8 @@ class TablaProductosPorAgotarse{
 
 			if ($_SESSION["grupo"] == "Administrador") {
 
-				$datosJson	 .= '[
+				if ($enStock != 1) {
+					$datosJson	 .= '[
 				      "'.($i+1).'",
 				      "'.$porAgotarse[$i]["codigoProducto"].'",
 				      "'.$porAgotarse[$i]["nombreProducto"].'",
@@ -103,10 +105,12 @@ class TablaProductosPorAgotarse{
 				      "'.$fecha.'",
 				      "'.$indicadorColor.'"
 				    ],';
+				}else{
 
+				}
 			}else{
-
-				$datosJson	 .= '[
+				if ($enStock != 1) {
+					$datosJson	 .= '[
 				      "'.($i+1).'",
 				      "'.$porAgotarse[$i]["codigoProducto"].'",
 				      "'.$porAgotarse[$i]["nombreProducto"].'",
@@ -116,6 +120,7 @@ class TablaProductosPorAgotarse{
 				      "'.$fecha.'",
 				      "'.$indicadorColor.'"
 				    ],';
+				}
 
 			}
 

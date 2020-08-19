@@ -547,7 +547,47 @@ $(".tableAdministradores").on("click", ".btnEliminarPerfil", function(){
  * ACCIONES PARA SOLICITAR PEDIDO SEMANAL
  */
 $("#btnSolicitarPedido").click(function(){
-      window.location.href = "generarNuevoPedido";
+  var identificador = $(this).attr("identificador");
+  localStorage.setItem("tipodePedido", identificador);
+
+  if (identificador == "pedidoManual") {
+    var idSesion = localStorage.getItem("idSesion");
+    var statusPedido = $('#statusPedido').val();
+    localStorage.setItem("statusPedido", statusPedido);
+    var datos = new FormData();
+
+    datos.append("idSesion", idSesion);
+
+    $.ajax({
+
+      url:"ajax/functions.ajax.php",
+      method: "POST",
+      data: datos,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: "json",
+      success: function(respuesta){ 
+        var existente = respuesta["existentes"];
+
+        if (existente != 0) {
+          window.location.href = "generarNuevoPedido";
+        }else{
+          swal({
+              type: "warning",
+              title: "Alto!!",
+              text: "Aun no ha seleccionado algun Producto",
+              showConfirmButton: true,
+              confirmButtonText: "Cerrar"
+          }).then(function(result) {
+          })
+        }
+      }
+    });
+    
+  }else{
+    window.location.href = "generarNuevoPedido";
+  }
 });
  var sucursal = localStorage.getItem("sucursal");
   switch (sucursal) {
@@ -567,8 +607,9 @@ $("#btnSolicitarPedido").click(function(){
       var almacen = "lastorres";
       break;
   }
+  var tipodePedido = localStorage.getItem("tipodePedido");
   tablaSolicitudPedido = $(".tablaSolicitudPedido").DataTable({
-    "ajax":"ajax/tablaSolicitudPedido.ajax.php?almacen="+almacen,
+    "ajax":"ajax/tablaSolicitudPedido.ajax.php?almacen="+almacen+"&tipodePedido="+tipodePedido,
     "deferRender": true,
     "retrieve": true,
     "processing": true,
@@ -611,6 +652,9 @@ function cargarCantidad(id){
     let cantidad = $("#"+id+"").val();
 
     var almacen = localStorage.getItem("sucursal");
+    var tipodePedido = localStorage.getItem("tipodePedido");
+    var idSesion = $("#idSesion").val();
+
     switch (almacen) {
  
       case 'Sucursal San Manuel':
@@ -636,6 +680,8 @@ function cargarCantidad(id){
     datos.append("idProducto",idProducto);
     datos.append("campo",campo);
     datos.append("cantidad",cantidad);
+    datos.append("tipodePedido",tipodePedido);
+    datos.append("idSesion",idSesion);
 
     $.ajax({
         url: "ajax/functions.ajax.php",
@@ -645,7 +691,6 @@ function cargarCantidad(id){
         contentType: false,
         processData: false,
         success: function(respuesta) {
-           
           
             var response = respuesta;
             var responseFinal = response.replace(/['"]+/g, '');
@@ -721,6 +766,9 @@ function cargarCantidad(id){
                       $("#progresoGenerarPedido").modal("show");
                       $("#progreso").html("Procesando pedido...");
                       var comentarios = $("#comentarios").val();
+                      var statusTipoPedido = localStorage.getItem("statusPedido");
+                      var tipodePedido = localStorage.getItem("tipodePedido");
+                      var idSesion = localStorage.getItem("idSesion");
                       
                       var datos = new FormData();
                       datos.append('pedidoSemanal',respuesta);
@@ -728,6 +776,9 @@ function cargarCantidad(id){
                       datos.append('unidadesPedido',unidadesPedido);
                       datos.append('montoPedido',montoPedido);
                       datos.append('comentarios',comentarios);
+                      datos.append('statusTipoPedido',statusTipoPedido);
+                      datos.append('tipodePedido',tipodePedido);
+                      datos.append('idSesion',idSesion);
 
                       $.ajax({
                           url: "ajax/functions.ajax.php",
@@ -1435,7 +1486,6 @@ $(".tablaListaRequisiciones").on("click", ".btnNivelSurtimiento", function(){
 
   var idRequisicion = $(this).attr("idRequisicion");
 
-
   $.ajax({
         type: "POST",
         url: "vistas/modulos/graficos/graficoNivelSurtimiento.php",
@@ -1449,3 +1499,4 @@ $(".tablaListaRequisiciones").on("click", ".btnNivelSurtimiento", function(){
   });
 
 });
+

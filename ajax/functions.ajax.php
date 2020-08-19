@@ -9,16 +9,28 @@ class functionsInventory{
 	public $idProducto;
 	public $cantidad;
 	public $campo;
+	public $tipodePedido;
+	public $idSesion;
 	public function actualizarCantidadSolicitada(){
 
-		$item = "id";
-		$valor = $this->idProducto;
+		$idProducto = $this->idProducto;
+		$campo = $this->campo;
+		$cantidad = $this->cantidad;
 
-		$item2 = $this->campo;
-		$valor2 = $this->cantidad;
-		$tabla = "productos";
 
-		$respuesta = ModeloInventarios::mdlActualizarCantidadSolicitada($tabla,$item,$valor,$item2,$valor2);
+		$tipodePedido = $this->tipodePedido;
+		$idSesion = $this->idSesion;
+		if ($tipodePedido == "pedidoManual") {
+			$tabla = "temp_productos";
+			$campos = "cantidad_tmp = ".$cantidad;
+			$parametros = "id_producto = ".$idProducto." AND idSesion = ".$idSesion;
+		}else{
+			$tabla = "productos";
+			$campos = $campo." = ".$cantidad;
+			$parametros = "id = ".$idProducto;
+		}
+
+		$respuesta = ModeloInventarios::mdlActualizarCantidadSolicitada($tabla,$campos,$parametros);
 		echo json_encode($respuesta);
 
 	}
@@ -44,7 +56,31 @@ class functionsInventory{
 	public $unidadesPedido;
 	public $montoPedido;
 	public $comentarios;
+	public $statusTipoPedido;
+	public $tipodePedidoHecho;
+	public $idSesionUser;
 	public function generarNuevoPedido(){
+		/**
+		 * ELIMINAMOS LOS PRODUCTOS DE LA TABLA TEMPORAL
+		 */
+		$tipoPedido = $this->tipodePedidoHecho;
+		if ($tipoPedido == "pedidoManual") {
+
+			$idSesion = $this->idSesionUser;
+			$productoPedido = $this->pedidoSemanal;
+			$productoPedido = json_decode($productoPedido, true);
+
+			for ($j=0; $j < count($productoPedido["data"]); $j++) { 
+				$idProducto = $productoPedido["data"][$j][0];
+				$table = "temp_productos";
+				$campos = "";
+				$parametros = "WHERE id_producto = ".$idProducto." AND idSesion =".$idSesion;
+				
+				$eliminarTemp = ModeloInventarios::mdlEliminarTemp($table, $parametros);
+
+			}
+			
+		}
 
 		$tabla = "pedidossemanales";
 
@@ -52,6 +88,7 @@ class functionsInventory{
 		$folio = $ultimoPedido["folio"];
 
 		$comment = $this->comentarios;
+		$statusTipoPedido = $this->statusTipoPedido;
 		if ($comment != "") {
 			$comentarios = $comment;
 		}else {
@@ -68,6 +105,7 @@ class functionsInventory{
 						"montoAprobado" => $this->montoPedido,
 						"solicitado" => "1",
 						"comentarios" => $comentarios,
+						"statusTipoPedido" => $statusTipoPedido,
 						"estatus" => "1");
 
 		$generarPedido = ControladorInventarios::ctrGenerarNuevoPedido($tabla,$datos);
@@ -242,6 +280,21 @@ class functionsInventory{
 
 	}
 
+	/**
+	 * CONSULTAR TABLA DE TEMPORALES ANTES DE PASAR A GENERAR PEDIDO
+	 */
+	public $idSesionTemp;
+	public function consultarTemporal(){
+		$idSesionTemp = $this->idSesionTemp;
+		$tabla = "temp_productos";
+		$campos = "COUNT(id_tmp) AS existentes";
+		$parametros = "WHERE idSesion = ".$idSesionTemp;
+
+		$respuesta = ModeloInventarios::mdlConsultarTemp($tabla,$campos,$parametros);
+
+		echo json_encode($respuesta);
+
+	}
 
 }
 
@@ -250,6 +303,8 @@ if (isset($_POST["idProducto"])) {
 	$actualizarSolicitado -> idProducto = $_POST["idProducto"];
 	$actualizarSolicitado -> campo = $_POST["campo"];
 	$actualizarSolicitado -> cantidad = $_POST["cantidad"];
+	$actualizarSolicitado -> tipodePedido = $_POST["tipodePedido"];
+	$actualizarSolicitado -> idSesion = $_POST["idSesion"];
 	$actualizarSolicitado -> actualizarCantidadSolicitada();
 }
 
@@ -271,6 +326,9 @@ if (isset($_POST["sucursal"])) {
 	$generarPedido -> montoPedido = $_POST["montoPedido"];
 	$generarPedido -> pedidoSemanal = $_POST["pedidoSemanal"];
 	$generarPedido -> comentarios = $_POST["comentarios"];
+	$generarPedido -> statusTipoPedido = $_POST["statusTipoPedido"];
+	$generarPedido -> tipodePedidoHecho = $_POST["tipodePedido"];
+	$generarPedido -> idSesionUser = $_POST["idSesion"];
 	$generarPedido -> generarNuevoPedido();
 }
 if (isset($_POST["idRequisicion"])) {
@@ -319,5 +377,11 @@ if (isset($_POST["idRequisicionConcluida"])) {
 	$concluirRequisicion -> idRequisicionConcluida = $_POST["idRequisicionConcluida"];
 	$concluirRequisicion -> observacionesRequisicion = $_POST["observacionesRequisicion"];
 	$concluirRequisicion -> concluirRequisicion();
+}
+
+if (isset($_POST["idSesion"])) {
+	$consultarTemporal = new functionsInventory();
+	$consultarTemporal -> idSesionTemp = $_POST["idSesion"];
+	$consultarTemporal -> consultarTemporal();
 }
 ?>

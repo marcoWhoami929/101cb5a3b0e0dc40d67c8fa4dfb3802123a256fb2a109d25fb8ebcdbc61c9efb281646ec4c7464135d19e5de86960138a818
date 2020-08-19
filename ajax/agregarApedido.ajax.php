@@ -83,7 +83,7 @@
 						<td><?php echo $descripcion; ?></td>
 						<td class='col-xs-1'>
 						<div class="pull-right">
-						<input type="text" class="form-conntrol" style="text-align:right" id="cantidad_<?php echo $id; ?>"  value="1" >
+						<input type="text" class="form-control" style="text-align:center;width: 30%;" id="cantidad_<?php echo $id; ?>"  value="1" >
 						</div></td>
 
 						<td ><span class="pull-right"><a href="#" onclick="agregar('<?php echo $id ?>')"><span class="mdi mdi-plus"></span></a></span></td>

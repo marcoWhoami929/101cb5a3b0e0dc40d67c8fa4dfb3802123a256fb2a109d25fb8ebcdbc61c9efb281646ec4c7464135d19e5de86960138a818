@@ -39,7 +39,14 @@
 												<br>
 												Unidades Solicitadas:<span id="unidadesPedido"></span>
 												<br>
-												Monto Pedido :<span id="montoPedido"></span>
+												<?php 
+												if ($_SESSION["Administrador"]) {
+												 	echo 'Monto Pedido :<span id="montoPedido"></span>';
+												 }else{
+												 	
+												 } 
+												 ?>
+												
 												<br>
 												<button type="button" class="btn btn-success" id="btnGenerarPedido">Generar Pedido</button>
 												<br>
@@ -50,6 +57,7 @@
 												<br>
 												<div class="table-responsive">
 													<table class="table table-bordered table-striped dt-responsive tablaSolicitudPedido" width="100%"  style="border: 2px solid #1F262D">
+														<input type="hidden" class="form-control" id="idSesion" value="<?php echo $_SESSION["id"]; ?>">
 
 													<thead style="background:#1F262D;color: white">
 

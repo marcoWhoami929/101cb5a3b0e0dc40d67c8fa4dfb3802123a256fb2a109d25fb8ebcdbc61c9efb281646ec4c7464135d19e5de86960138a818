@@ -45,11 +45,19 @@ class TablaDetalleRequisicionGeneral{
 			$arregloUnidades += $detalleRequisicion[$i]["unidadesAprobadas"];
 	 		$arregloMonto +=$detalleRequisicion[$i]["montoAprobado"];
 
+	 		if ($detalleRequisicion[$i]["existencias"] == 0) {
+
+				$cambio = "<button type='button' class='btn btn-secondary btnCambiar' idProducto='".$detalleRequisicion[$i]["idProducto"]."' idPedido='".$detalleRequisicion[$i]["idPedido"]."' data-toggle='modal' data-target='#verContratipo'><i class='mdi mdi-cloud-sync'></i> </button>";
+			}else{
+				$cambio = "<button type='button' class='btn btn-secondary btnCambiar' idProducto='".$detalleRequisicion[$i]["idProducto"]."' idPedido='".$detalleRequisicion[$i]["idPedido"]."' data-toggle='modal' data-target='#' disabled><i class='mdi mdi-cloud-sync'></i> </button>";
+			}
+
 			$datosJson	 .= '[
 					  "'.$estatus.'",
 					  "'.$detalleRequisicion[$i]["codigo"].'",
 				      "'.$detalleRequisicion[$i]["producto"].'",
 				      "'.$detalleRequisicion[$i]["existencias"].'",
+				      "'.$cambio.'",
 				      "'.$detalleRequisicion[$i]["solicitado"].'",
 				      "'.$cantidadAprobada.'",
 				      "'.$detalleRequisicion[$i]["pendiente"].'",

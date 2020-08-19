@@ -190,13 +190,9 @@ class ModeloInventarios{
 	/**	
 	 *ACTUALIZAR CANTIDAD SOLICITADA DE PEDIDO
 	 */
-	static public function mdlActualizarCantidadSolicitada($tabla,$item,$valor,$item2,$valor2){
+	static public function mdlActualizarCantidadSolicitada($tabla,$campos,$parametros){
  
-		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $item2 = :$item2 WHERE $item = :$item");
-
-		$stmt-> bindParam(":".$item,$valor,PDO::PARAM_INT);
-		$stmt-> bindParam(":".$item2,$valor2,PDO::PARAM_STR);
-
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $campos WHERE $parametros");
 
 		if($stmt -> execute()){
 
@@ -210,6 +206,36 @@ class ModeloInventarios{
 
 		$stmt -> close();
 		$stmt = null;
+
+	}
+	/**
+	 * MODELO PARA ELIMINAR DATOS DE LA TABLA DE PRODUCTOS TEMPORALES
+	 */
+	static public function mdlEliminarTemp($table, $parametros){
+		$tabla = $table;
+
+		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla $parametros");
+
+		if($stmt -> execute()){
+
+			return "ok";
+		
+		}else{
+
+			return "error";	
+
+		}
+
+		$stmt -> close();
+		$stmt = null;
+
+	}
+	static public function mdlConsultarTemp($tabla, $campos, $parametros){
+
+		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
+		//var_dump($stmt);
+		$stmt -> execute();
+		return $stmt -> fetch();
 
 	}
 		/*
@@ -229,11 +255,12 @@ class ModeloInventarios{
 	 */
 	static public function mdlGenerarNuevoPedido($tabla, $datos){
  
-		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id,descripcion,comentarios,sucursal,unidadesSolicitadas,unidadesAprobadas,montoSolicitado,montoAprobado,solicitado,estatus) VALUES(:id,:descripcion,:comentarios,:sucursal,:unidadesPedido,:unidadesAprobadas,:montoPedido,:montoAprobado,:solicitado,:estatus)");
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id,descripcion,comentarios,statusTipoPedido,sucursal,unidadesSolicitadas,unidadesAprobadas,montoSolicitado,montoAprobado,solicitado,estatus) VALUES(:id,:descripcion,:comentarios,:statusTipoPedido,:sucursal,:unidadesPedido,:unidadesAprobadas,:montoPedido,:montoAprobado,:solicitado,:estatus)");
 
 		$stmt->bindParam(":id",$datos["id"],PDO::PARAM_STR);
 		$stmt->bindParam(":descripcion",$datos["descripcion"],PDO::PARAM_STR);
 		$stmt->bindParam(":comentarios",$datos["comentarios"],PDO::PARAM_STR);
+		$stmt->bindParam(":statusTipoPedido",$datos["statusTipoPedido"],PDO::PARAM_STR);
 		$stmt->bindParam(":sucursal",$datos["sucursal"],PDO::PARAM_STR);
 		$stmt->bindParam(":unidadesPedido",$datos["unidadesPedido"],PDO::PARAM_STR);
 		$stmt->bindParam(":unidadesAprobadas",$datos["unidadesAprobadas"],PDO::PARAM_STR);

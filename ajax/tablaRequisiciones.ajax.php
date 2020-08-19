@@ -57,12 +57,19 @@ class TablaRequisiciones{
 	 			$concluida = $requisicion[$i]["observacionesConcluido"];
 	 		}
 
+	 		if ($requisicion[$i]["statusTipoPedido"] == 0) {
+	 			$statusTipoPedido = "<button type='button' class='btn btn-warning btn-sm'>Urgente</button>";
+	 		}else{
+	 			$statusTipoPedido = "<button type='button' class='btn btn-danger btn-sm'>Extraurgente</button>";
+	 		}
+
 	 		if ($_SESSION["grupo"] == "Administrador") {
 	 			$datosJson	 .= '[
 					  "'.$estatus.'",
 				      "'.$requisicion[$i]["id"].'",
 				      "'.$requisicion[$i]["descripcion"].'",
 				      "'.$requisicion[$i]["comentarios"].'",
+				      "'.$statusTipoPedido.'",
 				      "'.$requisicion[$i]["unidadesSolicitadas"].'",
 				      "$ '.$requisicion[$i]["montoSolicitado"].'",
 				      "'.$requisicion[$i]["fecha"].'",
@@ -77,6 +84,7 @@ class TablaRequisiciones{
 				      "'.$requisicion[$i]["id"].'",
 				      "'.$requisicion[$i]["descripcion"].'",
 				      "'.$requisicion[$i]["comentarios"].'",
+				      "'.$statusTipoPedido.'",
 				      "'.$requisicion[$i]["unidadesSolicitadas"].'",
 				      
 				      "'.$requisicion[$i]["fecha"].'",

@@ -1,6 +1,8 @@
 <?php
 error_reporting(0);
 session_start();
+
+//$session_id= session_id();
 require_once "../controladores/inventarios.php";
 require_once "../modelos/inventarios.php";
 
@@ -8,39 +10,58 @@ class TablaSolicitudPedido{
 
 
 	public function mostrarTablas(){
+		$idSesion = $_SESSION["id"];
 
 		//$fechaActual = date("Y-m-d");
 		$fechaActual = "2020-08-05";
 		$fechaFinal = date("Y-m-d", strtotime($fechaActual));
+
+		$tipoPedido = $_GET["tipodePedido"];
 
 		$tablaInicial = "almacen".$_GET["almacen"]."1";
 
 		switch ($_GET["almacen"]) {
 			case 'general':
 				$almacen = "solicitadoGral1";
+				$campo = "stockMinimoGral1";
 				break;
 			case 'sanmanuel':
 				$almacen = "solicitadoSM1";
+				$campo = "stockMinimoSM1";
 				break;
 			case 'reforma':
 				$almacen = "solicitadoRf1";
+				$campo = "stockMinimoRf1";
 				break;
 			case 'santiago':
 				$almacen = "solicitadoSg1";
+				$campo = "stockMinimoSg1";
 				break;
 			case 'capu':
 				$almacen = "solicitadoCp1";
+				$campo = "stockMinimoCp1";
 				break;
 			case 'lastorres':
 				$almacen = "solicitadoTr1";
+				$campo = "stockMinimoTr1";
 				break;
 			
 			
 		}
 
-		$tabla = "productos AS p INNER JOIN ".$tablaInicial." AS al ON p.id = al.idProducto";
-		$campos = " MAX(p.id) as idProducto,MAX(p.codigoProducto) as codigoProducto, MAX(p.nombreProducto) as nombreProducto, MAX(p.stockMinimoGral1) as stockMinimoGral1, MAX(al.existenciasUnidades) as existenciasUnidades, MAX(al.ultimoCosto) as ultimoCosto, MAX(al.fecha) as fecha,p.".$almacen." as solicitado";
-    	$parametros = "WHERE al.existenciasUnidades != 0 AND al.fecha = '".$fechaFinal."' group by p.codigoProducto";	
+		if ($tipoPedido == "pedidoManual") {
+
+			$tabla = "productos AS p INNER JOIN temp_productos AS t ON p.id = t.id_producto INNER JOIN ".$tablaInicial." AS al ON p.id = al.idProducto";
+			$campos = "p.id AS idProducto,p.codigoProducto AS codigoProducto, p.nombreProducto AS nombreProducto, p.".$campo." AS stockMinimo, t.cantidad_tmp AS solicitado, al.existenciasUnidades AS existenciasUnidades, al.ultimoCosto AS ultimoCosto, al.fecha AS fecha";
+			$parametros = "WHERE t.idSesion = ".$idSesion." AND al.idImportacion = (SELECT MAX(al.idImportacion) FROM ".$tablaInicial." as al WHERE al.idProducto = t.id_producto)";
+			
+		}else{
+
+			$tabla = "productos AS p INNER JOIN ".$tablaInicial." AS al ON p.id = al.idProducto";
+			$campos = " MAX(p.id) as idProducto,MAX(p.codigoProducto) as codigoProducto, MAX(p.nombreProducto) as nombreProducto, MAX(p.".$campo.") as stockMinimo, MAX(al.existenciasUnidades) as existenciasUnidades, MAX(al.ultimoCosto) as ultimoCosto, MAX(al.fecha) as fecha,p.".$almacen." as solicitado";
+    		$parametros = "WHERE  al.existenciasUnidades != 0 AND al.fecha = '".$fechaFinal."' group by p.codigoProducto";
+			
+		}
 
  		$pedido = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
 
@@ -57,7 +78,7 @@ class TablaSolicitudPedido{
 
 	 	for($i = 0; $i < count($pedido); $i++){
 
-	 		$stockMinimo = $pedido[$i]["stockMinimoGral1"];
+	 		$stockMinimo = $pedido[$i]["stockMinimo"];
 	 		$existencias = $pedido[$i]["existenciasUnidades"];
 	 		$ultimoCosto = $pedido[$i]["ultimoCosto"];
 
@@ -125,30 +146,112 @@ class TablaSolicitudPedido{
 			DEVOLVER DATOS JSON
 			=============================================*/
 
-			if ($indicadorFaltante == "1" and $indicadorEstatusFaltante == "0") {
-				
-			$datosJson	 .= '[
-				   
-				      "<strong>'.$pedido[$i]["codigoProducto"].'</strong>",
-				      "'.$pedido[$i]["nombreProducto"].'",
-				      "'.$existencias.'",
-				      "'.$faltantantesUnidad.'",
-				      "'.$cantidadSolicitada.'",
-				      "$ '.number_format($faltanteMonto,2).'",
-				      "$ '.$montoSolicitado.'",
-				      "'.$estatus.'"
-				    ],';
+			if ($_SESSION["grupo"] == "Administrador") {
 
-			$datosJson2	 .= '[
-				   	  "'.$pedido[$i]["idProducto"].'",
-				      "'.$existencias.'",
-				      "'.$faltantantesUnidad.'",
-				      "'.$unidades.'",
-				      "'.number_format($faltanteMonto,2,'.', '').'",
-				      "'.number_format($montoFaltanteSolicitado,2,'.', '').'"
-				    ],';
-			}else{
+				if ($tipoPedido == "pedidoManual") {
+					$datosJson	 .= '[
+						   
+						      "<strong>'.$pedido[$i]["codigoProducto"].'</strong>",
+						      "'.$pedido[$i]["nombreProducto"].'",
+						      "'.$existencias.'",
+						      "'.$faltantantesUnidad.'",
+						      "'.$cantidadSolicitada.'",
+						      "$ '.number_format($faltanteMonto,2).'",
+						      "$ '.$montoSolicitado.'",
+						      "'.$estatus.'"
+						    ],';
+
+					$datosJson2	 .= '[
+						   	  "'.$pedido[$i]["idProducto"].'",
+						      "'.$existencias.'",
+						      "'.$faltantantesUnidad.'",
+						      "'.$unidades.'",
+						      "'.number_format($faltanteMonto,2,'.', '').'",
+						      "'.number_format($montoFaltanteSolicitado,2,'.', '').'"
+						    ],';
+				}else{
+
+					if ($indicadorFaltante == "1" and $indicadorEstatusFaltante == "0") {
 				
+						$datosJson	 .= '[
+							   
+							      "<strong>'.$pedido[$i]["codigoProducto"].'</strong>",
+							      "'.$pedido[$i]["nombreProducto"].'",
+							      "'.$existencias.'",
+							      "'.$faltantantesUnidad.'",
+							      "'.$cantidadSolicitada.'",
+							      "$ '.number_format($faltanteMonto,2).'",
+							      "$ '.$montoSolicitado.'",
+							      "'.$estatus.'"
+							    ],';
+
+						$datosJson2	 .= '[
+							   	  "'.$pedido[$i]["idProducto"].'",
+							      "'.$existencias.'",
+							      "'.$faltantantesUnidad.'",
+							      "'.$unidades.'",
+							      "'.number_format($faltanteMonto,2,'.', '').'",
+							      "'.number_format($montoFaltanteSolicitado,2,'.', '').'"
+							    ],';
+					}else{
+							
+					}
+
+				}
+				
+				
+			}else{
+				if ($tipoPedido == "pedidoManual") {
+
+					$datosJson	 .= '[
+						   
+						      "<strong>'.$pedido[$i]["codigoProducto"].'</strong>",
+						      "'.$pedido[$i]["nombreProducto"].'",
+						      "'.$existencias.'",
+						      "'.$faltantantesUnidad.'",
+						      "'.$cantidadSolicitada.'",
+						      
+						      "'.$estatus.'"
+						    ],';
+
+					$datosJson2	 .= '[
+						   	  "'.$pedido[$i]["idProducto"].'",
+						      "'.$existencias.'",
+						      "'.$faltantantesUnidad.'",
+						      "'.$unidades.'",
+						      "'.number_format($faltanteMonto,2,'.', '').'",
+						      "'.number_format($montoFaltanteSolicitado,2,'.', '').'"
+						    ],';
+
+				}else{
+
+					if ($indicadorFaltante == "1" and $indicadorEstatusFaltante == "0") {
+				
+						$datosJson	 .= '[
+							   
+							      "<strong>'.$pedido[$i]["codigoProducto"].'</strong>",
+							      "'.$pedido[$i]["nombreProducto"].'",
+							      "'.$existencias.'",
+							      "'.$faltantantesUnidad.'",
+							      "'.$cantidadSolicitada.'",
+							      
+							      "'.$estatus.'"
+							    ],';
+
+						$datosJson2	 .= '[
+							   	  "'.$pedido[$i]["idProducto"].'",
+							      "'.$existencias.'",
+							      "'.$faltantantesUnidad.'",
+							      "'.$unidades.'",
+							      "'.number_format($faltanteMonto,2,'.', '').'",
+							      "'.number_format($montoFaltanteSolicitado,2,'.', '').'"
+							    ],';
+					}else{
+							
+					}
+
+				}
+
 			}
 
 	 	}
