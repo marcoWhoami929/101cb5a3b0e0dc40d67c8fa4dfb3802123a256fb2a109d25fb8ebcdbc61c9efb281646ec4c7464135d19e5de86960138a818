@@ -193,7 +193,7 @@ class ModeloInventarios{
 	static public function mdlActualizarCantidadSolicitada($tabla,$campos,$parametros){
  
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $campos WHERE $parametros");
-
+		//var_dump($stmt);
 		if($stmt -> execute()){
 
 			return "ok";
@@ -519,6 +519,57 @@ class ModeloInventarios{
 
 		$stmt -> close();
 
+		$stmt = null;
+
+	}
+
+	/*
+	OBTENER EL ULTIMO FOLIO EN LA TABLA DE INVENTARIO FISICO
+	 */
+	static public function mdlObtenerUltimoFolioInventarioFisico(){
+
+		$stmt = Conexion::conectar()->prepare("SELECT IF(MAX(id) IS NULL,1,MAX(id)+1) as folio FROM inventariofisico");
+
+		$stmt-> execute();
+
+		return $stmt -> fetch();
+
+	}
+
+	/*
+	MOSTRAR DATOS REQUISICION
+	 */
+	static public function mdlVerProductosInventarioFisico($tabla,$campos,$parametros){
+
+		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla WHERE $parametros");
+
+		$stmt -> execute();
+
+		return $stmt->fetchAll();
+
+	}
+
+	static public function mdlInsertarInventarioFisico($tablaInsertar,$datos){
+ 		
+
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tablaInsertar(descripcion, tipoInventario, idFamilia, sucursal) VALUES(:descripcion, :tipoInventario, :idFamilia, :sucursal)");
+
+		$stmt->bindParam(":descripcion",$datos["descripcion"],PDO::PARAM_STR);
+		$stmt->bindParam(":tipoInventario",$datos["tipoInventario"],PDO::PARAM_STR);
+		$stmt->bindParam(":idFamilia",$datos["idFamilia"],PDO::PARAM_INT);
+		$stmt->bindParam(":sucursal",$datos["sucursal"],PDO::PARAM_STR);
+
+		if($stmt -> execute()){
+
+			return "ok";
+		
+		}else{
+
+			return "error";	
+
+		}
+
+		$stmt -> close();
 		$stmt = null;
 
 	}

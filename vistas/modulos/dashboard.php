@@ -1,6 +1,10 @@
 <?php
 $sesion = $_SESSION["id"];
+$nameSesion = $_SESSION["nombre"];
+$grupoSesion = $_SESSION["grupo"];
 echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion."');</script>";
+echo "<script type='text/javascript'>localStorage.setItem('nameSesion','".$nameSesion."');</script>";
+echo "<script type='text/javascript'>localStorage.setItem('grupoSesion','".$grupoSesion."');</script>";
 
 ?>
 <div class="preloader">
