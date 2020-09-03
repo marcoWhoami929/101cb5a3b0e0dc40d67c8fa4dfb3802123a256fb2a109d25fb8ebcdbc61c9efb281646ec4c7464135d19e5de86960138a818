@@ -199,6 +199,21 @@ class ControladorInventarios{
 
 		return $respuesta;
 	}
+	/*
+	MOSTRAR LA TABLA CON LOS INVENTARIOS FISICOS QUE SE HAN HECHO
+	 */
+	static public function ctrRevisionFisicos($tabla, $campos, $parametros){
+
+		$respuesta = ModeloInventarios::mdlRevisionFisicos($tabla, $campos, $parametros);
+
+		return $respuesta;
+	}
+	static public function ctrDetalleRevisionFisicos($tabla, $campos, $parametros){
+
+		$respuesta = ModeloInventarios::mdlDetalleRevisionFisicos($tabla, $campos, $parametros);
+
+		return $respuesta;
+	}
 
 }
 

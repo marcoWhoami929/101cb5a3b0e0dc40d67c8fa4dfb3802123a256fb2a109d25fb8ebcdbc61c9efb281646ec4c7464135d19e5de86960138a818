@@ -313,6 +313,80 @@ $(document).ready(function(){
     });
   });
 
+/**
+ * TABLA MOSTRAR LOS DATOS DE LA REVISION DEL INVENTARIO FISICO
+ */
+  tablaRevisionInventario = $(".tablaRevisionInventario").DataTable({
+    "ajax":"ajax/tablaRevisionFisicos.ajax.php?Revision=",
+    "deferRender": true,
+    "retrieve": true,
+    "processing": true,
+    "language": {
+
+    "sProcessing":     "Procesando...",
+    "sLengthMenu":     "Mostrar _MENU_ registros",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix":    "",
+    "sSearch":         "Buscar:",
+    "sUrl":            "",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
+          "sFirst":    "Primero",
+          "sLast":     "Último",
+          "sNext":     "Siguiente",
+          "sPrevious": "Anterior"
+    },
+    "oAria": {
+      "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+      "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    }
+
+    }
+
+  });
+  /**
+ * TABLA MOSTRAR LOS DETALLES DE LA REVISION DEL INVENTARIO FISICO
+ */
+var idRevisionF = localStorage.getItem("idRevisionFisico");
+  tablaDetalleRevisionInventario = $(".tablaDetalleRevisionInventario").DataTable({
+    "ajax":"ajax/tablaRevisionFisicos.ajax.php?Detalle=&idFisico="+idRevisionF,
+    "deferRender": true,
+    "retrieve": true,
+    "processing": true,
+    "language": {
+
+    "sProcessing":     "Procesando...",
+    "sLengthMenu":     "Mostrar _MENU_ registros",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix":    "",
+    "sSearch":         "Buscar:",
+    "sUrl":            "",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
+          "sFirst":    "Primero",
+          "sLast":     "Último",
+          "sNext":     "Siguiente",
+          "sPrevious": "Anterior"
+    },
+    "oAria": {
+      "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+      "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    }
+
+    }
+
+  });
+
 function cargarCantidadFisico(id){
 
     var id = id;
@@ -375,6 +449,7 @@ function cargarCantidadFisico(id){
     }
 
     var datoTabla = "existenciaFisica";
+    var fechaActualF = $("#fechaActual").val();
 
     var datos = new FormData();
     datos.append("idProductoF",idProductoF);
@@ -382,6 +457,7 @@ function cargarCantidadFisico(id){
     datos.append("cantidadFisico",cantidadFisico);
     datos.append("tablaFisico",tablaFisico);
     datos.append("datoTabla",datoTabla);
+    datos.append("fechaActualF",fechaActualF);
 
     $.ajax({
         url: "ajax/functions.ajax.php",
@@ -514,19 +590,34 @@ function cargarCantidadFisico(id){
         processData: false,
         success: function(respuesta) {
           var response = respuesta;
-
+          console.log(response);
             var responseFinal = response.replace(/['"]+/g, '');
            console.log(responseFinal);
             if (responseFinal == 'ok') {
-
-               tablaInventarioFisico.ajax.reload();
-
+              swal({
+                  type: "success",
+                  title: "Exito!!",
+                  text: "Los datos se han Guardado Correctamente",
+                  showConfirmButton: true,
+                  confirmButtonText: "Cerrar"
+                  }).then(function(result) {
+                    window.location = "revisionInventarios";
+                  })
              }
 
         }
     })
   }
   });
+
+  $(".tablaRevisionInventario").on("click",".btnVerDetalleinvFisico",function(){
+
+      var idRevisionFisico = $(this).attr("idRevision");
+      localStorage.setItem("idRevisionFisico", idRevisionFisico);
+
+     window.location = "detalleRevisionFisicos";
+      
+})
 
 
 /**

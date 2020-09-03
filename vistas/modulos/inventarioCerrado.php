@@ -14,6 +14,7 @@
     
     $grupo = $_SESSION["grupo"];
     $sesion = $_SESSION["nombre"];
+
     if ($grupo == "Administrador") {
     	$almacen = "Almacen General";
     }else{
@@ -29,6 +30,8 @@
 	        $almacen = "Capu";
 	    }
 	}
+
+	$fechaActual = date("Y-m-d");
 
 ?>
 
@@ -123,6 +126,7 @@
 
 														<input type="hidden" name="clasificacionFamilia" id="clasificacionFamilia" value="<?php echo $familia ?>">
 														<input type="hidden" name="tipoInventario" id="tipoInventario" value="<?php echo $inventario ?>">
+														<input type="hidden" name="fechaActual" id="fechaActual" value="<?php echo $fechaActual ?>">
 														
 
 														
@@ -181,5 +185,108 @@
         });
   });
 
+</script>
+<script language="JavaScript" type="text/javascript">
+$(document).ready(function(){
+    var nombreSesion = localStorage.getItem("nameSesion");
+    var grupoSesion = localStorage.getItem("grupoSesion");
+	var validar = $("#tipo").val();
+	var tipoInventario = $("#statusInventario").val();
 
+    if (grupoSesion == "Administrador") {
+
+
+      	if (tipoInventario == "cerrado") {
+          	var tablaInFisico = "almacengeneral1";
+        }else{
+          	var tablaInFisico = "almacengeneral2";
+        }
+
+    }else{
+      	switch (nombreSesion) {
+ 
+	        case 'Sucursal San Manuel':
+	          if (tipoInventario == "cerrado") {
+	            var tablaInFisico = "almacensanmanuel1";
+	          }else{
+	            var tablaInFisico = "almacensanmanuel2";
+	          }
+	        break;
+	        case 'Sucursal Reforma':
+	          if (tipoInventario == "cerrado") {
+	            var tablaInFisico = "almacenreforma1";
+	          }else{
+	            var tablaInFisico = "almacenreforma2";
+	          }
+	        break;
+	        case 'Sucursal Santiago':
+	          if (tipoInventario == "cerrado") {
+	            var tablaInFisico = "almacensantiago1";
+	          }else{
+	            var tablaInFisico = "almacensantiago2";
+	          }
+	        break;
+	        case 'Sucursal Capu':
+	          if (tipoInventario == "cerrado") {
+	            var tablaInFisico = "almacencapu1";
+	          }else{
+	            var tablaInFisico = "almacencapu2";
+	          }
+	        break;
+	        case 'Sucursal Las Torres':
+	          if (tipoInventario == "cerrado") {
+	            var tablaInFisico = "almacenlastorres1";
+	          }else{
+	            var tablaInFisico = "almacenlastorres2";
+	          }
+	        break;
+      	}
+    }
+
+
+	if (validar == "") {
+		var bPreguntar = false;
+
+	}else{
+		var bPreguntar = true;
+     
+	    window.onbeforeunload = preguntarAntesDeSalir(bPreguntar);
+
+	    function preguntarAntesDeSalir(bPreguntar) {
+
+	     	if (bPreguntar){
+
+	      		var respuesta = confirm ( '¿Seguro que quieres salir?' );
+
+	      		if (respuesta) {
+
+			      	var fechaActualFisico = $("#fechaActual").val();
+
+			      	var datos = new FormData();
+			      	datos.appen("fechaActualFisico",fechaActualFisico);
+			      	datos.appen("tablaInFisico",tablaInFisico);
+
+					      	$.ajax({
+					        url: "ajax/functions.ajax.php",
+					        method: "POST",
+					        data: datos,
+					        cache: false,
+					        contentType: false,
+					        processData: false,
+					        success: function(respuesta) {
+					          
+
+					        }
+					    })
+
+	      		}else{
+
+	     		 }
+	        	
+
+	     	 }
+      	return respuesta;
+    	}
+	}
+})
 </script>
