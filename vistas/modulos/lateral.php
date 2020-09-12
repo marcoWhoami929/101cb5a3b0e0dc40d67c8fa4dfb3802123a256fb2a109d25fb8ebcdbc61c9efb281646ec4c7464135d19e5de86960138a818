@@ -38,13 +38,17 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </li>';
+                            </li>
+
+                            <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="revisionInventarios" aria-expanded="false"><i class="mdi mdi-checkbox-marked-outline"></i><span class="hide-menu">Revisión Inventario</span></a></li>
+                            <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="existenciasGenerales" aria-expanded="false"><i class="mdi mdi-search-web"></i><span class="hide-menu">Existencias Generales</span></a></li>';
 
                             if ($_SESSION["perfil"] == "Administrador General") {
                                echo '<li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="administradores" aria-expanded="false"><i class="mdi mdi-account-settings-variant"></i><span class="hide-menu"> Usuarios</span></a></li>';
                             }else{
                                 
                             }
+                            echo '';
                             
                             
                     }else{
@@ -79,7 +83,11 @@
                             </ul>
                         </li>
 
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="revisionInventarios" aria-expanded="false"><i class="mdi mdi-checkbox-marked-outline"></i><span class="hide-menu">Revisión Inventario</span></a></li>
+
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="existenciasGenerales" aria-expanded="false"><i class="mdi mdi-search-web"></i><span class="hide-menu">Existencias Generales</span></a></li>
+
+                        
                         ';
                     }
                 ?>

@@ -489,6 +489,7 @@ function cargarCantidadFisico(id){
     var grupoSesion = localStorage.getItem("grupoSesion");
 
     var tipoInventario = $("#statusInventario").val();
+    var stadoInventario = tipoInventario;
 
     if (grupoSesion == "Administrador") {
 
@@ -581,6 +582,7 @@ function cargarCantidadFisico(id){
     datos.append("nameUser",nameUser);
     datos.append("tipoFisico",tipoFisico);
     datos.append("familiaF",familiaF);
+    datos.append("stadoInventario",stadoInventario);
     $.ajax({
         url: "ajax/functions.ajax.php",
         method: "POST",

@@ -29,6 +29,8 @@
 	    }
 	}
 
+	$fechaActual = date("Y-m-d");
+
 ?>
 
 <div class="preloader">
@@ -122,6 +124,7 @@
 
 														<input type="hidden" name="clasificacionFamilia" id="clasificacionFamilia" value="<?php echo $familia ?>">
 														<input type="hidden" name="tipoInventario" id="tipoInventario" value="<?php echo $inventario ?>">
+														<input type="hidden" name="fechaActual" id="fechaActual" value="<?php echo $fechaActual ?>">
 														<input type="hidden" name="fechaActual" id="fechaActual" value="<?php echo $fechaActual ?>">
 														
 

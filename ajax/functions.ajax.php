@@ -5,7 +5,6 @@ require_once("../controladores/inventarios.php");
 require_once("../modelos/inventarios.php");
 class functionsInventory{
 
-
 	public $idProducto;
 	public $cantidad;
 	public $campo;
@@ -131,18 +130,11 @@ class functionsInventory{
 
 			$agregarProductosPedido = ControladorInventarios::ctrInsertarProductosPedido($tabla,$datosPedido);
 
-			
-
 			}
 			echo "ok";
-			
-			
-
 		}
-		
-
-
 	}
+
 	public $idRequisicion;
 	public function obtenerDatosRequisicion(){
 
@@ -158,7 +150,6 @@ class functionsInventory{
 	/*=============================================
 	ACTIVAR REVISION PEDIDO
 	=============================================*/	
-
 	public $idRequisicionRevision;
 	public $estadoRequisicion;
 
@@ -180,10 +171,10 @@ class functionsInventory{
 		echo $respuesta;
 
 	}
+
 	/*=============================================
 	ACTUALIZAR ESTATUS PEDIDO
 	=============================================*/	
-
 	public $idProductoRequisicion;
 	public $estadoProducto;
 
@@ -203,6 +194,7 @@ class functionsInventory{
 		echo $respuesta;
 
 	}
+
 	public $idProductoAprobar;
 	public $cantidadAprobar;
 	
@@ -219,6 +211,7 @@ class functionsInventory{
 		echo json_encode($respuesta);
 
 	}
+
 	public $sesion3;
 	public function obtenerDatosRequisicionAprobada(){
 
@@ -228,6 +221,7 @@ class functionsInventory{
 
 		echo json_encode($respuesta."|".$respuesta2);
 	}
+
 	/*
 	APROBAR REQUISICION
 	 */
@@ -251,10 +245,9 @@ class functionsInventory{
 		$aprobarRequisicion = ControladorInventarios::ctrAprobarRequisicion($tabla,$datos);
 
 		echo $aprobarRequisicion;
-		
-
 
 	}
+
 	/*
 	CONCLUIR REQUISICION
 	 */
@@ -275,8 +268,6 @@ class functionsInventory{
 		$concluir = ControladorInventarios::ctrConcluirRequisicion($tabla,$datos);
 
 		echo $concluir;
-		
-
 
 	}
 
@@ -295,6 +286,7 @@ class functionsInventory{
 		echo json_encode($respuesta);
 
 	}
+
 	/**
 	 * ACTUALIZAR CANTIDAD FISICA
 	 */
@@ -313,7 +305,6 @@ class functionsInventory{
 		$idT = $this->idTabla;
 		$fechaActualF = $this->fechaActualF;
 
-
 		$tabla = $table;
 		$campos = $dato." = ".$cantidadF.", fechaInventarioFisico = '".$fechaActualF."'";
 		$parametros = "id = ".$idT." AND idProducto =".$idP;
@@ -323,6 +314,7 @@ class functionsInventory{
 		echo json_encode($respuesta);
 
 	}
+
 	/**
 	 * OBTENER LOS DATOS DE LOS PRODUCTOS CON INVENTARIO FISICO
 	 */
@@ -331,6 +323,7 @@ class functionsInventory{
 	public $nameUser;
 	public $tipoFisico;
 	public $familiaF;
+	public $stadoInventario;
 	public function inventarioFisicoRevisado(){
 
 		$table = $this->tablaFisico2;
@@ -340,7 +333,9 @@ class functionsInventory{
 		$tipoInventarioF = $this->tipoFisico;
 		$idFamilia = $this->familiaF;
 
-		$descripcion = "Inventario Fisico Realizado";
+		$status = $this->stadoInventario;
+
+		$descripcion = "Inventario Fisico Realizado en Almacén de tipo ".$status;
 		$fechaHoy = date('Y-m-d');
 
 		$tablaInsertar = "inventariofisico";
@@ -357,11 +352,9 @@ class functionsInventory{
 			$ultimoFolioFisico = ModeloInventarios::mdlObtenerUltimoFolioInventarioFisico();
 			$folioFisico = $ultimoFolioFisico["folio"];
 
-			
-
 			$tabla = $table." AS al INNER JOIN productos AS p ON al.idProducto = p.id";
 			$campos = "al.id, al.idProducto, p.codigoProducto, p.nombreProducto, al.entradasUnidades, al.salidasUnidades, al.existenciasUnidades, al.existenciaFisica";
-			$parametros = "existenciaFisica != '' AND fechaInventarioFisico = '".$fechaHoy."' AND idImportacion = (SELECT MAX(al.idImportacion) FROM almacengeneral1 AS al)";
+			$parametros = "al.existenciaFisica != '' AND al.fechaInventarioFisico = '".$fechaHoy."' AND al.idImportacion = (SELECT MAX(al.idImportacion) FROM ".$table." AS al)";
 
 			$verProductosInventarioFisico = ModeloInventarios::mdlVerProductosInventarioFisico($tabla,$campos,$parametros);
 
@@ -384,17 +377,16 @@ class functionsInventory{
 				$respuesta = ModeloInventarios::mdlInsertarProdutosFisico($datos);
 
 			}
-
+			
 			if ($respuesta == "ok") {
 				$tabla = $table;
 				$campos = "existenciaFisica = '', fechaInventarioFisico = ''";
-				$parametros = "existenciaFisica != '' AND fechaInventarioFisico = '".$fechaHoy."' AND idImportacion = (SELECT MAX(al.idImportacion) FROM almacengeneral1 AS al)";
+				$parametros = "existenciaFisica != '' AND fechaInventarioFisico = '".$fechaHoy."' AND idImportacion = (SELECT MAX(al.idImportacion) FROM ".$table." AS al)";
 
 				$respuestaEditar = ModeloInventarios::mdlActualizarCantidadSolicitada($tabla,$campos,$parametros);
 			}
 			
 		}
-
 
 		echo json_encode($respuesta);
 
@@ -413,12 +405,11 @@ class functionsInventory{
 
 		$tabla = $table;
 		$campos = "existenciaFisica = '', fechaInventarioFisico = ''";
-		$parametros = "existenciaFisica != '' AND fechaInventarioFisico = '".$fechaActual."' AND idImportacion = (SELECT MAX(al.idImportacion) FROM almacengeneral1 AS al)";
+		$parametros = "existenciaFisica != '' AND fechaInventarioFisico = '".$fechaActual."' AND idImportacion = (SELECT MAX(al.idImportacion) FROM ".$table." AS al)";
 
 		$respuesta = ModeloInventarios::mdlActualizarCantidadSolicitada($tabla,$campos,$parametros);
 
 		echo json_encode($respuesta);
-
 
 	}
 
@@ -529,6 +520,7 @@ if (isset($_POST["tablaFisico2"])) {
 	$inventarioFisico -> nameUser = $_POST["nameUser"];
 	$inventarioFisico -> tipoFisico = $_POST["tipoFisico"];
 	$inventarioFisico -> familiaF = $_POST["familiaF"];
+	$inventarioFisico -> stadoInventario = $_POST["stadoInventario"];
 	$inventarioFisico -> inventarioFisicoRevisado();
 }
 

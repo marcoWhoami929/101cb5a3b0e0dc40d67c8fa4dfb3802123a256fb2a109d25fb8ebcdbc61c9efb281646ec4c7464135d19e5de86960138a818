@@ -12,10 +12,20 @@ class TablaRevision{
 
 	public function revisionInventarioFisico(){
 
-		
-		$tabla = "inventariofisico AS i LEFT OUTER JOIN familias AS f ON i.idFamilia = f.id";
-		$campos = "i.*, f.nombre";
-    	$parametros = "";
+		$nameSesion = $_SESSION["nombre"];
+		$grupoSesion = $_SESSION["grupo"];
+
+		if ($grupoSesion == "Administrador") {
+
+			$tabla = "inventariofisico AS i LEFT OUTER JOIN familias AS f ON i.idFamilia = f.id";
+			$campos = "i.*, f.nombre";
+    		$parametros = "";
+			
+		}else{
+			$tabla = "inventariofisico AS i LEFT OUTER JOIN familias AS f ON i.idFamilia = f.id";
+			$campos = "i.*, f.nombre";
+    		$parametros = "WHERE sucursal = '".$nameSesion."'";
+		}
 
  		$revision = ControladorInventarios::ctrRevisionFisicos($tabla, $campos, $parametros);
  		

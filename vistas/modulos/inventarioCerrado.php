@@ -187,106 +187,119 @@
 
 </script>
 <script language="JavaScript" type="text/javascript">
-$(document).ready(function(){
-    var nombreSesion = localStorage.getItem("nameSesion");
-    var grupoSesion = localStorage.getItem("grupoSesion");
-	var validar = $("#tipo").val();
-	var tipoInventario = $("#statusInventario").val();
 
-    if (grupoSesion == "Administrador") {
+	$(document).ready(function(){
+		var nombreSesion = localStorage.getItem("nameSesion");
+	    var grupoSesion = localStorage.getItem("grupoSesion");
+		var validar = $("#tipo").val();
+		var tipoInventario = $("#statusInventario").val();
 
-
-      	if (tipoInventario == "cerrado") {
-          	var tablaInFisico = "almacengeneral1";
-        }else{
-          	var tablaInFisico = "almacengeneral2";
-        }
-
-    }else{
-      	switch (nombreSesion) {
- 
-	        case 'Sucursal San Manuel':
-	          if (tipoInventario == "cerrado") {
-	            var tablaInFisico = "almacensanmanuel1";
-	          }else{
-	            var tablaInFisico = "almacensanmanuel2";
-	          }
-	        break;
-	        case 'Sucursal Reforma':
-	          if (tipoInventario == "cerrado") {
-	            var tablaInFisico = "almacenreforma1";
-	          }else{
-	            var tablaInFisico = "almacenreforma2";
-	          }
-	        break;
-	        case 'Sucursal Santiago':
-	          if (tipoInventario == "cerrado") {
-	            var tablaInFisico = "almacensantiago1";
-	          }else{
-	            var tablaInFisico = "almacensantiago2";
-	          }
-	        break;
-	        case 'Sucursal Capu':
-	          if (tipoInventario == "cerrado") {
-	            var tablaInFisico = "almacencapu1";
-	          }else{
-	            var tablaInFisico = "almacencapu2";
-	          }
-	        break;
-	        case 'Sucursal Las Torres':
-	          if (tipoInventario == "cerrado") {
-	            var tablaInFisico = "almacenlastorres1";
-	          }else{
-	            var tablaInFisico = "almacenlastorres2";
-	          }
-	        break;
-      	}
-    }
+	    if (grupoSesion == "Administrador") {
 
 
-	if (validar == "") {
-		var bPreguntar = false;
+	      	if (tipoInventario == "cerrado") {
+	          	var tablaInFisico = "almacengeneral1";
+	        }else{
+	          	var tablaInFisico = "almacengeneral2";
+	        }
 
-	}else{
-		var bPreguntar = true;
-     
-	    window.onbeforeunload = preguntarAntesDeSalir(bPreguntar);
+	    }else{
+	      	switch (nombreSesion) {
+	 
+		        case 'Sucursal San Manuel':
+		          if (tipoInventario == "cerrado") {
+		            var tablaInFisico = "almacensanmanuel1";
+		          }else{
+		            var tablaInFisico = "almacensanmanuel2";
+		          }
+		        break;
+		        case 'Sucursal Reforma':
+		          if (tipoInventario == "cerrado") {
+		            var tablaInFisico = "almacenreforma1";
+		          }else{
+		            var tablaInFisico = "almacenreforma2";
+		          }
+		        break;
+		        case 'Sucursal Santiago':
+		          if (tipoInventario == "cerrado") {
+		            var tablaInFisico = "almacensantiago1";
+		          }else{
+		            var tablaInFisico = "almacensantiago2";
+		          }
+		        break;
+		        case 'Sucursal Capu':
+		          if (tipoInventario == "cerrado") {
+		            var tablaInFisico = "almacencapu1";
+		          }else{
+		            var tablaInFisico = "almacencapu2";
+		          }
+		        break;
+		        case 'Sucursal Las Torres':
+		          if (tipoInventario == "cerrado") {
+		            var tablaInFisico = "almacenlastorres1";
+		          }else{
+		            var tablaInFisico = "almacenlastorres2";
+		          }
+		        break;
+	      	}
+	    }
 
-	    function preguntarAntesDeSalir(bPreguntar) {
+		if (validar == "") {
+			var bPreguntar = false;
 
-	     	if (bPreguntar){
+		}else{
+			var bPreguntar = true;
+	     
+	    	window.onbeforeunload = preguntarAntesDeSalir(bPreguntar);
 
-	      		var respuesta = confirm ( '¿Seguro que quieres salir?' );
+	    	function preguntarAntesDeSalir(bPreguntar) {
 
-	      		if (respuesta) {
+		     	if (bPreguntar){
 
-			      	var fechaActualFisico = $("#fechaActual").val();
+		      		var respuesta = confirm ('¿Seguro que quieres salir?');
 
-			      	var datos = new FormData();
-			      	datos.appen("fechaActualFisico",fechaActualFisico);
-			      	datos.appen("tablaInFisico",tablaInFisico);
+		      		if (respuesta) {
+		      			swal({
+						  title: "¿Seguro que quieres salir?",
+						  text: "Se Perderan los Datos que has Ingresado",
+						  icon: "warning",
+						  buttons: true,
+						  dangerMode: true,
+						})
+						.then((willDelete) => {
+						  if (willDelete) {
 
-					      	$.ajax({
-					        url: "ajax/functions.ajax.php",
-					        method: "POST",
-					        data: datos,
-					        cache: false,
-					        contentType: false,
-					        processData: false,
-					        success: function(respuesta) {
-					          
+						     	var fechaActualFisico = $("#fechaActual").val();
+						     	
+						      	var datos = new FormData();
+						      	datos.append("fechaActualFisico",fechaActualFisico);
+						      	datos.append("tablaInFisico",tablaInFisico);
 
-					        }
-					    })
+								      $.ajax({
+								        url: "ajax/functions.ajax.php",
+								        method: "POST",
+								        data: datos,
+								        cache: false,
+								        contentType: false,
+								        processData: false,
+								        success: function(respuesta) {
+								          
+								        }
+								    })
+						  } else {
+						    
+						  }
+						});
 
-	      		}else{
+		     		}else{
+		      	
+		      		}
+		        	return respuesta;
 
-	     		 }
-	        	
+		      	}
+	      	
+	    	}
+		}
+	});
 
-	     	 }
-      	return respuesta;
-    	}
-	}
-})
 </script>
