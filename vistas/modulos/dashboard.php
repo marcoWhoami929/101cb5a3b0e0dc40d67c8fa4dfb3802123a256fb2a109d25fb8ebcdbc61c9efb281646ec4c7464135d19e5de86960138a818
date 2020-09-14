@@ -623,7 +623,7 @@ echo "<script type='text/javascript'>localStorage.setItem('grupoSesion','".$grup
 
                                 echo '<tr>
                                 <th rowspan="2" colspan="3" style="border:none;color: blue;text-align: right;font-size: 15px;">Total General</th>
-                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades</th>
+                                <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Unidades Existentes</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante Unidades</th>
                                 <th colspan="2" style="border:none;color: black;text-align: right;font-size: 15px;">Total Faltante en Monto</th>
                             </tr>
