@@ -162,12 +162,8 @@ echo "<script type='text/javascript'>localStorage.setItem('grupoSesion','".$grup
                         <div class="card card-body">
                             <div class="row">
                              <div class="col-lg-2 col-md-2 col-sm-2">
-                                <div  id="contenedorSemaforo">
-                                   <ul class="semaforo">
-                                    <li></li>
-                                    <li></li>
-                                    <li></li>
-                                </ul>
+                                <div  id="contenedorSemaforoGr">
+                                   
                             </div>
                         </div>
                     </div>
@@ -209,20 +205,21 @@ echo "<script type='text/javascript'>localStorage.setItem('grupoSesion','".$grup
         </div>
         <div class="card card-body">
             <div class="row">
-             <div class="col-lg-2 col-md-2 col-sm-2">
-                <div  id="contenedorSemaforo">
-                   <ul class="semaforo naranja">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                </ul>
+                <div class="col-lg-2 col-md-2 col-sm-2" >
+                    <div id="contenedorSemaforo">
+                        <ul class="semaforo naranja">
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                   
+                    </div>
+                </div>
             </div>
+
         </div>
+
     </div>
-
-</div>
-
-</div>
 
 </div>
 <div class="col-md-2 col-lg-2 col-xlg-2">

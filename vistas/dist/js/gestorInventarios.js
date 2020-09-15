@@ -1807,5 +1807,52 @@ $(".tablaListaRequisiciones").on("click", ".btnNivelSurtimiento", function(){
 
 });
 
+$(document).ready(function(){
+
+  var almacenGR1 = "almacengeneral1";
+  var datos = new FormData();
+  datos.append('almacenGR1',almacenGR1);
+
+  $.ajax({
+    url: "ajax/functions.ajax.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    dataType: "json",
+    success: function(respuesta) {
+      var ultimoCosto = respuesta[0]["ultimoCosto"]*1;
+      var resultado =ultimoCosto.toFixed(2);
+
+      var div =document.getElementById("contenedorSemaforoGr");
+
+      div.setAttribute("style","margin-top: 20px;");
+      var ul = document.createElement("ul");
+
+      var li1 = document.createElement("li");
+      var li2 = document.createElement("li");
+      var li3 = document.createElement("li");
+
+
+      if (resultado > 35000) {
+        ul.setAttribute("class","semaforo verde");
+      }else if (resultado < 35000) {
+        ul.setAttribute("class","semaforo rojo");
+      }else if (resultado == 35000) {
+        ul.setAttribute("class","semaforo naranja");
+      }else{
+        ul.setAttribute("class","semaforo");
+      }
+      ul.appendChild(li1);
+      ul.appendChild(li2);
+      ul.appendChild(li3);
+      div.appendChild(ul);
+    }
+  });
+
+
+});
+
 
 

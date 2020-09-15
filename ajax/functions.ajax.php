@@ -413,6 +413,23 @@ class functionsInventory{
 
 	}
 
+	public $almacenGR1;
+	public function statusSemaforoGr(){
+
+		$table = $this->almacenGR1;
+		$fechaActual = "2020-08-05";
+        $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
+
+		$tabla = "productos AS p INNER JOIN ".$table." AS al ON p.id = al.idProducto";
+		$campos = "SUM(al.ultimoCosto) AS ultimoCosto";
+		$parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = (SELECT MAX(al.idImportacion) FROM ".$table." AS al) AND al.fecha = '".$fechaFinal."'";
+
+		$respuesta = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla,$campos,$parametros);
+
+		echo json_encode($respuesta);
+
+	}
+
 }
 
 if (isset($_POST["idProducto"])) {
@@ -529,5 +546,13 @@ if (isset($_POST["fechaActualFisico"])) {
 	$borrarFisicosIngresados -> fechaActualFisico = $_POST["fechaActualFisico"];
 	$borrarFisicosIngresados -> tablaInFisico = $_POST["tablaInFisico"];
 	$borrarFisicosIngresados -> borrarFisicosIngresados(); 
+}
+
+
+
+if (isset($_POST["almacenGR1"])) {
+	$statusSemaforoGr = new functionsInventory();
+	$statusSemaforoGr -> almacenGR1 = $_POST["almacenGR1"];
+	$statusSemaforoGr -> statusSemaforoGr(); 
 }
 ?>
