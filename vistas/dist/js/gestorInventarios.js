@@ -1806,7 +1806,9 @@ $(".tablaListaRequisiciones").on("click", ".btnNivelSurtimiento", function(){
   });
 
 });
-
+/**
+ * CAMBIAR COLOR DEL SEMAFORO EN EL TABLERO
+ */
 $(document).ready(function(){
 
   var almacenGR1 = "almacengeneral1";
@@ -1814,7 +1816,7 @@ $(document).ready(function(){
   datos.append('almacenGR1',almacenGR1);
 
   $.ajax({
-    url: "ajax/functions.ajax.php",
+    url: "ajax/functionsTablero.ajax.php",
     method: "POST",
     data: datos,
     cache: false,
@@ -1822,18 +1824,24 @@ $(document).ready(function(){
     processData: false,
     dataType: "json",
     success: function(respuesta) {
+      var entradaGr = respuesta[0]["entradas"]*1;
+      var salidasGr = respuesta[0]["salidas"]*1;
+      var existenciasGr = respuesta[0]["existencias"]*1;
+
       var ultimoCosto = respuesta[0]["ultimoCosto"]*1;
       var resultado =ultimoCosto.toFixed(2);
 
+      document.getElementById("entradasGr").innerHTML = entradaGr.toFixed(2);
+      document.getElementById("salidasGr").innerHTML = salidasGr.toFixed(2);
+      document.getElementById("existenciasGr").innerHTML = existenciasGr.toFixed(2);
+
       var div =document.getElementById("contenedorSemaforoGr");
+      div.setAttribute("style","margin-top: 20px; margin-left:-30px;");
 
-      div.setAttribute("style","margin-top: 20px;");
       var ul = document.createElement("ul");
-
       var li1 = document.createElement("li");
       var li2 = document.createElement("li");
       var li3 = document.createElement("li");
-
 
       if (resultado > 35000) {
         ul.setAttribute("class","semaforo verde");
@@ -1851,6 +1859,48 @@ $(document).ready(function(){
     }
   });
 
+});
+$(document).ready(function(){
+
+  var almacenSM = "almacensanmanuel1";
+  var datos = new FormData();
+  datos.append('almacenSM',almacenSM);
+
+  $.ajax({
+    url: "ajax/functionsTablero.ajax.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    dataType: "json",
+    success: function(respuesta) {
+      var ultimoCostoSm = respuesta[0]["ultimoCosto"]*1;
+      var resultado =ultimoCostoSm.toFixed(2);
+
+      var div =document.getElementById("contenedorSemaforoSm");
+      div.setAttribute("style","margin-top: 20px;margin-left:-30px;");
+
+      var ul = document.createElement("ul");
+      var li1 = document.createElement("li");
+      var li2 = document.createElement("li");
+      var li3 = document.createElement("li");
+
+      if (resultado > 50000) {
+        ul.setAttribute("class","semaforo verde");
+      }else if (resultado < 50000) {
+        ul.setAttribute("class","semaforo rojo");
+      }else if (resultado == 50000) {
+        ul.setAttribute("class","semaforo naranja");
+      }else{
+        ul.setAttribute("class","semaforo");
+      }
+      ul.appendChild(li1);
+      ul.appendChild(li2);
+      ul.appendChild(li3);
+      div.appendChild(ul);
+    }
+  });
 
 });
 

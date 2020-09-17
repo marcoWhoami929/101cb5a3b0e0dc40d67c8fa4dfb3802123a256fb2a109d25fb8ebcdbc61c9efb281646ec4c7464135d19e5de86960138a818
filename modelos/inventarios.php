@@ -61,7 +61,7 @@ class ModeloInventarios{
 	static public function mdlMostrarProductosPorAgotarse($tabla, $campos, $parametros){
 
 		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
-		
+
 		$stmt -> execute();
 
 		return $stmt->fetchAll();

@@ -187,7 +187,7 @@
 
 </script>
 <script language="JavaScript" type="text/javascript">
-
+/*
 	$(document).ready(function(){
 		var nombreSesion = localStorage.getItem("nameSesion");
 	    var grupoSesion = localStorage.getItem("grupoSesion");
@@ -300,5 +300,5 @@
 	    	}
 		}
 	});
-
+*/
 </script>
