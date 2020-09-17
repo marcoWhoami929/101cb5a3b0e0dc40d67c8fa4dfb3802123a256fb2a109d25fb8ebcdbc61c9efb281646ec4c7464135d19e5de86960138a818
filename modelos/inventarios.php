@@ -348,7 +348,7 @@ class ModeloInventarios{
 	 */
 	static public function mdlMostrarDetalleRequisicion($tabla,$item,$valor){
 
-			$stmt = Conexion::conectar()->prepare("SELECT pp.*,p.nombreProducto as producto,p.codigoProducto as codigo FROM $tabla as pp INNER JOIN productos as p ON pp.idProducto = p.id WHERE pp.$item = :$item");
+			$stmt = Conexion::conectar()->prepare("SELECT pp.*,p.nombreProducto as producto,p.contratipo,p.codigoProducto as codigo FROM $tabla as pp INNER JOIN productos as p ON pp.idProducto = p.id WHERE pp.$item = :$item");
 
 			$stmt -> bindParam(":".$item,$valor,PDO::PARAM_STR);
 

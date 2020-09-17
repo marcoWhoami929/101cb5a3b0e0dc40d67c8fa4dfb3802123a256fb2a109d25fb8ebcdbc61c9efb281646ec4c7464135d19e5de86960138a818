@@ -39,7 +39,7 @@ $(document).ready(function(){
   $('body').on('click', '#pills-tab a', function(){
 
     var areaInventario = $(this).attr('identificador');
-
+    console.log(areaInventario);
     localStorage.setItem("areaInventario", areaInventario);
     var area = localStorage.getItem("areaInventario");
 
@@ -547,7 +547,13 @@ $(".tableAdministradores").on("click", ".btnEliminarPerfil", function(){
  * ACCIONES PARA SOLICITAR PEDIDO SEMANAL
  */
 $("#btnSolicitarPedido").click(function(){
-  var identificador = $(this).attr("identificador");
+
+  if ($("#statusPedido").val() == "") {
+
+
+  }else{
+
+     var identificador = $(this).attr("identificador");
   localStorage.setItem("tipodePedido", identificador);
 
   if (identificador == "pedidoManual") {
@@ -556,7 +562,7 @@ $("#btnSolicitarPedido").click(function(){
     localStorage.setItem("statusPedido", statusPedido);
     var datos = new FormData();
 
-    datos.append("idSesion", idSesion);
+    datos.append("idSesionValidar", idSesion);
 
     $.ajax({
 
@@ -588,6 +594,8 @@ $("#btnSolicitarPedido").click(function(){
   }else{
     window.location.href = "generarNuevoPedido";
   }
+  }
+ 
 });
  var sucursal = localStorage.getItem("sucursal");
   switch (sucursal) {
@@ -693,6 +701,7 @@ function cargarCantidad(id){
         success: function(respuesta) {
           
             var response = respuesta;
+        
             var responseFinal = response.replace(/['"]+/g, '');
             if (responseFinal == "ok") {
 
@@ -710,6 +719,7 @@ function cargarCantidad(id){
                     processData: false,
                     success: function(respuesta) {
                       var response = respuesta;
+                   
                       var unidades = response.split("|");
 
                       var unidadesPedido = unidades[0];
@@ -1500,3 +1510,23 @@ $(".tablaListaRequisiciones").on("click", ".btnNivelSurtimiento", function(){
 
 });
 
+/***************CARGAR CONTRATIPOS*************/
+$(".tablaDetalleRequisicionGeneral").on("click", ".btnCargarContratipo", function(){
+
+  var idPedido = $(this).attr("idPedido");
+  var idProducto = $(this).attr("idProducto");
+  var idMovimiento = $(this).attr("idMovimiento");
+  var contratipo = $(this).attr("contratipo");
+
+
+  $("#detalleIdPedido").val(idPedido);
+  $("#detalleIdProducto").val(idProducto);
+  $("#detalleIdMovimiento").val(idMovimiento);
+  $("#detalleIdContratipo").val(contratipo);
+
+  load(1);
+
+
+
+});
+/***************CARGAR CONTRATIPOS*************/

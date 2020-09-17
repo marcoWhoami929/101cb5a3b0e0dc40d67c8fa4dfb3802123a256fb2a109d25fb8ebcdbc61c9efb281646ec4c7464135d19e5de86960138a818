@@ -1,4 +1,6 @@
-
+<?php
+session_start();
+?>
 <div class="preloader">
 	<div class="lds-ripple">
 		<div class="lds-pos"></div>
@@ -39,6 +41,10 @@
 											</button>
 											<div class="col-sm-1"></div>
 											<button type="button" class="btn btn-warning" id="btnSolicitarPedido" identificador="pedidoManual">Solicitar Pedido</button>
+											<input type="hidden" id="sesionIdNavegador" value="<?php echo session_id() ?>">
+											<input type="hidden" class="form-control" id="grupoSesion" value="<?php echo $_SESSION["grupo"] ?>">
+								  			<input type="hidden" class="form-control" id="sesion" value="<?php echo $_SESSION["nombre"]; ?>">
+								  			<input type="hidden" class="form-control" id="idSesion" value="<?php echo $_SESSION["id"]; ?>">
 											<div></div>
 											<select class="form-control col-md-3" name="statusPedido" id="statusPedido">
 												<option value="">Seleccionar Estado</option>
@@ -131,6 +137,24 @@
 	}
 </script>
 <script>
+
+	$(document).ready(function() {
+
+		var sesionIdNavegador = $("#sesionIdNavegador").val();
+
+		$.ajax({
+			type:"POST",
+			url: "ajax/cargar_pedido.ajax.php",
+	
+			data: "sesionIdNavegador="+sesionIdNavegador+"&grupoSesion="+grupoSesion+"&sesion="+sesion+'&idSesion='+idSesion,
+			beforeSend:function(objeto){
+
+			},
+			success:function(datos){
+				$("#resultados").html(datos);
+			}
+		})		
+	});
 	
 	function agregar (id){
 			//var precio_venta=document.getElementById('precio_venta_'+id).value;
@@ -158,23 +182,45 @@
 			}
 		});
 	}
-		
+
 	function eliminar (id){
 			
 		$.ajax({
-        	type: "GET",
+        	type: "POST",
         	url: "ajax/agregar_Pedido.ajax.php",
-        	data: "id="+id,
+        	data: "idDelete="+id+"&grupoSesion="+grupoSesion+"&sesion="+sesion+'&idSesion='+idSesion,
 		 	beforeSend: function(objeto){
 				//$("#resultados").html("Mensaje: Cargando...");
 		  	},
         	success: function(datos){
         		
 				$("#resultados").html(datos);
+		
 				
 			}
 		});
 
+	}
+	function updateCantidad(id){
+
+		var cantidadTemp = $("#cantidadTemp"+id+"").val();
+	
+		
+		$.ajax({
+			type:"POST",
+			url: "ajax/agregar_Pedido.ajax.php",
+			data: "idUpdate="+id +"&cantidadTemp="+cantidadTemp +"&grupoSesion="+grupoSesion+"&sesion="+sesion+'&idSesion='+idSesion,
+			beforeSend: function(objeto){
+
+			},
+			success:function(datos){
+				$("#resultados").html(datos);
+				console.log(datos);
+
+			}
+
+		});
+		
 	}
 </script>
 	
