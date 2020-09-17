@@ -5,7 +5,6 @@ require_once("../controladores/inventarios.php");
 require_once("../modelos/inventarios.php");
 class functionsInventory{
 
-
 	public $idProducto;
 	public $cantidad;
 	public $campo;
@@ -131,18 +130,11 @@ class functionsInventory{
 
 			$agregarProductosPedido = ControladorInventarios::ctrInsertarProductosPedido($tabla,$datosPedido);
 
-			
-
 			}
 			echo "ok";
-			
-			
-
 		}
-		
-
-
 	}
+
 	public $idRequisicion;
 	public function obtenerDatosRequisicion(){
 
@@ -158,7 +150,6 @@ class functionsInventory{
 	/*=============================================
 	ACTIVAR REVISION PEDIDO
 	=============================================*/	
-
 	public $idRequisicionRevision;
 	public $estadoRequisicion;
 
@@ -180,10 +171,10 @@ class functionsInventory{
 		echo $respuesta;
 
 	}
+
 	/*=============================================
 	ACTUALIZAR ESTATUS PEDIDO
 	=============================================*/	
-
 	public $idProductoRequisicion;
 	public $estadoProducto;
 
@@ -203,6 +194,7 @@ class functionsInventory{
 		echo $respuesta;
 
 	}
+
 	public $idProductoAprobar;
 	public $cantidadAprobar;
 	
@@ -219,6 +211,7 @@ class functionsInventory{
 		echo json_encode($respuesta);
 
 	}
+
 	public $sesion3;
 	public function obtenerDatosRequisicionAprobada(){
 
@@ -228,6 +221,7 @@ class functionsInventory{
 
 		echo json_encode($respuesta."|".$respuesta2);
 	}
+
 	/*
 	APROBAR REQUISICION
 	 */
@@ -251,10 +245,9 @@ class functionsInventory{
 		$aprobarRequisicion = ControladorInventarios::ctrAprobarRequisicion($tabla,$datos);
 
 		echo $aprobarRequisicion;
-		
-
 
 	}
+
 	/*
 	CONCLUIR REQUISICION
 	 */
@@ -275,8 +268,6 @@ class functionsInventory{
 		$concluir = ControladorInventarios::ctrConcluirRequisicion($tabla,$datos);
 
 		echo $concluir;
-		
-
 
 	}
 
@@ -291,6 +282,132 @@ class functionsInventory{
 		$parametros = "WHERE idSesion = ".$idSesionTemp;
 
 		$respuesta = ModeloInventarios::mdlConsultarTemp($tabla,$campos,$parametros);
+
+		echo json_encode($respuesta);
+
+	}
+
+	/**
+	 * ACTUALIZAR CANTIDAD FISICA
+	 */
+	public $idProductoF;
+	public $idTabla;
+	public $cantidadFisico;
+	public $tablaFisico;
+	public $datoTabla;
+	public $fechaActualF;
+	public function actualizarCantidadFisica(){
+
+		$table = $this->tablaFisico;
+		$dato = $this->datoTabla;
+		$cantidadF = $this->cantidadFisico;
+		$idP = $this->idProductoF;
+		$idT = $this->idTabla;
+		$fechaActualF = $this->fechaActualF;
+
+		$tabla = $table;
+		$campos = $dato." = ".$cantidadF.", fechaInventarioFisico = '".$fechaActualF."'";
+		$parametros = "id = ".$idT." AND idProducto =".$idP;
+
+		$respuesta = ModeloInventarios::mdlActualizarCantidadSolicitada($tabla,$campos,$parametros);
+
+		echo json_encode($respuesta);
+
+	}
+
+	/**
+	 * OBTENER LOS DATOS DE LOS PRODUCTOS CON INVENTARIO FISICO
+	 */
+	public $tablaFisico2;
+	public $statusInventarioF;
+	public $nameUser;
+	public $tipoFisico;
+	public $familiaF;
+	public $stadoInventario;
+	public function inventarioFisicoRevisado(){
+
+		$table = $this->tablaFisico2;
+		$statusInventarioF = $this->statusInventarioF;
+		$nameUser = $this->nameUser;
+
+		$tipoInventarioF = $this->tipoFisico;
+		$idFamilia = $this->familiaF;
+
+		$status = $this->stadoInventario;
+
+		$descripcion = "Inventario Fisico Realizado en Almacén de tipo ".$status;
+		$fechaHoy = date('Y-m-d');
+
+		$tablaInsertar = "inventariofisico";
+		$datos = array("descripcion" => $descripcion,
+			"tipoInventario" => $tipoInventarioF,
+			"idFamilia" => $idFamilia,
+			"sucursal" => $nameUser,
+		);
+
+		$insertarInventarioFisico = ModeloInventarios::mdlInsertarInventarioFisico($tablaInsertar,$datos);
+
+		if ($insertarInventarioFisico == "ok") {
+
+			$ultimoFolioFisico = ModeloInventarios::mdlObtenerUltimoFolioInventarioFisico();
+			$folioFisico = $ultimoFolioFisico["folio"];
+
+			$tabla = $table." AS al INNER JOIN productos AS p ON al.idProducto = p.id";
+			$campos = "al.id, al.idProducto, p.codigoProducto, p.nombreProducto, al.entradasUnidades, al.salidasUnidades, al.existenciasUnidades, al.existenciaFisica";
+			$parametros = "al.existenciaFisica != '' AND al.fechaInventarioFisico = '".$fechaHoy."' AND al.idImportacion = (SELECT MAX(al.idImportacion) FROM ".$table." AS al)";
+
+			$verProductosInventarioFisico = ModeloInventarios::mdlVerProductosInventarioFisico($tabla,$campos,$parametros);
+
+			for ($i = 0; $i < count($verProductosInventarioFisico); $i++) { 
+
+				$idProducto = $verProductosInventarioFisico[$i]["idProducto"];
+				$entradasUnidades = $verProductosInventarioFisico[$i]["entradasUnidades"];
+				$salidasUnidades = $verProductosInventarioFisico[$i]["salidasUnidades"];
+				$existenciasUnidades = $verProductosInventarioFisico[$i]["existenciasUnidades"];
+				$existenciaFisica = $verProductosInventarioFisico[$i]["existenciaFisica"];
+
+				$datos = array("idProducto" => $idProducto,
+								"entradas" => $entradasUnidades,
+								"salidas" => $salidasUnidades,
+								"existencias" => $existenciasUnidades,
+								"existenciasFisicas" => $existenciaFisica,
+								"idFisico" => $folioFisico*1);
+
+				
+				$respuesta = ModeloInventarios::mdlInsertarProdutosFisico($datos);
+
+			}
+			
+			if ($respuesta == "ok") {
+				$tabla = $table;
+				$campos = "existenciaFisica = '', fechaInventarioFisico = ''";
+				$parametros = "existenciaFisica != '' AND fechaInventarioFisico = '".$fechaHoy."' AND idImportacion = (SELECT MAX(al.idImportacion) FROM ".$table." AS al)";
+
+				$respuestaEditar = ModeloInventarios::mdlActualizarCantidadSolicitada($tabla,$campos,$parametros);
+			}
+			
+		}
+
+		echo json_encode($respuesta);
+
+	}
+
+	/**
+	 * BORRAR LOS DATOS QUE SE INGRESARON EN EL INVENTARIO FISICO SI EL USUARIO DECIDE ABANDONAR LA PAGINA SIN 
+	 * CONCLUIR EL REVISADO DEL INVENTARIO FISICO
+	 */
+	public $fechaActualFisico;
+	public $tablaInFisico;
+	public function borrarFisicosIngresados(){
+
+		$fechaActual = $this->fechaActualFisico;
+		$table = $this->tablaInFisico;
+
+		$tabla = $table;
+		$campos = "existenciaFisica = '', fechaInventarioFisico = ''";
+		$parametros = "existenciaFisica != '' AND fechaInventarioFisico = '".$fechaActual."' AND idImportacion = (SELECT MAX(al.idImportacion) FROM ".$table." AS al)";
+
+		$respuesta = ModeloInventarios::mdlActualizarCantidadSolicitada($tabla,$campos,$parametros);
 
 		echo json_encode($respuesta);
 
@@ -384,4 +501,34 @@ if (isset($_POST["idSesionValidar"])) {
 	$consultarTemporal -> idSesionTemp = $_POST["idSesionValidar"];
 	$consultarTemporal -> consultarTemporal();
 }
+
+if (isset($_POST["idProductoF"])) {
+	$actualizarCantidadFisica = new functionsInventory();
+	$actualizarCantidadFisica -> idProductoF = $_POST["idProductoF"];
+	$actualizarCantidadFisica -> idTabla = $_POST["idTabla"];
+	$actualizarCantidadFisica -> cantidadFisico = $_POST["cantidadFisico"];
+	$actualizarCantidadFisica -> tablaFisico = $_POST["tablaFisico"];
+	$actualizarCantidadFisica -> datoTabla = $_POST["datoTabla"];
+	$actualizarCantidadFisica -> fechaActualF = $_POST["fechaActualF"];
+	$actualizarCantidadFisica -> actualizarCantidadFisica();
+}
+
+if (isset($_POST["tablaFisico2"])) {
+	$inventarioFisico = new functionsInventory();
+	$inventarioFisico -> tablaFisico2 = $_POST["tablaFisico2"];
+	$inventarioFisico -> statusInventarioF = $_POST["statusInventarioF"];
+	$inventarioFisico -> nameUser = $_POST["nameUser"];
+	$inventarioFisico -> tipoFisico = $_POST["tipoFisico"];
+	$inventarioFisico -> familiaF = $_POST["familiaF"];
+	$inventarioFisico -> stadoInventario = $_POST["stadoInventario"];
+	$inventarioFisico -> inventarioFisicoRevisado();
+}
+
+if (isset($_POST["fechaActualFisico"])) {
+	$borrarFisicosIngresados = new functionsInventory();
+	$borrarFisicosIngresados -> fechaActualFisico = $_POST["fechaActualFisico"];
+	$borrarFisicosIngresados -> tablaInFisico = $_POST["tablaInFisico"];
+	$borrarFisicosIngresados -> borrarFisicosIngresados(); 
+}
+
 ?>

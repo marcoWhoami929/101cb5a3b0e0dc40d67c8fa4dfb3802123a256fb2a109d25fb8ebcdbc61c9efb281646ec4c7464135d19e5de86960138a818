@@ -37,11 +37,15 @@ $(function() {
     element.addClass("active"); 
     $('#sidebarnav a').on('click', function (e) {
             var boton = $(this).attr("href");
+
             if (boton == "pedidoSemanal") {
                 var sucursal = $(this).attr("sucursal");
                 localStorage.setItem("sucursal", sucursal);
               
             }else{
+
+              
+                localStorage.setItem("direccionamiento", boton);
 
             }
           

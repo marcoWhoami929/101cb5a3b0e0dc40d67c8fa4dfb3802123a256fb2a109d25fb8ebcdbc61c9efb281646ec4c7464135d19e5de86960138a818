@@ -61,7 +61,7 @@ class ModeloInventarios{
 	static public function mdlMostrarProductosPorAgotarse($tabla, $campos, $parametros){
 
 		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
-		//var_dump($stmt);
+
 		$stmt -> execute();
 
 		return $stmt->fetchAll();
@@ -193,7 +193,7 @@ class ModeloInventarios{
 	static public function mdlActualizarCantidadSolicitada($tabla,$campos,$parametros){
  
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $campos WHERE $parametros");
-
+		
 		if($stmt -> execute()){
 
 			return "ok";
@@ -233,7 +233,7 @@ class ModeloInventarios{
 	static public function mdlConsultarTemp($tabla, $campos, $parametros){
 
 		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
-		//var_dump($stmt);
+		
 		$stmt -> execute();
 		return $stmt -> fetch();
 
@@ -519,6 +519,108 @@ class ModeloInventarios{
 
 		$stmt -> close();
 
+		$stmt = null;
+
+	}
+
+	/*
+	OBTENER EL ULTIMO FOLIO EN LA TABLA DE INVENTARIO FISICO
+	 */
+	static public function mdlObtenerUltimoFolioInventarioFisico(){
+
+		$stmt = Conexion::conectar()->prepare("SELECT IF(MAX(id) IS NULL,1,MAX(id)) as folio FROM inventariofisico");
+
+		$stmt-> execute();
+
+		return $stmt -> fetch();
+
+	}
+
+	/*
+	MOSTRAR DATOS REQUISICION
+	 */
+	static public function mdlVerProductosInventarioFisico($tabla,$campos,$parametros){
+
+		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla WHERE $parametros");
+
+		$stmt -> execute();
+
+		return $stmt->fetchAll();
+
+	}
+
+	static public function mdlInsertarInventarioFisico($tablaInsertar,$datos){
+ 		
+
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tablaInsertar(descripcion, tipoInventario, idFamilia, sucursal) VALUES(:descripcion, :tipoInventario, :idFamilia, :sucursal)");
+
+		$stmt->bindParam(":descripcion",$datos["descripcion"],PDO::PARAM_STR);
+		$stmt->bindParam(":tipoInventario",$datos["tipoInventario"],PDO::PARAM_STR);
+		$stmt->bindParam(":idFamilia",$datos["idFamilia"],PDO::PARAM_INT);
+		$stmt->bindParam(":sucursal",$datos["sucursal"],PDO::PARAM_STR);
+
+		if($stmt -> execute()){
+
+			return "ok";
+		
+		}else{
+
+			return "error";	
+
+		}
+
+		$stmt -> close();
+		$stmt = null;
+
+	}
+	static public function mdlInsertarProdutosFisico($datos){
+
+		$stmt = Conexion::conectar()->prepare("INSERT INTO productoscnfisico(idProducto, entradas, salidas, existencias, existenciasFisicas, idFisico) VALUES(:idProducto, :entradas, :salidas, :existencias, :existenciasFisicas, :idFisico)");
+		
+		$stmt->bindParam(":idProducto",$datos["idProducto"],PDO::PARAM_INT);
+		$stmt->bindParam(":entradas",$datos["entradas"],PDO::PARAM_STR);
+		$stmt->bindParam(":salidas",$datos["salidas"],PDO::PARAM_STR);
+		$stmt->bindParam(":existencias",$datos["existencias"],PDO::PARAM_STR);
+		$stmt->bindParam(":existenciasFisicas",$datos["existenciasFisicas"],PDO::PARAM_STR);
+		$stmt->bindParam(":idFisico",$datos["idFisico"],PDO::PARAM_INT);
+
+
+		if($stmt -> execute()){
+
+			return "ok";
+		
+		}else{
+
+			return "error";	
+
+		}
+
+		$stmt -> close();
+		$stmt = null;
+
+	}
+
+	static public function mdlRevisionFisicos($tabla, $campos, $parametros){
+
+		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
+
+		$stmt -> execute();
+
+		return $stmt->fetchAll();
+
+		$stmt -> close();
+		$stmt = null;
+
+	}
+	static public function mdlDetalleRevisionFisicos($tabla, $campos, $parametros){
+
+		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
+
+		$stmt -> execute();
+
+		return $stmt->fetchAll();
+
+		$stmt -> close();
 		$stmt = null;
 
 	}

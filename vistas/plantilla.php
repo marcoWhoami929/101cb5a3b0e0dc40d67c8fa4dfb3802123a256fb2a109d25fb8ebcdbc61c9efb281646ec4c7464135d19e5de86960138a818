@@ -54,6 +54,7 @@ error_reporting(0);
     <script src="vistas/dist/js/pages/chart/chart-page-init.js"></script>
     <!-- SweetAlert 2 https://sweetalert2.github.io/-->
     <script src="vistas/assets/libs/sweetalert2/sweetalert2.all.js"></script>
+   
 
     <!----HIGHCHARTS------------------------>
 

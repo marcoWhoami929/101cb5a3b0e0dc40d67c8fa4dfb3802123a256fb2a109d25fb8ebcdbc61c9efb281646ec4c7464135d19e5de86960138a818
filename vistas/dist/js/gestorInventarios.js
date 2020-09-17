@@ -222,6 +222,7 @@ $(document).ready(function(){
  * TABLA MOSTRAR EXISTENCIAS EN TIENDAS
  */
 
+
   tableExistenciasGenerales = $(".tableExistenciasGenerales").DataTable({
     "ajax":"ajax/tablaExistenciasGenerales.ajax.php?Productos=",
     "deferRender": true,
@@ -262,21 +263,23 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 
-  $('body').on('click', '#nav-menu a', function(){
+  var tipo = $("#statusInventario").val();
+  
+  if ($("#tipo").val() != "") {
+    var clasificarInventario = $("#tipo").val();
+  }else{
+    var clasificarInventario = "";
+  }
+  
+  if ($("#clasificacionFamilia").val() != "") {
+    var familia = $("#clasificacionFamilia").val();
+  }else{
+    var familia = "";
+  }
+ 
 
-    $("#nombreUsuario").val();
-    var nombreUsuario = $("#nombreUsuario").val();
-
-    var areaFisico = $(this).attr('identificadorFisico');
-    localStorage.setItem("areaFisico", areaFisico);
-     var area = localStorage.getItem("areaFisico");
-     
-     for (var i = 1; i <= 2; i++) {
-      var tabla = area+i;
-      var nombreTabla = tabla.toLowerCase();
-      
-      tableFisicoVSadmin = $(".tableFisicoVSadmin"+tabla+"").DataTable({
-       "ajax":"ajax/tablaFisicoVSadmin.ajax.php?almacen="+nombreTabla,
+  tablaInventarioFisico = $(".tablaInventarioFisico").DataTable({
+       "ajax":"ajax/tablaInventarioFisico.ajax.php?tipo="+tipo+"&clasificarInventario="+clasificarInventario+"&familia="+familia,
        "deferRender": true,
        "retrieve": true,
        "processing": true,
@@ -308,10 +311,316 @@ $(document).ready(function(){
        }
 
     });
-        
-     }
-  })
-});
+  });
+
+/**
+ * TABLA MOSTRAR LOS DATOS DE LA REVISION DEL INVENTARIO FISICO
+ */
+  tablaRevisionInventario = $(".tablaRevisionInventario").DataTable({
+    "ajax":"ajax/tablaRevisionFisicos.ajax.php?Revision=",
+    "deferRender": true,
+    "retrieve": true,
+    "processing": true,
+    "language": {
+
+    "sProcessing":     "Procesando...",
+    "sLengthMenu":     "Mostrar _MENU_ registros",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix":    "",
+    "sSearch":         "Buscar:",
+    "sUrl":            "",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
+          "sFirst":    "Primero",
+          "sLast":     "Último",
+          "sNext":     "Siguiente",
+          "sPrevious": "Anterior"
+    },
+    "oAria": {
+      "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+      "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    }
+
+    }
+
+  });
+  /**
+ * TABLA MOSTRAR LOS DETALLES DE LA REVISION DEL INVENTARIO FISICO
+ */
+var idRevisionF = localStorage.getItem("idRevisionFisico");
+  tablaDetalleRevisionInventario = $(".tablaDetalleRevisionInventario").DataTable({
+    "ajax":"ajax/tablaRevisionFisicos.ajax.php?Detalle=&idFisico="+idRevisionF,
+    "deferRender": true,
+    "retrieve": true,
+    "processing": true,
+    "language": {
+
+    "sProcessing":     "Procesando...",
+    "sLengthMenu":     "Mostrar _MENU_ registros",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix":    "",
+    "sSearch":         "Buscar:",
+    "sUrl":            "",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
+          "sFirst":    "Primero",
+          "sLast":     "Último",
+          "sNext":     "Siguiente",
+          "sPrevious": "Anterior"
+    },
+    "oAria": {
+      "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+      "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    }
+
+    }
+
+  });
+
+function cargarCantidadFisico(id){
+
+    var id = id;
+    let idProductoF = $("#"+id+"").attr("idProductoF");
+    let cantidadFisico = $("#"+id+"").val();
+    let idTabla = $("#"+id+"").attr("idTabla");
+
+    var nombreSesion = localStorage.getItem("nameSesion");
+    var grupoSesion = localStorage.getItem("grupoSesion");
+
+    var tipoInventario = $("#statusInventario").val();
+
+    if (grupoSesion == "Administrador") {
+
+      if (tipoInventario == "cerrado") {
+          var tablaFisico = "almacengeneral1";
+        }else{
+          var tablaFisico = "almacengeneral2";
+        }
+
+    }else{
+      switch (nombreSesion) {
+ 
+        case 'Sucursal San Manuel':
+          if (tipoInventario == "cerrado") {
+            var tablaFisico = "almacensanmanuel1";
+          }else{
+            var tablaFisico = "almacensanmanuel2";
+          }
+        break;
+        case 'Sucursal Reforma':
+          if (tipoInventario == "cerrado") {
+            var tablaFisico = "almacenreforma1";
+          }else{
+            var tablaFisico = "almacenreforma2";
+          }
+        break;
+        case 'Sucursal Santiago':
+          if (tipoInventario == "cerrado") {
+            var tablaFisico = "almacensantiago1";
+          }else{
+            var tablaFisico = "almacensantiago2";
+          }
+        break;
+        case 'Sucursal Capu':
+          if (tipoInventario == "cerrado") {
+            var tablaFisico = "almacencapu1";
+          }else{
+            var tablaFisico = "almacencapu2";
+          }
+        break;
+        case 'Sucursal Las Torres':
+          if (tipoInventario == "cerrado") {
+            var tablaFisico = "almacenlastorres1";
+          }else{
+            var tablaFisico = "almacenlastorres2";
+          }
+        break;
+      }
+    }
+
+    var datoTabla = "existenciaFisica";
+    var fechaActualF = $("#fechaActual").val();
+
+    var datos = new FormData();
+    datos.append("idProductoF",idProductoF);
+    datos.append("idTabla",idTabla);
+    datos.append("cantidadFisico",cantidadFisico);
+    datos.append("tablaFisico",tablaFisico);
+    datos.append("datoTabla",datoTabla);
+    datos.append("fechaActualF",fechaActualF);
+
+    $.ajax({
+        url: "ajax/functions.ajax.php",
+        method: "POST",
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(respuesta) {
+          var response = respuesta;
+
+            var responseFinal = response.replace(/['"]+/g, '');
+           console.log(responseFinal);
+            if (responseFinal == 'ok') {
+
+               tablaInventarioFisico.ajax.reload();
+
+             }
+
+        }
+    })
+
+    
+  }
+
+  $("#terminarRevision").click(function(){
+
+    var nombreSesion = localStorage.getItem("nameSesion");
+    var grupoSesion = localStorage.getItem("grupoSesion");
+
+    var tipoInventario = $("#statusInventario").val();
+    var stadoInventario = tipoInventario;
+
+    if (grupoSesion == "Administrador") {
+
+      if (tipoInventario == "cerrado") {
+          var tablaFisico2 = "almacengeneral1";
+        }else{
+          var tablaFisico2 = "almacengeneral2";
+        }
+
+        var nameUser = "Almacén General";
+
+    }else{
+
+      var nameUser = nombreSesion;
+      switch (nombreSesion) {
+ 
+        case 'Sucursal San Manuel':
+          if (tipoInventario == "cerrado") {
+            var tablaFisico2 = "almacensanmanuel1";
+          }else{
+            var tablaFisico2 = "almacensanmanuel2";
+          }
+        break;
+        case 'Sucursal Reforma':
+          if (tipoInventario == "cerrado") {
+            var tablaFisico2 = "almacenreforma1";
+          }else{
+            var tablaFisico2 = "almacenreforma2";
+          }
+        break;
+        case 'Sucursal Santiago':
+          if (tipoInventario == "cerrado") {
+            var tablaFisico2 = "almacensantiago1";
+          }else{
+            var tablaFisico2 = "almacensantiago2";
+          }
+        break;
+        case 'Sucursal Capu':
+          if (tipoInventario == "cerrado") {
+            var tablaFisico2 = "almacencapu1";
+          }else{
+            var tablaFisico2 = "almacencapu2";
+          }
+        break;
+        case 'Sucursal Las Torres':
+          if (tipoInventario == "cerrado") {
+            var tablaFisico2 = "almacenlastorres1";
+          }else{
+            var tablaFisico2 = "almacenlastorres2";
+          }
+        break;
+      }
+    }
+
+    var statusInventarioF = tipoInventario;
+    var tipoFisico = $("#clasificarInventario").val();
+
+    if (tipoFisico == "general") {
+      var familiaF = 0;
+      
+    }else if (tipoFisico == "porFamilia"){
+      var familiaF = $("#familia").val();
+    }
+
+    if(tipoFisico == ""){
+      swal({
+            type: "warning",
+            title: "Alto!!",
+            text: "No has seleccionado el tipo de Inventario",
+            showConfirmButton: true,
+            confirmButtonText: "Cerrar"
+            }).then(function(result) {
+              
+            })
+    }else if (tipoFisico == "porFamilia" && familiaF == "") {
+      swal({
+            type: "warning",
+            title: "Alto!!",
+            text: "No has seleccionado el grupo",
+            showConfirmButton: true,
+            confirmButtonText: "Cerrar"
+            }).then(function(result) {
+              
+            })
+    } else {
+    
+    var datos = new FormData();
+    datos.append("tablaFisico2",tablaFisico2);
+    datos.append("statusInventarioF",statusInventarioF);
+    datos.append("nameUser",nameUser);
+    datos.append("tipoFisico",tipoFisico);
+    datos.append("familiaF",familiaF);
+    datos.append("stadoInventario",stadoInventario);
+    $.ajax({
+        url: "ajax/functions.ajax.php",
+        method: "POST",
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(respuesta) {
+          var response = respuesta;
+          console.log(response);
+            var responseFinal = response.replace(/['"]+/g, '');
+           console.log(responseFinal);
+            if (responseFinal == 'ok') {
+              swal({
+                  type: "success",
+                  title: "Exito!!",
+                  text: "Los datos se han Guardado Correctamente",
+                  showConfirmButton: true,
+                  confirmButtonText: "Cerrar"
+                  }).then(function(result) {
+                    window.location = "revisionInventarios";
+                  })
+             }
+
+        }
+    })
+  }
+  });
+
+  $(".tablaRevisionInventario").on("click",".btnVerDetalleinvFisico",function(){
+
+      var idRevisionFisico = $(this).attr("idRevision");
+      localStorage.setItem("idRevisionFisico", idRevisionFisico);
+
+     window.location = "detalleRevisionFisicos";
+      
+})
+
 
 /**
  * MODIFICAR DIAS QUE TARDA EL PROVEEDOR EN RESURTIR
@@ -321,8 +630,6 @@ $("#editarTiempo").click(function(){
   var idFamilia = $('#elegirFamilia option:selected').attr('idFamilia');
   var elegirAlmacenGR = $("#elegirAlmacenGR").val();
   var elegirrPeriodo = $("#elegirrPeriodo").val();
-
-  //alert(elegirAlmacenGR);
 
   var datos = new FormData();
   datos.append("idFamilia",idFamilia);
@@ -1509,6 +1816,105 @@ $(".tablaListaRequisiciones").on("click", ".btnNivelSurtimiento", function(){
   });
 
 });
+/**
+ * CAMBIAR COLOR DEL SEMAFORO EN EL TABLERO
+ */
+$(document).ready(function(){
+
+  var almacenGR1 = "almacengeneral1";
+  var datos = new FormData();
+  datos.append('almacenGR1',almacenGR1);
+
+  $.ajax({
+    url: "ajax/functionsTablero.ajax.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    dataType: "json",
+    success: function(respuesta) {
+      var entradaGr = respuesta[0]["entradas"]*1;
+      var salidasGr = respuesta[0]["salidas"]*1;
+      var existenciasGr = respuesta[0]["existencias"]*1;
+
+      var ultimoCosto = respuesta[0]["ultimoCosto"]*1;
+      var resultado =ultimoCosto.toFixed(2);
+
+      document.getElementById("entradasGr").innerHTML = entradaGr.toFixed(2);
+      document.getElementById("salidasGr").innerHTML = salidasGr.toFixed(2);
+      document.getElementById("existenciasGr").innerHTML = existenciasGr.toFixed(2);
+
+      var div =document.getElementById("contenedorSemaforoGr");
+      div.setAttribute("style","margin-top: 20px; margin-left:-30px;");
+
+      var ul = document.createElement("ul");
+      var li1 = document.createElement("li");
+      var li2 = document.createElement("li");
+      var li3 = document.createElement("li");
+
+      if (resultado > 35000) {
+        ul.setAttribute("class","semaforo verde");
+      }else if (resultado < 35000) {
+        ul.setAttribute("class","semaforo rojo");
+      }else if (resultado == 35000) {
+        ul.setAttribute("class","semaforo naranja");
+      }else{
+        ul.setAttribute("class","semaforo");
+      }
+      ul.appendChild(li1);
+      ul.appendChild(li2);
+      ul.appendChild(li3);
+      div.appendChild(ul);
+    }
+  });
+
+});
+$(document).ready(function(){
+
+  var almacenSM = "almacensanmanuel1";
+  var datos = new FormData();
+  datos.append('almacenSM',almacenSM);
+
+  $.ajax({
+    url: "ajax/functionsTablero.ajax.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    dataType: "json",
+    success: function(respuesta) {
+      var ultimoCostoSm = respuesta[0]["ultimoCosto"]*1;
+      var resultado =ultimoCostoSm.toFixed(2);
+
+      var div =document.getElementById("contenedorSemaforoSm");
+      div.setAttribute("style","margin-top: 20px;margin-left:-30px;");
+
+      var ul = document.createElement("ul");
+      var li1 = document.createElement("li");
+      var li2 = document.createElement("li");
+      var li3 = document.createElement("li");
+
+      if (resultado > 50000) {
+        ul.setAttribute("class","semaforo verde");
+      }else if (resultado < 50000) {
+        ul.setAttribute("class","semaforo rojo");
+      }else if (resultado == 50000) {
+        ul.setAttribute("class","semaforo naranja");
+      }else{
+        ul.setAttribute("class","semaforo");
+      }
+      ul.appendChild(li1);
+      ul.appendChild(li2);
+      ul.appendChild(li3);
+      div.appendChild(ul);
+    }
+  });
+
+});
+
+
 
 /***************CARGAR CONTRATIPOS*************/
 $(".tablaDetalleRequisicionGeneral").on("click", ".btnCargarContratipo", function(){
