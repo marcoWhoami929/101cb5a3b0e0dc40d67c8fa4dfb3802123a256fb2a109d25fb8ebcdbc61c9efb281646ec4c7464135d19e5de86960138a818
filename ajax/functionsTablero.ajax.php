@@ -32,7 +32,7 @@ class functionsTablero{
         $fechaFinal = date("Y-m-d", strtotime($fechaActual)); 
 
 		$tabla = "productos AS p INNER JOIN ".$table." AS al ON p.id = al.idProducto";
-		$campos = "SUM(al.ultimoCosto) AS ultimoCosto";
+		$campos = "SUM(al.entradasUnidades) AS entradas,SUM(salidasUnidades) AS salidas, SUM(existenciasUnidades) AS existencias, SUM(al.ultimoCosto) AS ultimoCosto";
 		$parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = (SELECT MAX(al.idImportacion) FROM ".$table." AS al) AND al.fecha = '".$fechaFinal."'";
 
 		$respuesta = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla,$campos,$parametros);
