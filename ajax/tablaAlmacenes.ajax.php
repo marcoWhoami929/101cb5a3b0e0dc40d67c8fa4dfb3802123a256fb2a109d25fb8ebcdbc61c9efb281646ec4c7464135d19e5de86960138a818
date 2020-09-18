@@ -1,5 +1,6 @@
 <?php
 error_reporting(0);
+session_start();
 require_once "../controladores/inventarios.php";
 require_once "../modelos/inventarios.php";
 
@@ -123,7 +124,9 @@ class TablaAlmacenes{
 				$rotacion = "<button class='btn btn-primary btn-xs'>Mala</button>";
 			}
 
-			$datosJson	 .= '[
+			if ($_SESSION["grupo"] == "Administrador") {
+               	
+               	$datosJson	 .= '[
 				      "'.$almacenes[$i]["id"].'",
 				      "'.$almacenes[$i]["codigoProducto"].'",
 				      "'.$almacenes[$i]["nombreProducto"].'",
@@ -146,6 +149,30 @@ class TablaAlmacenes{
 
 
 				    ],';
+
+                }else{
+                	
+                	$datosJson	 .= '[
+				      "'.$almacenes[$i]["id"].'",
+				      "'.$almacenes[$i]["codigoProducto"].'",
+				      "'.$almacenes[$i]["nombreProducto"].'",
+				      "'.$almacenes[$i]["totalEntradas"].'",
+				      "'.$almacenes[$i]["entradasUnidades"].'",
+				      "'.$almacenes[$i]["totalSalidas"].'",
+				      "'.$almacenes[$i]["salidasUnidades"].'",
+				      "'.number_format($almacenes[$i]["totalExistencias"],2).'",
+				      "'.number_format($almacenes[$i]["existenciasUnidades"],2).'",
+				      "'.$stockMinimo.'",
+				      "'.round($stockSeguridad).'",
+				      "'.round($stockMaximo).'",
+				      "'.number_format($porcentaje,3).'",
+				      "'.$rotacion.'",
+				      "'.$clasificacionJ.'",
+				      "'.$clasificacion.'"
+
+
+				    ],';                    
+                }
 
 	 	}
 

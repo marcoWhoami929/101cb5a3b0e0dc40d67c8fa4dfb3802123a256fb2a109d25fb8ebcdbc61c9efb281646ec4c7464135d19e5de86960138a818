@@ -2,21 +2,22 @@
 include_once("db_connect.php");
 require_once("controladores/inventarios.php");
 require_once("modelos/inventarios.php");
-error_reporting(E_ALL);
+
+error_reporting(0);
 if(isset($_POST['import_data'])){
-	
-	$file_mimes = array(
-		'text/x-comma-separated-values',
-		'text/comma-separated-values', 
-		'application/octet-stream', 
-		'application/vnd.ms-excel', 
-		'application/x-csv', 
-		'text/x-csv', 
-		'text/csv', 
-		'application/csv', 
-		'application/excel', 
-		'application/vnd.msexcel'
-	);
+  
+  $file_mimes = array(
+    'text/x-comma-separated-values',
+    'text/comma-separated-values', 
+    'application/octet-stream', 
+    'application/vnd.ms-excel', 
+    'application/x-csv', 
+    'text/x-csv', 
+    'text/csv', 
+    'application/csv', 
+    'application/excel', 
+    'application/vnd.msexcel'
+  );
   if(!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'],$file_mimes)){
       if(is_uploaded_file($_FILES['file']['tmp_name'])){
 
@@ -42,9 +43,9 @@ if(isset($_POST['import_data'])){
 
           }
 
-          /*$almacen = $_POST["almacen"];
-          $numeroAlmacen = $_POST["numeroAlmacen"];*/
           $almacen = $_POST["nombreAlmacen"];
+          $periodoImportacion = $_POST["periodoSeleccionado"];
+          $mesElegido = $_POST["mesElegido"];
 
           $idUsuario = $_POST["idUsuario"];
 
@@ -57,98 +58,127 @@ if(isset($_POST['import_data'])){
 
           $almacenDatos = $almacen;
 
-          //var_dump("Almacen Datos",$almacenDatos);
-          //
           $table = "importaciones";
           $select = "IF(MAX(id) IS NULL,1,MAX(id)+1) as idDisponible";
           $conditions = "";
           $idDisponible = ControladorInventarios::ctrBuscarFolioDisponible($table, $select, $conditions);
-                   
+                     
           $idImportacion = $idDisponible["idDisponible"];
 
-          //$fechaActual = date("Y-m-d");
-          $fechaActual = "2020-07-11";
-                    
-          $insertarProductoAlmacen = "INSERT INTO almacen".$almacenDatos."(idProducto,inventarioInicialUnidades,entradasUnidades,salidasUnidades,existenciasUnidades,inventarioInicialImportes,entradasImportes,salidasImportes,existenciaImportes,ultimoCosto,totalUltCosto,fecha,idImportacion) VALUES('".$id."','".str_replace(",", "", $emp_record[4])."','".str_replace(",", "", $emp_record[5])."','".str_replace(",", "", $emp_record[6])."','".str_replace(",", "", $emp_record[7])."','".str_replace(",", "", $emp_record[8])."','".str_replace(",", "", $emp_record[9])."','".str_replace(",", "", $emp_record[10])."','".str_replace(",", "", $emp_record[11])."','".str_replace(",", "", $emp_record[12])."','".str_replace(",", "", $emp_record[13])."','".$fechaActual."','".$idImportacion."')";
-          mysqli_query($conn, $insertarProductoAlmacen) or die("database error:". mysqli_error($conn));
+          $verificarAnterior = "SELECT al.existenciasUnidades FROM almacen".$almacen." AS al INNER JOIN productos AS p ON al.idProducto = p.id WHERE codigoProducto = '".$codigoProducto."' AND al.idImportacion = (SELECT MAX(al.idImportacion) FROM almacen".$almacen." AS al WHERE p.codigoProducto = '".$codigoProducto."')";
+          $respuestaVerificar = mysqli_query($conn, $verificarAnterior) or die("database error:". mysqli_error($conn));
+          $verAnterior = mysqli_fetch_array($respuestaVerificar);
 
-          if ($almacen == "general1") {
-            $campo = "stockMinimoGral1";
-          }else if($almacen == "general2"){
-            $campo = "stockMinimoGral2";
-          }else if($almacen == "sanmanuel1"){
-            $campo = "stockMinimoSM1";
-          }else if($almacen == "sanmanuel2"){
-            $campo = "stockMinimoSM2";
-          }else if($almacen == "reforma1"){
-            $campo = "stockMinimoRf1";
-          }else if($almacen == "reforma2"){
-            $campo = "stockMinimoRf1";
-          }else if($almacen == "santiago1"){
-            $campo = "stockMinimoSg1";
-          }else if($almacen == "santiago2"){
-            $campo = "stockMinimoSg1";
-          }else if($almacen == "capu1"){
-            $campo = "stockMinimoCp1";
-          }else if($almacen == "capu2"){
-            $campo = "stockMinimoCp2";
-          }else if($almacen == "lastorres1"){
-            $campo = "stockMinimoTr1";
-          }else if($almacen == "lastorres2"){
-            $campo = "stockMinimoTr2";
-          }
+          $existenciaAnterior = $verAnterior["existenciasUnidades"];
 
-          $fechats = strtotime($fechaActual);
-          switch (date('w', $fechats)){
-            case 0: $day = "Domingo"; break;
-            case 1: $day = "Lunes"; break;
-            case 2: $day = "Martes"; break;
-            case 3: $day = "Miercoles"; break;
-            case 4: $day = "Jueves"; break;
-            case 5: $day = "Viernes"; break;
-            case 6: $day = "Sabado"; break;
-          }
+          $unidadesInicial = str_replace(",", "", $emp_record[4]);
 
-          $fechaSum = date("Y-m-d",strtotime($fechaActual."+ 1 days"));
+          if ($existenciaAnterior == $unidadesInicial || $existenciaAnterior == "") {
+             $descripcion = "Importacion ALMACEN ".strtoupper($almacenDatos); 
 
-          if ($day == "Sabado") {
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 6 days"));
-            $diasRestados = "6"; 
-          }else if($day == "Viernes"){
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 5 days"));
-            $diasRestados = "5";  
-          }else if($day == "Jueves"){
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 4 days"));
-            $diasRestados = "4";  
-          }else if($day == "Miercoles"){
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 3 days"));
-            $diasRestados = "3";  
-          }else if($day == "Martes"){
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 2 days"));
-            $diasRestados = "2";  
-          }else if($day == "Lunes"){
-            $fechaMenosSeis = date("Y-m-d",strtotime($fechaSum."- 1 days"));
-            $diasRestados = "1"; 
-          }
+            //$fechaActual1 = date("Y-m-d");
+            $fechaActual1 = "2020-08-05";
           
-          $sumaSalidas =  "SELECT SUM(al.salidasUnidades) AS totalSalidas FROM almacen".$almacenDatos." as al INNER JOIN productos AS p ON al.idProducto = p.id WHERE p.id = ".$id." AND al.fecha BETWEEN "."'".$fechaMenosSeis."'"." AND "."'".$fechaActual."'";
-          $respuestaSalidas = mysqli_query($conn, $sumaSalidas) or die("database error:". mysqli_error($conn));
-          $salidasMostradas = mysqli_fetch_array($respuestaSalidas);
+            if ($periodoImportacion == "mes") {
+              $numeroMes = $mesElegido;
+            }else{
+              $mesFecha = strtotime($fechaActual1);
+              $numeroMes = date('n', $mesFecha);
+            }
+                    
+            $insertarProductoAlmacen = "INSERT INTO almacen".$almacenDatos."(idProducto,inventarioInicialUnidades,entradasUnidades,salidasUnidades,existenciasUnidades,inventarioInicialImportes,entradasImportes,salidasImportes,existenciaImportes,ultimoCosto,totalUltCosto,fecha,idImportacion, numeroMes) VALUES('".$id."','".str_replace(",", "", $emp_record[4])."','".str_replace(",", "", $emp_record[5])."','".str_replace(",", "", $emp_record[6])."','".str_replace(",", "", $emp_record[7])."','".str_replace(",", "", $emp_record[8])."','".str_replace(",", "", $emp_record[9])."','".str_replace(",", "", $emp_record[10])."','".str_replace(",", "", $emp_record[11])."','".str_replace(",", "", $emp_record[12])."','".str_replace(",", "", $emp_record[13])."','".$fechaActual1."','".$idImportacion."','".$numeroMes."')";
+            mysqli_query($conn, $insertarProductoAlmacen) or die("database error:". mysqli_error($conn));
 
-          $totalSalidas = $salidasMostradas["totalSalidas"];
-          $stockMinimo = $totalSalidas / $diasRestados;
+            if ($periodoImportacion == "mes") {
+              $ultimoMes = "SELECT MAX(numeroMes) AS ultimoMes FROM almacen".$almacenDatos."";
+              $respuestaMes = mysqli_query($conn, $ultimoMes) or die("database error:". mysqli_error($conn));
+              $respuestaUltimoMes = mysqli_fetch_array($respuestaMes);
 
-          $actualizarStock = "UPDATE productos SET ".$campo." = ".round($stockMinimo)." WHERE id = ".$id." ";
-             mysqli_query($conn, $actualizarStock) or die("database error:". mysqli_error($conn));
+              $fechaActual = $respuestaUltimoMes["ultimoMes"];
+              $mesF = $fechaActual +1;
+              $fechaAnterior = $mesF - 6;
+
+              $parametros = "WHERE p.id = ".$id." AND al.numeroMes BETWEEN "."'".$fechaAnterior."'"." AND "."'".$fechaActual."'";
+
+            }else{
+
+              $fechats = strtotime($fechaActual1);
+              switch (date('w', $fechats)){
+                case 0: $day = "Domingo"; break;
+                case 1: $day = "Lunes"; break;
+                case 2: $day = "Martes"; break;
+                case 3: $day = "Miercoles"; break;
+                case 4: $day = "Jueves"; break;
+                case 5: $day = "Viernes"; break;
+                case 6: $day = "Sabado"; break;
+              }
+              $fechaSum = date("Y-m-d",strtotime($fechaActual1."+ 1 days"));
+
+              if ($day == "Sabado") {
+                $fechaAnterior = date("Y-m-d",strtotime($fechaSum."- 6 days"));
+              }else{
+                $fechaAnterior = date("Y-m-d",strtotime($fechaSum."- 7 days"));
+              }
+
+              $parametros = "WHERE p.id = ".$id." AND al.fecha BETWEEN "."'".$fechaAnterior."'"." AND "."'".$fechaActual1."'";
+
+            }
+
+            if ($almacen == "general1") {
+              $campo = "stockMinimoGral1";
+            }else if($almacen == "general2"){
+              $campo = "stockMinimoGral2";
+            }else if($almacen == "sanmanuel1"){
+              $campo = "stockMinimoSM1";
+            }else if($almacen == "sanmanuel2"){
+              $campo = "stockMinimoSM2";
+            }else if($almacen == "reforma1"){
+              $campo = "stockMinimoRf1";
+            }else if($almacen == "reforma2"){
+              $campo = "stockMinimoRf2";
+            }else if($almacen == "santiago1"){
+              $campo = "stockMinimoSg1";
+            }else if($almacen == "santiago2"){
+              $campo = "stockMinimoSg2";
+            }else if($almacen == "capu1"){
+              $campo = "stockMinimoCp1";
+            }else if($almacen == "capu2"){
+              $campo = "stockMinimoCp2";
+            }else if($almacen == "lastorres1"){
+              $campo = "stockMinimoTr1";
+            }else if($almacen == "lastorres2"){
+              $campo = "stockMinimoTr2";
+            }
+          
+            $sumaSalidas =  "SELECT SUM(al.salidasUnidades) AS totalSalidas FROM almacen".$almacenDatos." as al INNER JOIN productos AS p ON al.idProducto = p.id ".$parametros."";
+            $respuestaSalidas = mysqli_query($conn, $sumaSalidas) or die("database error:". mysqli_error($conn));
+            $salidasMostradas = mysqli_fetch_array($respuestaSalidas);
+
+            $totalSalidas = $salidasMostradas["totalSalidas"];
+            $stockMinimo = $totalSalidas / 6;
+
+            $actualizarStock = "UPDATE productos SET ".$campo." = ".round($stockMinimo)." WHERE id = ".$id." ";
+            mysqli_query($conn, $actualizarStock) or die("database error:". mysqli_error($conn));
+
+            $import_status = '?import_status=success';
+
+           } else if ($existenciaAnterior != $unidadesInicial) {
+
+            $import_status = '?import_status=diferencias';
+            $descripcion = "Error de Importación en ALMACEN ".strtoupper($almacenDatos)." hubo diferencias con las Existencias";
+
+          }else{
+
+          }
 
         }
         
-        $descripcion = "Importacion ALMACEN ".strtoupper($almacenDatos); 
+        
         $insertarImportaciones = "INSERT INTO importaciones(id,descripcion,idUsuario) VALUES('".$idImportacion."','".$descripcion."','".$idUsuario."')";
         mysqli_query($conn, $insertarImportaciones) or die("database error:". mysqli_error($conn));
 
         fclose($csv_file);
-        $import_status = '?import_status=success';
+        //$import_status = '?import_status=success';
       } else {
         $import_status = '?import_status=error';
       }

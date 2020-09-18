@@ -7,6 +7,32 @@ function elegirAlmacen(){
     $("#nombreAlmacen").val(almacen);
 
 }
+
+
+$(function(){
+        $(document).on('change','#periodoFecha',function(){
+            var value = $(this).val();
+          $('#periodoSeleccionado').val(value);
+        });
+
+        $(document).on('change','#mes',function(){
+            var value = $(this).val();
+          $('#mesElegido').val(value);
+        });
+  });
+$(function(){
+        $(document).on('change','#clasificarInventario',function(){
+            var value = $(this).val();
+          $('#seleccion').val(value);
+        });
+       
+
+        $(document).on('change','#familia',function(){
+            var value = $(this).val();
+          $('#idFamilia').val(value);
+        });
+
+  });
 /*==================================================
 =            MANDAR DATOS A IMPORTACION            =
 ==================================================*/

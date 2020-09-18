@@ -1,19 +1,44 @@
 <?php
 error_reporting(0);
+session_start();
 require_once "../controladores/inventarios.php";
 require_once "../modelos/inventarios.php";
 
 class TablaProductosPorAgotarse{
 
- 	/*=============================================
-  	TABLA IMPORTACIONES
-  	=============================================*/ 
 
 	public function mostrarTablas(){
 
 		$tablaInicial = "almacen".$_GET["almacen"];
+		$almacen = $_GET["almacen"];
+
+		if ($tablaInicial == "almacengeneral1") {
+            $campo = "stockMinimoGral1";
+          }else if($tablaInicial == "almacengeneral2"){
+            $campo = "stockMinimoGral2";
+          }else if($tablaInicial == "almacensanmanuel1"){
+            $campo = "stockMinimoSM1";
+          }else if($tablaInicial == "almacensanmanuel2"){
+            $campo = "stockMinimoSM2";
+          }else if($tablaInicial == "almacenreforma1"){
+            $campo = "stockMinimoRf1";
+          }else if($tablaInicial == "almacenreforma2"){
+            $campo = "stockMinimoRf2";
+          }else if($tablaInicial == "almacensantiago1"){
+            $campo = "stockMinimoSg1";
+          }else if($tablaInicial == "almacensantiago2"){
+            $campo = "stockMinimoSg2";
+          }else if($tablaInicial == "almacencapu1"){
+            $campo = "stockMinimoCp1";
+          }else if($tablaInicial == "almacencapu2"){
+            $campo = "stockMinimoCp2";
+          }else if($tablaInicial == "almacenlastorres1"){
+            $campo = "stockMinimoTr1";
+          }else if($tablaInicial == "almacenlastorres2"){
+            $campo = "stockMinimoTr2";
+          }
 		//$fechaActual = date("Y-m-d");
-		$fechaActual = "2020-07-11";
+		$fechaActual = "2020-08-05";
 		$fechaFinal = date("Y-m-d", strtotime($fechaActual));
 
 		$table = $tablaInicial;
@@ -23,19 +48,19 @@ class TablaProductosPorAgotarse{
 		$ultimoId = $idDisponible["ultimoId"];
 
 		$tabla = "productos AS p INNER JOIN ".$tablaInicial." AS al ON p.id = al.idProducto";
-		$campos = "p.codigoProducto, p.nombreProducto, p.stockMinimoGral1, al.existenciasUnidades, al.ultimoCosto, al.fecha";
+		$campos = "p.codigoProducto, p.nombreProducto, p.".$campo." AS StockMinimoTabla, al.existenciasUnidades, al.ultimoCosto, al.fecha";
     	$parametros = "WHERE al.existenciasUnidades != 0 AND al.idImportacion = ".$ultimoId." AND al.fecha = '".$fechaFinal."'";	
 
  		$porAgotarse = ControladorInventarios::ctrMostrarProductosPorAgotarse($tabla, $campos, $parametros);
- 		//var_dump($porAgotarse);
+ 		
  		$datosJson = '{
 		 
 	 	"data": [ ';
 
 	 	for($i = 0; $i < count($porAgotarse); $i++){
 
-	 		$stockMinimo = $porAgotarse[$i]["stockMinimoGral1"];
-	 		$existencias = number_format($porAgotarse[$i]["existenciasUnidades"],2);
+	 		$stockMinimo = $porAgotarse[$i]["StockMinimoTabla"];
+	 		$existencias = $porAgotarse[$i]["existenciasUnidades"];
 	 		$ultimoCosto = $porAgotarse[$i]["ultimoCosto"];
 
 	 		if ($stockMinimo > $existencias) {
@@ -53,10 +78,13 @@ class TablaProductosPorAgotarse{
 
 	 		if ($existencias <= $indicador) {
 	 			$indicadorColor = "<button class='btn btn-danger btn-xs'>Pedir</button>";
+	 			$enStock = "pedir";
 	 		}else if($existencias == $indicador2){
 	 			$indicadorColor = "<button class='btn btn-warning btn-xs'>Surtir</button>";
+	 			$enStock = "surtir";
 	 		}else if($existencias >= $indicador2){
 	 			$indicadorColor = "<button class='btn btn-success btn-xs'>En Stock</button>";
+	 			$enStock = "enStock";
 	 		}
 
 	 		$fech = $porAgotarse[$i]["fecha"];
@@ -65,17 +93,40 @@ class TablaProductosPorAgotarse{
 			DEVOLVER DATOS JSON
 			=============================================*/
 
-			$datosJson	 .= '[
+			if ($_SESSION["grupo"] == "Administrador") {
+
+				if ($enStock != "enStock") {
+					$datosJson	 .= '[
 				      "'.($i+1).'",
 				      "'.$porAgotarse[$i]["codigoProducto"].'",
 				      "'.$porAgotarse[$i]["nombreProducto"].'",
 				      "'.$stockMinimo.'",
-				      "'.$existencias.'",
+				      "'.number_format($existencias,2).'",
 				      "'.$faltantantesUnidad.'",
 				      "'.$faltanteMonto.'",
 				      "'.$fecha.'",
 				      "'.$indicadorColor.'"
 				    ],';
+				}else{
+
+				}
+			}else{
+				if ($enStock != "enStock") {
+					$datosJson	 .= '[
+				      "'.($i+1).'",
+				      "'.$porAgotarse[$i]["codigoProducto"].'",
+				      "'.$porAgotarse[$i]["nombreProducto"].'",
+				      "'.$stockMinimo.'",
+				      "'.number_format($existencias,2).'",
+				      "'.$faltantantesUnidad.'",
+				      "'.$fecha.'",
+				      "'.$indicadorColor.'"
+				    ],';
+				}
+
+			}
+
+			
 
 	 	}
 
@@ -91,9 +142,6 @@ class TablaProductosPorAgotarse{
 
 }
 
-/*=============================================
- TABLA DE IMPORTACIONES
-=============================================*/ 
 $activar = new TablaProductosPorAgotarse();
 $activar -> mostrarTablas();
 

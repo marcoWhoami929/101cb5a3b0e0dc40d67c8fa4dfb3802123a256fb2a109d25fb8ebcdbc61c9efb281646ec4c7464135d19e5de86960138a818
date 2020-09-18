@@ -54,10 +54,12 @@ error_reporting(0);
     <script src="vistas/dist/js/pages/chart/chart-page-init.js"></script>
     <!-- SweetAlert 2 https://sweetalert2.github.io/-->
     <script src="vistas/assets/libs/sweetalert2/sweetalert2.all.js"></script>
+   
 
     <!----HIGHCHARTS------------------------>
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
