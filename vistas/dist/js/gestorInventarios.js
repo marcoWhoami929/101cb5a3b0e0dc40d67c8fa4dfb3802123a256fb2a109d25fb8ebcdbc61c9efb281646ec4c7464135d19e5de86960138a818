@@ -618,10 +618,9 @@ function cargarCantidadFisico(id){
       var idRevisionFisico = $(this).attr("idRevision");
       localStorage.setItem("idRevisionFisico", idRevisionFisico);
 
-     window.location = "detalleRevisionFisicos?Detalle="+idRevisionFisico;
+      window.location = "detalleRevisionFisicos?Detalle="+idRevisionFisico;
       
-})
-
+  });
 
 /**
  * MODIFICAR DIAS QUE TARDA EL PROVEEDOR EN RESURTIR
