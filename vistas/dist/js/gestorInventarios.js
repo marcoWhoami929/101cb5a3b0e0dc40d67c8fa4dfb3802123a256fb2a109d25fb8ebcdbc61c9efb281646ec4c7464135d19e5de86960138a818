@@ -546,15 +546,16 @@ function cargarCantidadFisico(id){
 
     var statusInventarioF = tipoInventario;
     var tipoFisico = $("#clasificarInventario").val();
+    var datoInput = $("#tipo").val();
 
-    if (tipoFisico == "general") {
+    if (datoInput == "general") {
       var familiaF = 0;
       
-    }else if (tipoFisico == "porFamilia"){
+    }else if (datoInput == "porFamilia"){
       var familiaF = $("#familia").val();
     }
 
-    if(tipoFisico == ""){
+    if(datoInput == ""){
       swal({
             type: "warning",
             title: "Alto!!",
@@ -564,7 +565,7 @@ function cargarCantidadFisico(id){
             }).then(function(result) {
               
             })
-    }else if (tipoFisico == "porFamilia" && familiaF == "") {
+    }else if (datoInput == "porFamilia" && familiaF == "") {
       swal({
             type: "warning",
             title: "Alto!!",
@@ -580,7 +581,7 @@ function cargarCantidadFisico(id){
     datos.append("tablaFisico2",tablaFisico2);
     datos.append("statusInventarioF",statusInventarioF);
     datos.append("nameUser",nameUser);
-    datos.append("tipoFisico",tipoFisico);
+    datos.append("tipoFisico",datoInput);
     datos.append("familiaF",familiaF);
     datos.append("stadoInventario",stadoInventario);
     $.ajax({
@@ -617,10 +618,9 @@ function cargarCantidadFisico(id){
       var idRevisionFisico = $(this).attr("idRevision");
       localStorage.setItem("idRevisionFisico", idRevisionFisico);
 
-     window.location = "detalleRevisionFisicos";
+      window.location = "detalleRevisionFisicos?Detalle="+idRevisionFisico;
       
-})
-
+  });
 
 /**
  * MODIFICAR DIAS QUE TARDA EL PROVEEDOR EN RESURTIR
@@ -1885,8 +1885,16 @@ $(document).ready(function(){
     processData: false,
     dataType: "json",
     success: function(respuesta) {
+      var entradaSm = respuesta[0]["entradas"]*1;
+      var salidasSm = respuesta[0]["salidas"]*1;
+      var existenciasSm = respuesta[0]["existencias"]*1;
+
       var ultimoCostoSm = respuesta[0]["ultimoCosto"]*1;
       var resultado =ultimoCostoSm.toFixed(2);
+
+      document.getElementById("entradasSm").innerHTML = entradaSm.toFixed(2);
+      document.getElementById("salidasSm").innerHTML = salidasSm.toFixed(2);
+      document.getElementById("existenciasSm").innerHTML = existenciasSm.toFixed(2);
 
       var div =document.getElementById("contenedorSemaforoSm");
       div.setAttribute("style","margin-top: 20px;margin-left:-30px;");

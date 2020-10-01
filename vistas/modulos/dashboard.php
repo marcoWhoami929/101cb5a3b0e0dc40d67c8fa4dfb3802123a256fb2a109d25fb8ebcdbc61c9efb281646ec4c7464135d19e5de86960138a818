@@ -2,9 +2,11 @@
 $sesion = $_SESSION["id"];
 $nameSesion = $_SESSION["nombre"];
 $grupoSesion = $_SESSION["grupo"];
+$sucursal = $nameSesion;
 echo "<script type='text/javascript'>localStorage.setItem('idSesion','".$sesion."');</script>";
 echo "<script type='text/javascript'>localStorage.setItem('nameSesion','".$nameSesion."');</script>";
 echo "<script type='text/javascript'>localStorage.setItem('grupoSesion','".$grupoSesion."');</script>";
+echo "<script type='text/javascript'>localStorage.setItem('sucursal','".$sucursal."');</script>";
 
 ?>
 <div class="preloader">
@@ -330,15 +332,15 @@ echo "<script type='text/javascript'>localStorage.setItem('grupoSesion','".$grup
                                 <div class="row">
                                     <div class="col-lg-4 col-md-4 col-sm-4 box bg-cyan text-center">
                                         <i class="fas fa-arrow-down text-white"></i>
-                                        <h4 class="text-white"><?php echo rand(1,100) ?></h4>
+                                        <h4 class="text-white" id="entradasSm"></h4>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 box bg-success text-center">
                                         <i class="fas fa-arrow-up text-white"></i>
-                                        <h4 class="text-white"><?php echo rand(1,100) ?></h4>
+                                        <h4 class="text-white" id="salidasSm"></h4>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-sm-4 box bg-warning text-center">
                                         <i class="fas fa-boxes text-white"></i>
-                                        <h4 class="text-white"><?php echo rand(1,100) ?></h4>
+                                        <h4 class="text-white" id="existenciasSm"></h4>
                                     </div>
                                 </div>
                                 <div class="row">

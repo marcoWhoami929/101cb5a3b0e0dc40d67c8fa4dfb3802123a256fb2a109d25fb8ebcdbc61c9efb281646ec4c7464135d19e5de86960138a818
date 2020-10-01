@@ -15,7 +15,7 @@
                             
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="importaciones" aria-expanded="false"><i class="mdi mdi-calendar-clock"></i><span class="hide-menu">Importación de Inventarios</span></a></li>
                            
-                            <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="existenciasGenerales" aria-expanded="false"><i class="mdi mdi-search-web"></i><span class="hide-menu">Existencias Generales</span></a></li>
+                            
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="configuraciones" aria-expanded="false"><i class="mdi mdi-settings-box"></i><span class="hide-menu">Configuración</span></a></li>
 
                             <li class="sidebar-item"> 
