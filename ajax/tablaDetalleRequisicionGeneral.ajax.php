@@ -45,11 +45,11 @@ class TablaDetalleRequisicionGeneral{
 			$arregloUnidades += $detalleRequisicion[$i]["unidadesAprobadas"];
 	 		$arregloMonto +=$detalleRequisicion[$i]["montoAprobado"];
 
-	 		if ($detalleRequisicion[$i]["existencias"] == 0) {
+	 		if ($detalleRequisicion[$i]["contratipo"] == 0) {
 
-				$cambio = "<button type='button' class='btn btn-secondary btnCambiar' idProducto='".$detalleRequisicion[$i]["idProducto"]."' idPedido='".$detalleRequisicion[$i]["idPedido"]."' data-toggle='modal' data-target='#verContratipo'><i class='mdi mdi-cloud-sync'></i> </button>";
+				$cambio = "<button type='button' class='btn btn-secondary btnCargarContratipo' data-toggle='modal' data-target='#verContratipo' disabled><i class='mdi mdi-cloud-sync'></i> </button>";
 			}else{
-				$cambio = "<button type='button' class='btn btn-secondary btnCambiar' idProducto='".$detalleRequisicion[$i]["idProducto"]."' idPedido='".$detalleRequisicion[$i]["idPedido"]."' data-toggle='modal' data-target='#' disabled><i class='mdi mdi-cloud-sync'></i> </button>";
+				$cambio = "<button type='button' class='btn btn-secondary btnCargarContratipo'  idPedido='".$detalleRequisicion[$i]["idPedido"]."' idProducto='".$detalleRequisicion[$i]["idProducto"]."' idMovimiento='".$detalleRequisicion[$i]["id"]."' contratipo = '".$detalleRequisicion[$i]["contratipo"]."' data-toggle='modal' data-target='#verContratipo' ><i class='mdi mdi-cloud-sync'></i> </button>";
 			}
 
 			$datosJson	 .= '[

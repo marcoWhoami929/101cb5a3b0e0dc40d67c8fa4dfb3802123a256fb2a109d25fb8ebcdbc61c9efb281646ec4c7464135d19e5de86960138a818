@@ -94,49 +94,46 @@
 						</div>
 					</div>
 					
-					<div id="verContratipo" class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">>
-  						<div class="modal-dialog modal-lg">
-    						<div class="modal-content">
+				
 
-      							<form role="form" method="post" enctype="multipart/form-data">
-						        <!-- CABEZA DEL MODAL-->
-				        			<div class="modal-header" style="background:#1F262D; color:white">
+					<!-- Modal -->
+					<div class="modal fade bs-example-modal-lg" id="verContratipo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					  <div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+						  <div class="modal-header" style="background:#1F262D; color:white">
+						  	<h4 class="modal-title" id="myModalLabel">Contratipos</h4>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							
+						  </div>
+						  <div class="modal-body">
+							<form class="form-horizontal">
+							  <div class="input-group">
+								<div class="col-sm-6">
+								  <input type="hidden" class="form-control" id="q" placeholder="Buscar productos" onkeyup="load(1)">
+								  <input type="hidden" class="form-control" id="grupoSesion" value="<?php echo $_SESSION["grupo"] ?>">
+								  <input type="hidden" class="form-control" id="sesion" value="<?php echo $_SESSION["nombre"]; ?>">
+								  <input type="hidden" class="form-control" id="idSesion" value="<?php echo $_SESSION["id"]; ?>">
+								  <input type="hidden" class="form-control" id="detalleIdPedido">
+								  <input type="hidden" class="form-control" id="detalleIdProducto">
+								  <input type="hidden" class="form-control" id="detalleIdMovimiento">
+								  <input type="hidden" class="form-control" id="detalleIdContratipo">
+								</div>
 
-				          				<h4 class="modal-title">Sustituir Producto</h4>
-				          				<button type="button" class="close" data-dismiss="modal">&times;</button>
+								
 
-				        			</div>
-
-	        						<div class="modal-body">
-	          							<div class="box-body">
-	            							
-	            							<div class="form-group table-responsive">
-
-						                        <table class="table table-bordered table-striped dt-responsive" id="tableContratipo" style="border: 2px solid #1F262D">
-						                        	<thead style="background:#1F262D;color: white">
-							                        	<tr>
-							                        		<th>Codigo Similar</th>
-							                        		<th>Producto</th>
-							                        		<th>Existencias</th>
-							                        		<th>Cantidad</th>
-							                        		<th>Codigo Original</th>
-							                        		<th>Producto</th>
-							                        	</tr>
-						                            </thead>
-						                        </table>
-				                    		</div>
-			                			</div>
-			            			</div>
-
-	        						<!-- PIE DEL MODAL-->
-							        <div class="modal-footer">
-
-							          	<button type="button" class="btn btn-dark pull-left" id="salirVerExistencias" data-dismiss="modal">Salir</button>
-
-							        </div>
-     							</form>
-    						</div>
-  						</div>
+								
+							  </div>
+							</form>
+							<br>
+							<div id="loader" style="position: absolute;	text-align: center;	top: 55px;	width: 100%;display:none;"></div><!-- Carga gif animado -->
+							<div class="outer_div" ></div><!-- Datos ajax Final -->
+						  </div>
+						  <div class="modal-footer">
+							<button type="button" class="btn btn-dark" data-dismiss="modal">Cerrar</button>
+							
+						  </div>
+						</div>
+					  </div>
 					</div>
 
 
@@ -165,6 +162,33 @@
     </div>
   </div>
 </div>
+<script>
+
+
+	function load(page){
+		var q= $("#q").val();
+		var sesion = $("#sesion").val();
+		var grupoSesion = $("#grupoSesion").val();
+		var idUser = $("#idSesion").val();
+		var idSesion = idUser * 1;
+
+		var idContratipo = $("#detalleIdContratipo").val();
+		var idProducto = $("#detalleIdProducto").val();
+		
+		$("#loader").fadeIn('slow');
+		$.ajax({
+			url:'ajax/agregarContratipo.ajax.php?action=ajax&page='+page+'&sesion='+sesion+'&grupoSesion='+grupoSesion+'&idSesion='+idSesion+'&idContratipo='+idContratipo+'$idProducto='+idProducto,
+			beforeSend: function(objeto){
+				 $('#loader').html('<img src="vistas/img/loader.gif"> Cargando...');
+			},
+			success:function(data){
+				$(".outer_div").html(data).fadeIn('slow');
+				$('#loader').html('');
+					
+			}
+		})
+	}
+</script>
 <script type="text/javascript">
 	$(document).ready(function(){
 

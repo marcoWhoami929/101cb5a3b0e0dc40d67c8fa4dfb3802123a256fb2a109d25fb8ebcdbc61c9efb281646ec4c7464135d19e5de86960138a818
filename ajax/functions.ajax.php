@@ -496,9 +496,9 @@ if (isset($_POST["idRequisicionConcluida"])) {
 	$concluirRequisicion -> concluirRequisicion();
 }
 
-if (isset($_POST["idSesion"])) {
+if (isset($_POST["idSesionValidar"])) {
 	$consultarTemporal = new functionsInventory();
-	$consultarTemporal -> idSesionTemp = $_POST["idSesion"];
+	$consultarTemporal -> idSesionTemp = $_POST["idSesionValidar"];
 	$consultarTemporal -> consultarTemporal();
 }
 
