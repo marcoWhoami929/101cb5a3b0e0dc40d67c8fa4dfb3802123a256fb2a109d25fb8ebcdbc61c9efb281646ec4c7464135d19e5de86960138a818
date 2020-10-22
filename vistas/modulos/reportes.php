@@ -7,8 +7,13 @@ require_once "../../controladores/inventarios.php";
 require_once "../../modelos/inventarios.php";
 
 if (isset($_GET["requisiciones"])) {
-	$reporteSeguimientos = new ControladorReportes();
-	$reporteSeguimientos -> ctrReporteRequisiciones();
+	$reporteRequisicion = new ControladorReportes();
+	$reporteRequisicion -> ctrReporteRequisiciones();
+}
+
+if (isset($_GET["requisicionesTiendas"])) {
+	$reporteRequisicionTiendas = new ControladorReportes();
+	$reporteRequisicionTiendas -> ctrReporteRequisicionesTiendas();
 }
 
 ?>

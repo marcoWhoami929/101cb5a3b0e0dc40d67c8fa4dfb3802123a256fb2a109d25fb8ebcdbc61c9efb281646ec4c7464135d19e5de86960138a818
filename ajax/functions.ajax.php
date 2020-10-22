@@ -125,7 +125,7 @@ class functionsInventory{
 									"montoFaltante" => $pedido["data"][$i][4],
 									"montoSolicitado" => $pedido["data"][$i][5],
 									"montoAprobado" => $pedido["data"][$i][5],
-									"estatus" => "2",
+									"estatus" => "0",
 									"idPedido" => $folio);
 
 			$agregarProductosPedido = ControladorInventarios::ctrInsertarProductosPedido($tabla,$datosPedido);
