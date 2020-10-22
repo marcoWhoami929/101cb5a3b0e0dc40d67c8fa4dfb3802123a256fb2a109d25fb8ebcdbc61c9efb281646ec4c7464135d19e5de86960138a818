@@ -199,13 +199,9 @@ echo "<script type='text/javascript'>localStorage.setItem('sucursal','".$sucursa
                             </div>
                             <div class="card card-body">
                                 <div class="row">
-                                    <div class="col-lg-2 col-md-2 col-sm-2" >
-                                        <div id="contenedorSemaforo">
-                                            <ul class="semaforo naranja">
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                            </ul>
+                                    <div class="col-lg-2 col-md-2 col-sm-2">
+                                        <div  id="contenedorSemaforoRf">
+                                       
                                         </div>
                                     </div>
                                 </div>
@@ -222,12 +218,8 @@ echo "<script type='text/javascript'>localStorage.setItem('sucursal','".$sucursa
                             <div class="card card-body">
                                 <div class="row">
                                     <div class="col-lg-2 col-md-2 col-sm-2">
-                                        <div  id="contenedorSemaforo">
-                                            <ul class="semaforo verde">
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                            </ul>
+                                        <div  id="contenedorSemaforoSg">
+                                       
                                         </div>
                                     </div>
                                 </div>
@@ -244,12 +236,8 @@ echo "<script type='text/javascript'>localStorage.setItem('sucursal','".$sucursa
                             <div class="card card-body">
                                 <div class="row">
                                     <div class="col-lg-2 col-md-2 col-sm-2">
-                                        <div  id="contenedorSemaforo">
-                                            <ul class="semaforo naranja">
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                            </ul>
+                                        <div  id="contenedorSemaforoCp">
+                                       
                                         </div>
                                     </div>
                                 </div>
@@ -266,12 +254,8 @@ echo "<script type='text/javascript'>localStorage.setItem('sucursal','".$sucursa
                             <div class="card card-body">
                                 <div class="row">
                                     <div class="col-lg-2 col-md-2 col-sm-2">
-                                        <div  id="contenedorSemaforo">
-                                            <ul class="semaforo rojo">
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                            </ul>
+                                        <div  id="contenedorSemaforoTr">
+                                       
                                         </div>
                                     </div>
                                 </div>

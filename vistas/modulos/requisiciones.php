@@ -1,3 +1,6 @@
+<?php 
+$sucursal = $_SESSION["nombre"];
+ ?>
 <div class="preloader">
 	<div class="lds-ripple">
 		<div class="lds-pos"></div>
@@ -33,6 +36,10 @@
 									<div class="card-body">
 									    <div class="d-md-flex align-items-center">
 			                                <div>
+			                                	<a href="vistas/modulos/reportes.php?requisicionesTiendas=pedidossemanales&sucursal=<?php echo $sucursal; ?>" >
+			                                		<button type="button" class="btn btn-success btn-sm">
+			                                        <i class="fas fa-file-excel fa-2x"></i></button>
+			                                    </a><br><br>
 			                                    <h4 class="card-title">Estatus</h4>
 			                                    <button type='button' class='btn btn-primary btn-sm'><i class="far fa-paper-plane fa-2x"></i></button> <strong>Pedido Solicitado</strong>
 			                                    <button type='button' class='btn btn-success btn-sm'><i class="fab fa-searchengin fa-2x"></i></button> <strong>Pedido En Revisión</strong>
