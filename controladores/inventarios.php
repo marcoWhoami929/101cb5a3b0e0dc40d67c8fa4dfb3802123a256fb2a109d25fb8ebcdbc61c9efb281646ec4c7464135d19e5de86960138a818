@@ -215,6 +215,14 @@ class ControladorInventarios{
 		return $respuesta;
 	}
 
+	/*****************MOSTRAR DATOS DE PRODUCTO CAMBIADO***************/
+	static public function ctrMostrarProductoCambiado($tabla, $campos, $parametros){
+
+		$respuesta = ModeloInventarios::mdlMostrarProductoCambiado($tabla, $campos, $parametros);
+
+		return $respuesta;
+	}
+
 }
 
 

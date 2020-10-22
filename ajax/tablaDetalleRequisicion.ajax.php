@@ -37,6 +37,13 @@ class TablaDetalleRequisicion{
 
 			$cantidadAprobada = "<input type='text' class='form-control cantidadPedidoAprobado' id='cantidadAprobada$i' idProducto='".$detalleRequisicion[$i]["idProducto"]."' value='".$detalleRequisicion[$i]["unidadesAprobadas"]."' onChange='actualizarCantidad(this.id);' disabled>";
 
+			if ($detalleRequisicion[$i]["sustituido"] == 1) {
+				$observacionCambio = "<button type='button' class='btn btn-secondary btn-sm btnInfoContratipo' idProducto='".$detalleRequisicion[$i]["idProducto"]."' idPedido='".$detalleRequisicion[$i]["idPedido"]."' idProductoPedido='".$detalleRequisicion[$i]["id"]."' data-toggle='modal' data-target='#informacionContratipo'><i class='fas fa-info'></i></button>";
+			}else{
+				$observacionCambio = "";
+			}
+			
+
 			
 
 			if ($_SESSION["grupo"] == "Administrador") {
@@ -61,7 +68,7 @@ class TablaDetalleRequisicion{
 				$datosJson	 .= '[
 					  "'.$estatus.'",
 					  "'.$detalleRequisicion[$i]["codigo"].'",
-				      "'.$detalleRequisicion[$i]["producto"].'",
+				      "'.$detalleRequisicion[$i]["producto"].'&nbsp;&nbsp;'.$observacionCambio.'",
 				      "'.$detalleRequisicion[$i]["existencias"].'",
 				      "'.$detalleRequisicion[$i]["solicitado"].'",
 				      "'.$cantidadAprobada.'",
@@ -84,11 +91,62 @@ class TablaDetalleRequisicion{
 
  	}
 
+ 	public function mostrarProductoSustituido(){	
+
+		$idPedido = $_GET["idPedidoCambio"];
+		$id = $_GET["idProductoPedido"];
+
+		$tabla = "productos AS p INNER JOIN sustituidos AS s ON p.id = s.idProducto";
+		$campos = "p.nombreProducto,s.cantidad,s.monto,s.fecha";
+		$parametros = "WHERE s.id = ".$idPedido;
+
+		$productoSustituido = ControladorInventarios::ctrMostrarProductoCambiado($tabla,$campos,$parametros);
+
+ 		$datosJson = '{
+		 
+	 	"data": [ ';
+
+	 	for($i = 0; $i < count($productoSustituido); $i++){
+
+
+				$datosJson	 .= '[
+					  "'.$productoSustituido[$i]["nombreProducto"].'",
+					  "'.$productoSustituido[$i]["cantidad"].'",
+					  "'.$productoSustituido[$i]["monto"].'",
+					  "'.$productoSustituido[$i]["fecha"].'"
+				     
+				    ],';
+			
+
+	 	}
+
+	 	$datosJson = substr($datosJson, 0, -1);
+
+		$datosJson.=  ']
+			  
+		}'; 
+
+		echo $datosJson;
+
+ 	}
+
 }
 
+if (isset($_GET["DetalleRequisicion"])) { 
 
+	$activar = new TablaDetalleRequisicion();
+	$activar -> mostrarTablas();
+
+}else if (isset($_GET["ModalProductoRemplazado"])) { 
+
+	$verProductoCambiado = new TablaDetalleRequisicion();
+	$verProductoCambiado -> mostrarProductoSustituido();
+
+}
+
+/*
 $activar = new TablaDetalleRequisicion();
 $activar -> mostrarTablas();
-
+*/
 
 

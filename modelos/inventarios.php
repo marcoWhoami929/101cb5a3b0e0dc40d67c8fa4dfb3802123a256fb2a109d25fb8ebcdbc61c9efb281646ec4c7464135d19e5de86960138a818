@@ -444,7 +444,7 @@ class ModeloInventarios{
 	 */
 	static public function mdlActualizarCantidadAprobada($tabla,$item,$valor,$item2,$valor2){
  
-		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $item2 = :$item2, pendiente = solicitado - unidadesAprobadas,montoAprobado = ((montoSolicitado/solicitado)*unidadesAprobadas),montoPendiente = montoSolicitado - montoAprobado WHERE $item = :$item");
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $item2 = :$item2, pendiente = solicitado - unidadesAprobadas,montoAprobado = ((montoSolicitado/solicitado)*unidadesAprobadas),montoPendiente = montoSolicitado - montoAprobado, montoFaltante = montoSolicitado - montoAprobado WHERE $item = :$item");
 
 		$stmt-> bindParam(":".$item,$valor,PDO::PARAM_INT);
 		$stmt-> bindParam(":".$item2,$valor2,PDO::PARAM_STR);
@@ -613,6 +613,90 @@ class ModeloInventarios{
 
 	}
 	static public function mdlDetalleRevisionFisicos($tabla, $campos, $parametros){
+
+		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
+
+		$stmt -> execute();
+
+		return $stmt->fetchAll();
+
+		$stmt -> close();
+		$stmt = null;
+
+	}
+
+	/**
+	 * DATOS CONTRATIPOS
+	 */
+	static public function mdlConsultarSucursalPedido($tablaPedido,$dato,$condicion){
+
+		$stmt = Conexion::conectar()->prepare("SELECT $dato FROM $tablaPedido $condicion");
+
+		$stmt -> execute();
+
+		return $stmt->fetch();
+
+		$stmt -> close();
+		$stmt = null;
+
+	}
+	static public function mdlBuscarExistencias($tableAlmacen,$datosBuscados,$parameters){
+
+		$stmt = Conexion::conectar()->prepare("SELECT $datosBuscados FROM $tableAlmacen $parameters");
+
+		$stmt -> execute();
+
+		return $stmt->fetch();
+
+		$stmt -> close();
+		$stmt = null;
+
+	}
+	static public function mdlContratipos($tabla, $datos){
+ 
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(idProducto,idRemplazo,idPedido,idUsuario,fecha,cantidad,monto) VALUES(:idProducto,:idRemplazo,:idPedido,:idUsuario,:fecha,:cantidad,:monto)");
+
+		$stmt->bindParam(":idProducto",$datos["idProducto"],PDO::PARAM_INT);
+		$stmt->bindParam(":idRemplazo",$datos["idRemplazo"],PDO::PARAM_INT);
+		$stmt->bindParam(":idPedido",$datos["idPedido"],PDO::PARAM_INT);
+		$stmt->bindParam(":idUsuario",$datos["idUsuario"],PDO::PARAM_INT);
+		$stmt->bindParam(":fecha",$datos["fecha"],PDO::PARAM_STR);
+		$stmt->bindParam(":cantidad",$datos["cantidad"],PDO::PARAM_STR);
+		$stmt->bindParam(":monto",$datos["monto"],PDO::PARAM_STR);
+
+		if($stmt -> execute()){
+
+			return "ok";
+		
+		}else{
+
+			return "error";	
+
+		}
+	}
+	static public function mdlActualizarProductoContratipo($table,$campos,$parametros){	
+
+		$stmt = Conexion::conectar()->prepare("UPDATE $table SET $campos WHERE $parametros");
+		
+
+		if($stmt -> execute()){
+
+			return "ok";
+		
+		}else{
+
+			return "error";	
+
+		}
+
+		$stmt -> close();
+
+		$stmt = null;
+
+	}
+
+	/*****************MOSTRAR DATOS DE PRODUCTO CAMBIADO***************/
+	static public function mdlMostrarProductoCambiado($tabla,$campos,$parametros){
 
 		$stmt = Conexion::conectar()->prepare("SELECT $campos FROM $tabla $parametros");
 

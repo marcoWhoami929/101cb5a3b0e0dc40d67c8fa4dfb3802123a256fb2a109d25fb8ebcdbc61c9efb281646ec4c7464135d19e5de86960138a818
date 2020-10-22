@@ -28,17 +28,11 @@ class TablaDetalleRequisicionGeneral{
 
 				$estatus = "<button type='button' class='btn btn-danger btn-sm btnEstatusProducto' idProductoRequisicion='".$detalleRequisicion[$i]["id"]."' estadoProducto='1' ><i class='fa fa-boxes'></i></button>";
 
-			}else if ($detalleRequisicion[$i]["estatus"] == 1){
-
-				$estatus = "<button type='button' class='btn btn-warning btn-sm btnEstatusProducto' idProductoRequisicion='".$detalleRequisicion[$i]["id"]."' estadoProducto='2' ><i class='fa fa-box-open'></i></button>";
-			}
-			else  if ($detalleRequisicion[$i]["estatus"] == 2){
+			}else  if ($detalleRequisicion[$i]["estatus"] == 1){
 
 				$estatus = "<button type='button' class='btn btn-success btn-sm btnEstatusProducto' idProductoRequisicion='".$detalleRequisicion[$i]["id"]."' estadoProducto='0'><i class='fa fa-truck-loading' ></i></button>";
 			}
 
-
-			
 
 			$cantidadAprobada = "<input type='text' class='form-control cantidadPedidoAprobado' id='cantidadAprobada$i' idProducto='".$detalleRequisicion[$i]["id"]."' value='".$detalleRequisicion[$i]["unidadesAprobadas"]."' onChange='actualizarCantidad(this.id);' >";
 
@@ -49,7 +43,7 @@ class TablaDetalleRequisicionGeneral{
 
 				$cambio = "<button type='button' class='btn btn-secondary btnCargarContratipo' data-toggle='modal' data-target='#verContratipo' disabled><i class='mdi mdi-cloud-sync'></i> </button>";
 			}else{
-				$cambio = "<button type='button' class='btn btn-secondary btnCargarContratipo'  idPedido='".$detalleRequisicion[$i]["idPedido"]."' idProducto='".$detalleRequisicion[$i]["idProducto"]."' idMovimiento='".$detalleRequisicion[$i]["id"]."' contratipo = '".$detalleRequisicion[$i]["contratipo"]."' data-toggle='modal' data-target='#verContratipo' ><i class='mdi mdi-cloud-sync'></i> </button>";
+				$cambio = "<button type='button' class='btn btn-secondary btnCargarContratipo' idProductoPedido='".$detalleRequisicion[$i]["id"]."' idPedido='".$detalleRequisicion[$i]["idPedido"]."' idProducto='".$detalleRequisicion[$i]["idProducto"]."' idMovimiento='".$detalleRequisicion[$i]["id"]."' contratipo = '".$detalleRequisicion[$i]["contratipo"]."' solicitado='".$detalleRequisicion[$i]["solicitado"]."' montoSolicitado='".$detalleRequisicion[$i]["montoSolicitado"]."'  data-toggle='modal' data-target='#verContratipo' ><i class='mdi mdi-cloud-sync'></i> </button>";
 			}
 
 			$datosJson	 .= '[
@@ -61,10 +55,10 @@ class TablaDetalleRequisicionGeneral{
 				      "'.$detalleRequisicion[$i]["solicitado"].'",
 				      "'.$cantidadAprobada.'",
 				      "'.$detalleRequisicion[$i]["pendiente"].'",
-				      "$ '.$detalleRequisicion[$i]["montoFaltante"].'",
-				      "$ '.$detalleRequisicion[$i]["montoSolicitado"].'",
-				      "$ '.$detalleRequisicion[$i]["montoAprobado"].'",
-				      "$ '.$detalleRequisicion[$i]["montoPendiente"].'"
+				      "$ '.number_format($detalleRequisicion[$i]["montoFaltante"],2).'",
+				      "$ '.number_format($detalleRequisicion[$i]["montoSolicitado"],2).'",
+				      "$ '.number_format($detalleRequisicion[$i]["montoAprobado"],2).'",
+				      "$ '.number_format($detalleRequisicion[$i]["montoPendiente"],2).'"
 				    ],';
 
 	 	}

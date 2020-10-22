@@ -1249,7 +1249,7 @@ if (requisicion == null) {
 }else{
 
   var tablaDetalleRequisicion = $(".tablaDetalleRequisicion").DataTable({
-        "ajax":"ajax/tablaDetalleRequisicion.ajax.php?idRequisicion="+requisicion,
+        "ajax":"ajax/tablaDetalleRequisicion.ajax.php?DetalleRequisicion=&idRequisicion="+requisicion,
         "deferRender": true,
         "retrieve": true,
         "processing": true,
@@ -1500,15 +1500,9 @@ $(".tablaDetalleRequisicionGeneral").on("click", ".btnEstatusProducto", function
     if(estadoProducto == 0){
 
       $(this).removeClass('btn-danger');
-      $(this).addClass('btn-warning');
+      $(this).addClass('btn-success');
       $(this).html('<i class="fa fa-box-open"></i>');
       $(this).attr('estadoProducto',1);
-
-    }else if(estadoProducto == 1){
-      $(this).removeClass('btn-warning');
-      $(this).addClass('btn-success');
-      $(this).html('<i class=" fa fa-truck-loading"></i>');
-      $(this).attr('estadoProducto',2);
     }
     else{
 
@@ -1931,16 +1925,60 @@ $(".tablaDetalleRequisicionGeneral").on("click", ".btnCargarContratipo", functio
   var idProducto = $(this).attr("idProducto");
   var idMovimiento = $(this).attr("idMovimiento");
   var contratipo = $(this).attr("contratipo");
-
+  var solicitado = $(this).attr("solicitado");
+  var montoSolicitado = $(this).attr("montoSolicitado");
+  var idProductoPedido = $(this).attr("idProductoPedido");
 
   $("#detalleIdPedido").val(idPedido);
   $("#detalleIdProducto").val(idProducto);
   $("#detalleIdMovimiento").val(idMovimiento);
   $("#detalleIdContratipo").val(contratipo);
+  $("#detalleSolicitado").val(solicitado);
+  $("#detalleMontoSolicitado").val(montoSolicitado);
+  $("#detalleIdProductoPedido").val(idProductoPedido);
 
   load(1);
 
 
 
 });
-/***************CARGAR CONTRATIPOS*************/
+/***************VER DETALLES DE CONTRATIPOS CAMBIADOS*************/
+$(".tablaDetalleRequisicion").on("click", ".btnInfoContratipo", function(){
+
+  var idPedidoCambio = $(this).attr("idPedido");
+  var idProductoPedido = $(this).attr("idProductoPedido");
+
+  var tablaInfoSustituido = $(".tablaInfoSustituido").DataTable({
+        "ajax":"ajax/tablaDetalleRequisicion.ajax.php?ModalProductoRemplazado=&idPedidoCambio="+idPedidoCambio+"&idProductoPedido="+idProductoPedido,
+        "deferRender": true,
+        "retrieve": true,
+        "processing": true,
+        "language": {
+
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+              "sFirst":    "Primero",
+              "sLast":     "Último",
+              "sNext":     "Siguiente",
+              "sPrevious": "Anterior"
+        },
+        "oAria": {
+          "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+          "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        }
+
+        }
+
+  });
+});
