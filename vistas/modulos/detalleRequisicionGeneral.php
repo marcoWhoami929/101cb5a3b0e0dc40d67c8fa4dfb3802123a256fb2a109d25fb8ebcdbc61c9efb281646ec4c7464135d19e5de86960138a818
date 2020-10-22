@@ -1,3 +1,6 @@
+<?php 
+session_start();
+ ?>
 <div class="preloader">
 	<div class="lds-ripple">
 		<div class="lds-pos"></div>
@@ -47,9 +50,9 @@
 												<textarea id="observacionesRequisicion" name="observacionesRequisicion" rows="4" cols="50" class="form-control"></textarea>
 												<br>
 												<div>
+													
 			                                    <h4 class="card-title">Estatus</h4>
 			                                    <button type='button' class='btn btn-danger btn-sm'><i class="fas fa-boxes fa-2x" ></i></button> <strong>Solo se enviará lo aprobado</strong>
-			                                    <button type='button' class='btn btn-warning btn-sm'><i class="fas fa-box-open fa-2x"></i></button> <strong>Backorder</strong>
 			                                    <button type='button' class='btn btn-success btn-sm'><i class="fas fa-truck-loading fa-2x"></i></button> <strong>Aprobado Totalmente</strong>
 			                                   
 			                                  
@@ -117,11 +120,10 @@
 								  <input type="hidden" class="form-control" id="detalleIdProducto">
 								  <input type="hidden" class="form-control" id="detalleIdMovimiento">
 								  <input type="hidden" class="form-control" id="detalleIdContratipo">
+								  <input type="hidden" class="form-control" id="detalleSolicitado">
+								  <input type="hidden" class="form-control" id="detalleMontoSolicitado">
+								  <input type="hidden" class="form-control" id="detalleIdProductoPedido">
 								</div>
-
-								
-
-								
 							  </div>
 							</form>
 							<br>
@@ -174,10 +176,14 @@
 
 		var idContratipo = $("#detalleIdContratipo").val();
 		var idProducto = $("#detalleIdProducto").val();
+		var solicitado = $("#detalleSolicitado").val();
+		var idPedido = $("#detalleIdPedido").val();
+		var montoSolicitado = $("#detalleMontoSolicitado").val();
+		var idProductoPedido = $("#detalleIdProductoPedido").val();
 		
 		$("#loader").fadeIn('slow');
 		$.ajax({
-			url:'ajax/agregarContratipo.ajax.php?action=ajax&page='+page+'&sesion='+sesion+'&grupoSesion='+grupoSesion+'&idSesion='+idSesion+'&idContratipo='+idContratipo+'$idProducto='+idProducto,
+			url:'ajax/agregarContratipo.ajax.php?action=ajax&page='+page+'&sesion='+sesion+'&grupoSesion='+grupoSesion+'&idSesion='+idSesion+'&idContratipo='+idContratipo+'&idProducto='+idProducto+'&solicitado='+solicitado+"&idPedido="+idPedido+"&montoSolicitado="+montoSolicitado+"&idProductoPedido="+idProductoPedido,
 			beforeSend: function(objeto){
 				 $('#loader').html('<img src="vistas/img/loader.gif"> Cargando...');
 			},

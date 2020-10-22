@@ -2,6 +2,7 @@
 
 require_once "../controladores/inventarios.php";
 require_once "../modelos/inventarios.php";
+require_once "../modelos/inventarios.php";
 require_once "../modelos/administradores.php";
 error_reporting(0);
 
@@ -196,6 +197,94 @@ class AjaxFuncionesInventarios{
 
 	}
 
+	/*-----------FUNCION DE CONTRATIPOS--------------*/
+	public $idProdSustituir;
+	public $idPedido;
+	public $idUsuario;
+	public $idContratipo;
+	public $solicitado;
+	public $montoSolicitado;
+	public $fecha;
+	public $nameSesion;
+	public $grupoSesion;
+	public $idProductoPedido;
+
+	public function ajaxContratipos(){
+
+		$idProducto = $this->idProdSustituir;
+		$idRemplazo = $this->idContratipo;
+		$idPedido = $this->idPedido;
+		$idUsuario = $this->idUsuario;
+		$fecha = $this->fecha;
+		$cantidad = $this->solicitado;
+		$monto = $this->montoSolicitado;
+		$idProductoPedido = $this->idProductoPedido;
+
+		$grupoSesion = $this->grupoSesion;
+		$nameSesion = $this->nameSesion;
+
+		$tablaPedido = "pedidossemanales";
+		$dato = "sucursal";
+		$condicion = "WHERE id = ".$idPedido;
+
+		$respuestaSucursal = ModeloInventarios::mdlConsultarSucursalPedido($tablaPedido,$dato,$condicion);
+
+		$sucursal = $respuestaSucursal["sucursal"];
+
+      	switch ($sucursal) {
+ 
+        	case 'Sucursal San Manuel':
+            	$almacen = "almacensanmanuel1";
+        	break;
+        	case 'Sucursal Reforma':
+            	$almacen = "almacenreforma1";
+        	break;
+        	case 'Sucursal Santiago':
+            	$almacen = "almacensantiago1";
+        	break;
+        	case 'Sucursal Capu':
+            	$almacen = "almacencapu1";
+        	break;
+        	case 'Sucursal Las Torres':
+            	$almacen = "almacenlastorres1";
+        	break;
+      	}
+
+      	$tableAlmacen = $almacen;
+      	$datosBuscados = "existenciasUnidades, ultimoCosto";
+      	$parameters = "WHERE idProducto = ".$idRemplazo;
+
+      	$respuestaExistencias = ModeloInventarios::mdlBuscarExistencias($tableAlmacen,$datosBuscados,$parameters);
+      	$existencias = $respuestaExistencias["existenciasUnidades"];
+      	$ultimoCosto = $respuestaExistencias["ultimoCosto"];
+
+    	$montoPedido = $cantidad * $ultimoCosto;
+
+		$tabla = "sustituidos";
+		$datos = array(
+			"idProducto" => $idProducto,
+			"idRemplazo" => $idRemplazo,
+			"idPedido" => $idPedido,
+			"idUsuario" => $idUsuario,
+			"fecha" => $fecha,
+			"cantidad" =>$cantidad,
+			"monto" => $monto);
+
+		$respuesta = ModeloInventarios::mdlContratipos($tabla, $datos);
+
+		if ($respuesta == "ok") {
+			
+			$table = "productospedidos";
+			$campos = "idProducto = ".$idRemplazo.", existencias = ".$existencias.", montoSolicitado = ".$montoPedido.", sustituido = 1";
+			$parametros = "id = ".$idProductoPedido." AND idPedido = ".$idPedido;
+
+			$respuestaActualizar = ModeloInventarios::mdlActualizarProductoContratipo($table,$campos,$parametros);
+		}
+
+		echo json_encode($respuesta);
+
+	}
+
 }
 /*-----------ACTUALIZAR LOS DIAS DE SURTIMIENTO DEL PROVEEDOR--------------*/
 if(isset($_POST["idFamilia"])){
@@ -232,4 +321,20 @@ if(isset($_POST["idPerfil"])){
 	$editar = new AjaxFuncionesInventarios();
 	$editar -> idPerfil = $_POST["idPerfil"];
 	$editar -> ajaxEditarPerfil();
+}
+/*-----------FUNCION DE CONTRATIPOS--------------*/
+if(isset($_POST["idProdSustituir"])){
+
+	$contratipo = new AjaxFuncionesInventarios();
+	$contratipo -> idProdSustituir = $_POST["idProdSustituir"];
+	$contratipo -> idPedido = $_POST["idPedido"];
+	$contratipo -> idUsuario = $_POST["idUsuario"];
+	$contratipo -> idContratipo = $_POST["idContratipo"];
+	$contratipo -> solicitado = $_POST["solicitado"];
+	$contratipo -> montoSolicitado = $_POST["montoSolicitado"];
+	$contratipo -> fecha = $_POST["fecha"];
+	$contratipo -> nameSesion = $_POST["nameSesion"];
+	$contratipo -> grupoSesion = $_POST["grupoSesion"];
+	$contratipo -> idProductoPedido = $_POST["idProductoPedido"];
+	$contratipo -> ajaxContratipos();
 }

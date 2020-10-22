@@ -49,7 +49,7 @@
 																								<div>
 			                                    <h4 class="card-title">Estatus</h4>
 			                                    <button type='button' class='btn btn-danger btn-sm'><i class="fas fa-boxes fa-2x" ></i></button> <strong>Solo se enviará lo aprobado</strong>
-			                                    <button type='button' class='btn btn-warning btn-sm'><i class="fas fa-box-open fa-2x"></i></button> <strong>Backorder</strong>
+			                                    
 			                                    <button type='button' class='btn btn-success btn-sm'><i class="fas fa-truck-loading fa-2x"></i></button> <strong>Aprobado Totalmente</strong>
 			                                   <br>
 			                                   
@@ -136,6 +136,52 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="informacionContratipo" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header headColor" style="background:#1F262D; color:white">
+				<h4 class="modal-title" id="exampleModalLabel">Detalles Sustituto</h4>
+
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				    <span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+				    <label for="title" class="col-sm-2 control-label">Detalle</label>
+					<div class="table-responsive">
+						<table class="table table-bordered  tablaInfoSustituido" width="100%"  style="border: 2px solid #1F262D">
+
+							<thead style="background:#1F262D;color: white">
+
+								<tr>
+									<th style="border:none">Producto Pedido</th>
+									<th style="border:none">Cantidad Solicitada</th>
+									<th style="border:none">Monto</th>
+									<th style="border:none">Fecha</th>
+								</tr> 
+
+							</thead>
+						</table>
+					</div>
+				                          
+				</div>
+			</div>
+			<br>
+			<div class="modal-footer">
+				          
+				<div class="row">
+				    <div class="col-lg-12 col-md-12 col-sm-12">
+				        <button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button>
+				    </div>
+				</div>   
+				                   
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 

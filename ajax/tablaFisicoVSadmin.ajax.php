@@ -63,31 +63,3 @@ class TablaFisicoVSadmin{
 =============================================*/ 
 $activar = new TablaFisicoVSadmin();
 $activar -> mostrarTablas();
-
-
-
-/*if ($nombreUsuario == "almacengeneral1") {
-			$nombreUsuario = "almacengeneral1";
-		}else if($nombreUsuario == "almacengeneral2"){
-			$nombreUsuario = "almacengeneral2";
-		}else if($nombreUsuario == "almacensanmanuel1"){
-			$nombreUsuario = "almacensanmanuel1";
-		}else if($nombreUsuario == "almacensanmanuel2"){
-			$nombreUsuario = "almacensanmanuel2";
-		}else if($nombreUsuario == "almacenreforma1"){
-			$nombreUsuario = "almacenreforma1";
-		}else if($nombreUsuario == "almacenreforma2"){
-			$nombreUsuario = "almacenreforma2";
-		}else if($nombreUsuario == "almacensantiago1"){
-			$nombreUsuario = "almacensantiago1";
-		}else if($nombreUsuario == "almacensantiago2"){
-			$nombreUsuario = "almacensantiago2";
-		}else if($nombreUsuario == "almacencapu1"){
-			$nombreUsuario = "almacencapu1";
-		}else if($nombreUsuario == "almacencapu2"){
-			$nombreUsuario = "almacencapu2";
-		}else if($nombreUsuario == "almacenlastorres1"){
-			$nombreUsuario = "almacenlastorres1";
-		}else if($nombreUsuario == "almacenlastorres2"){
-			$nombreUsuario = "almacenlastorres2";
-		}*/
