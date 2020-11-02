@@ -19,88 +19,88 @@ if(isset($_POST['import_data'])){
     'application/vnd.msexcel'
   );
   if(!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'],$file_mimes)){
-      if(is_uploaded_file($_FILES['file']['tmp_name'])){
+    if(is_uploaded_file($_FILES['file']['tmp_name'])){
 
-        $csv_file = fopen($_FILES['file']['tmp_name'], 'r');
+      $csv_file = fopen($_FILES['file']['tmp_name'], 'r');
 
-        while(($emp_record = fgetcsv($csv_file,10000, ",")) !== FALSE){
+      while(($emp_record = fgetcsv($csv_file,10000, ",")) !== FALSE){
 
-          $codigoProducto = $emp_record[0];
+        $codigoProducto = $emp_record[0];
 
-          $existenciaProducto =  "SELECT id,codigoProducto,nombreProducto FROM productos WHERE codigoProducto = '".$codigoProducto."'";
-          $existenciaProducto = mysqli_query($conn, $existenciaProducto) or die("database error:". mysqli_error($conn));
+        $existenciaProducto =  "SELECT id,codigoProducto,nombreProducto FROM productos WHERE codigoProducto = '".$codigoProducto."'";
+        $existenciaProducto = mysqli_query($conn, $existenciaProducto) or die("database error:". mysqli_error($conn));
 
-          $nombreProducto = str_replace('"', 'pul', $emp_record[1]);
-          if(mysqli_num_rows($existenciaProducto)){
+        $nombreProducto = str_replace('"', 'pul', $emp_record[1]);
+        if(mysqli_num_rows($existenciaProducto)){
 
-            $actualizarProducto = "UPDATE productos SET nombreProducto = '".$nombreProducto."',costeo = '".$emp_record[2]."', unidad = '".$emp_record[3]."' where codigoProducto = '".$codigoProducto."' ";
-             mysqli_query($conn, $actualizarProducto) or die("database error:". mysqli_error($conn));
+          $actualizarProducto = "UPDATE productos SET nombreProducto = '".$nombreProducto."',costeo = '".$emp_record[2]."', unidad = '".$emp_record[3]."' where codigoProducto = '".$codigoProducto."' ";
+          mysqli_query($conn, $actualizarProducto) or die("database error:". mysqli_error($conn));
 
-          }else{
+        }else{
 
-            $insertarProducto = "INSERT INTO productos(codigoProducto,nombreProducto,costeo,unidad) VALUES('".$emp_record[0]."','".$nombreProducto."','".$emp_record[2]."','".$emp_record[3]."')";
-            mysqli_query($conn, $insertarProducto) or die("database error:". mysqli_error($conn));
+          $insertarProducto = "INSERT INTO productos(codigoProducto,nombreProducto,costeo,unidad) VALUES('".$emp_record[0]."','".$nombreProducto."','".$emp_record[2]."','".$emp_record[3]."')";
+          mysqli_query($conn, $insertarProducto) or die("database error:". mysqli_error($conn));
 
-          }
+        }
 
-          $almacen = $_POST["nombreAlmacen"];
-          $periodoImportacion = $_POST["periodoSeleccionado"];
-          $mesElegido = $_POST["mesElegido"];
+        $almacen = $_POST["nombreAlmacen"];
+        $periodoImportacion = $_POST["periodoSeleccionado"];
+        $mesElegido = $_POST["mesElegido"];
 
-          $idUsuario = $_POST["idUsuario"];
+        $idUsuario = $_POST["idUsuario"];
 
-          $item = "codigoProducto";
-          $valor = $codigoProducto;
+        $item = "codigoProducto";
+        $valor = $codigoProducto;
 
-          $buscarDatosProducto = ControladorInventarios::ctrBuscarValores($item,$valor);
+        $buscarDatosProducto = ControladorInventarios::ctrBuscarValores($item,$valor);
                    
-          $id = $buscarDatosProducto["id"];
+        $id = $buscarDatosProducto["id"];
 
-          $almacenDatos = $almacen;
+        $almacenDatos = $almacen;
 
-          $table = "importaciones";
-          $select = "IF(MAX(id) IS NULL,1,MAX(id)+1) as idDisponible";
-          $conditions = "";
-          $idDisponible = ControladorInventarios::ctrBuscarFolioDisponible($table, $select, $conditions);
+        $table = "importaciones";
+        $select = "IF(MAX(id) IS NULL,1,MAX(id)+1) as idDisponible";
+        $conditions = "";
+        $idDisponible = ControladorInventarios::ctrBuscarFolioDisponible($table, $select, $conditions);
                      
-          $idImportacion = $idDisponible["idDisponible"];
+        $idImportacion = $idDisponible["idDisponible"];
 
-          $verificarAnterior = "SELECT al.existenciasUnidades FROM almacen".$almacen." AS al INNER JOIN productos AS p ON al.idProducto = p.id WHERE codigoProducto = '".$codigoProducto."' AND al.idImportacion = (SELECT MAX(al.idImportacion) FROM almacen".$almacen." AS al WHERE p.codigoProducto = '".$codigoProducto."')";
-          $respuestaVerificar = mysqli_query($conn, $verificarAnterior) or die("database error:". mysqli_error($conn));
-          $verAnterior = mysqli_fetch_array($respuestaVerificar);
+        $verificarAnterior = "SELECT al.existenciasUnidades FROM almacen".$almacen." AS al INNER JOIN productos AS p ON al.idProducto = p.id WHERE codigoProducto = '".$codigoProducto."' AND al.idImportacion = (SELECT MAX(al.idImportacion) FROM almacen".$almacen." AS al WHERE p.codigoProducto = '".$codigoProducto."')";
+        $respuestaVerificar = mysqli_query($conn, $verificarAnterior) or die("database error:". mysqli_error($conn));
+        $verAnterior = mysqli_fetch_array($respuestaVerificar);
 
-          $existenciaAnterior = $verAnterior["existenciasUnidades"];
+        $existenciaAnterior = $verAnterior["existenciasUnidades"];
 
-          $unidadesInicial = str_replace(",", "", $emp_record[4]);
+        $unidadesInicial = str_replace(",", "", $emp_record[4]);
 
-          if ($existenciaAnterior == $unidadesInicial || $existenciaAnterior == "") {
-             $descripcion = "Importacion ALMACEN ".strtoupper($almacenDatos); 
+        if ($existenciaAnterior == $unidadesInicial || $existenciaAnterior == "") {
+        $descripcion = "Importacion ALMACEN ".strtoupper($almacenDatos); 
 
-            //$fechaActual1 = date("Y-m-d");
-            $fechaActual1 = "2020-08-05";
+          //$fechaActual1 = date("Y-m-d");
+          $fechaActual1 = "2020-08-05";
           
-            if ($periodoImportacion == "mes") {
+          if ($periodoImportacion == "mes") {
               $numeroMes = $mesElegido;
-            }else{
-              $mesFecha = strtotime($fechaActual1);
-              $numeroMes = date('n', $mesFecha);
-            }
+          }else{
+            $mesFecha = strtotime($fechaActual1);
+            $numeroMes = date('n', $mesFecha);
+          }
                     
-            $insertarProductoAlmacen = "INSERT INTO almacen".$almacenDatos."(idProducto,inventarioInicialUnidades,entradasUnidades,salidasUnidades,existenciasUnidades,inventarioInicialImportes,entradasImportes,salidasImportes,existenciaImportes,ultimoCosto,totalUltCosto,fecha,idImportacion, numeroMes) VALUES('".$id."','".str_replace(",", "", $emp_record[4])."','".str_replace(",", "", $emp_record[5])."','".str_replace(",", "", $emp_record[6])."','".str_replace(",", "", $emp_record[7])."','".str_replace(",", "", $emp_record[8])."','".str_replace(",", "", $emp_record[9])."','".str_replace(",", "", $emp_record[10])."','".str_replace(",", "", $emp_record[11])."','".str_replace(",", "", $emp_record[12])."','".str_replace(",", "", $emp_record[13])."','".$fechaActual1."','".$idImportacion."','".$numeroMes."')";
-            mysqli_query($conn, $insertarProductoAlmacen) or die("database error:". mysqli_error($conn));
+          $insertarProductoAlmacen = "INSERT INTO almacen".$almacenDatos."(idProducto,inventarioInicialUnidades,entradasUnidades,salidasUnidades,existenciasUnidades,inventarioInicialImportes,entradasImportes,salidasImportes,existenciaImportes,ultimoCosto,totalUltCosto,fecha,idImportacion, numeroMes) VALUES('".$id."','".str_replace(",", "", $emp_record[4])."','".str_replace(",", "", $emp_record[5])."','".str_replace(",", "", $emp_record[6])."','".str_replace(",", "", $emp_record[7])."','".str_replace(",", "", $emp_record[8])."','".str_replace(",", "", $emp_record[9])."','".str_replace(",", "", $emp_record[10])."','".str_replace(",", "", $emp_record[11])."','".str_replace(",", "", $emp_record[12])."','".str_replace(",", "", $emp_record[13])."','".$fechaActual1."','".$idImportacion."','".$numeroMes."')";
+          mysqli_query($conn, $insertarProductoAlmacen) or die("database error:". mysqli_error($conn));
 
-            if ($periodoImportacion == "mes") {
-              $ultimoMes = "SELECT MAX(numeroMes) AS ultimoMes FROM almacen".$almacenDatos."";
-              $respuestaMes = mysqli_query($conn, $ultimoMes) or die("database error:". mysqli_error($conn));
-              $respuestaUltimoMes = mysqli_fetch_array($respuestaMes);
+          if ($periodoImportacion == "mes") {
+            $ultimoMes = "SELECT MAX(numeroMes) AS ultimoMes FROM almacen".$almacenDatos."";
+            $respuestaMes = mysqli_query($conn, $ultimoMes) or die("database error:". mysqli_error($conn));
+            $respuestaUltimoMes = mysqli_fetch_array($respuestaMes);
 
-              $fechaActual = $respuestaUltimoMes["ultimoMes"];
-              $mesF = $fechaActual +1;
+            $fechaActual = $respuestaUltimoMes["ultimoMes"];
+            $mesF = $fechaActual +1;
               $fechaAnterior = $mesF - 6;
 
               $parametros = "WHERE p.id = ".$id." AND al.numeroMes BETWEEN "."'".$fechaAnterior."'"." AND "."'".$fechaActual."'";
 
-            }else{
+          }else{
 
               $fechats = strtotime($fechaActual1);
               switch (date('w', $fechats)){
@@ -184,7 +184,7 @@ if(isset($_POST['import_data'])){
       }
     } else {
       $import_status = '?import_status=invalid_file';
-  }
+    }
 }
 //return $import_status;
 header("Location: importaciones".$import_status);

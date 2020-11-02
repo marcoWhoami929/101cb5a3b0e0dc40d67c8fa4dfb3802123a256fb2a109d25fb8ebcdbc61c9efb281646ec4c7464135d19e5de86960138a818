@@ -145,7 +145,25 @@
                         </form>
                       </div>
 
+                      
+
                     </div><br>
+                    <div class="row">
+                      <div  class="col-lg-4 col-md-4 col-sm-4">
+                        <form action="actulizarAlmacenes.php" method="post" enctype="multipart/form-data" id="actualizacionAlmacenes">
+                          <div  class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                              <input type="hidden" name="nameAlmacenActualizar" id="nameAlmacenActualizar">
+                              <input type="hidden" name="nameSesion" id="nameSesion" value="<?php echo $_SESSION["nombre"]?>">
+                              <input type="hidden" name="idUsuario" id="idUsuario" value="<?php echo $_SESSION["id"]?>">
+                              <input type="submit" class="btn btn-success" name="update_data" value="Actualizar">
+
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                    <br>
                     <div class="row">
                       <div class="col-lg-12 col-md-12 col-sm-12">
                         <table class="table table-bordered table-striped dt-responsive tablaImportaciones" width="100%" id="importaciones" style="border: 2px solid #1F262D">

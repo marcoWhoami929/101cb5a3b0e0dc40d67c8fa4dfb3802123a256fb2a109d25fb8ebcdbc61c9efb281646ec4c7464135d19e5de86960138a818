@@ -5,6 +5,7 @@ function elegirAlmacen(){
     var almacen = document.getElementById("almacenElegido").value;
     
     $("#nombreAlmacen").val(almacen);
+    $("#nameAlmacenActualizar").val(almacen);
 
 }
 
