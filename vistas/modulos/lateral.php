@@ -10,6 +10,7 @@
                     if ($_SESSION["grupo"] == "Administrador") {
                         echo'<li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="dashboard" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Tablero</span></a></li>
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="listaRequisiciones" aria-expanded="false"><i class="mdi mdi-receipt"></i><span class="hide-menu">Requisiciones</span></a></li>
+
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="crearPedido" aria-expanded="false"><i class="mdi mdi-file"></i><span class="hide-menu">Crear Pedido</span></a></li>
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="misRecordatorios" aria-expanded="false"><i class="mdi mdi-calendar-clock"></i><span class="hide-menu">Mis Recordatorios</span></a></li>
                             
@@ -55,6 +56,7 @@
                         echo '
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="dashboard" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Inicio</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="requisiciones" aria-expanded="false"><i class="mdi mdi-receipt"></i><span class="hide-menu">Requisiciones</span></a></li>
+                         
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="crearPedido" aria-expanded="false"><i class="mdi mdi-file"></i><span class="hide-menu">Crear Pedido</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="miCalendario" aria-expanded="false"><i class="mdi mdi-calendar-clock"></i><span class="hide-menu">Mis Recordatorios</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="pedidoSemanal" aria-expanded="false" sucursal="'.$_SESSION["nombre"].'"><i class="mdi mdi-clipboard-outline"></i><span class="hide-menu">Pedido Semanal</span></a></li>

@@ -91,21 +91,7 @@
 
     series: [{
         name: 'Nivel Actual',
-        data: [<?php
-
-            require_once("db_connect.php");
-            if (isset($_POST['idRequisicion'])){
-                $idRequisicion=$_POST['idRequisicion'];
-                $obtenerDatos = mysqli_query($conn, "SELECT (SUM(unidadesAprobadas)/SUM(solicitado)) AS nivelSurtimiento FROM productospedidos WHERE idPedido = ".$idRequisicion."");
-                $respuestaDatos = mysqli_fetch_array($obtenerDatos); 
-
-                $nivelSurtido = $respuestaDatos["nivelSurtimiento"]*100;
-                $nivelFinal = round($nivelSurtido) * 1;
-                echo $nivelFinal;
-            }else {
-
-            }  
-            ?>],
+        data: [],
         tooltip: {
             valueSuffix: ' Nivel de Surtimiento %'
         }
