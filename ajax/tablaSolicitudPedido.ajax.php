@@ -12,8 +12,8 @@ class TablaSolicitudPedido{
 	public function mostrarTablas(){
 		$idSesion = $_SESSION["id"];
 
-		//$fechaActual = date("Y-m-d");
-		$fechaActual = "2020-08-05";
+		$fechaActual = date("Y-m-d");
+		//$fechaActual = "2020-08-05";
 		$fechaFinal = date("Y-m-d", strtotime($fechaActual));
 
 		$tipoPedido = $_GET["tipodePedido"];

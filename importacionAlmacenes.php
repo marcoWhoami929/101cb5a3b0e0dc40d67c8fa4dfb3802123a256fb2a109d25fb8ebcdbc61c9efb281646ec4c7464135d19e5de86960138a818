@@ -76,8 +76,8 @@ if(isset($_POST['import_data'])){
           if ($existenciaAnterior == $unidadesInicial || $existenciaAnterior == "") {
              $descripcion = "Importacion ALMACEN ".strtoupper($almacenDatos); 
 
-            //$fechaActual1 = date("Y-m-d");
-            $fechaActual1 = "2020-08-05";
+            $fechaActual1 = date("Y-m-d");
+            //$fechaActual1 = "2020-08-05";
           
             if ($periodoImportacion == "mes") {
               $numeroMes = $mesElegido;

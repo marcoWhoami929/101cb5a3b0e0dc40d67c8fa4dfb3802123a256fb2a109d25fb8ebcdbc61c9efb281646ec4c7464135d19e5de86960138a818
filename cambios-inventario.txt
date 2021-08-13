@@ -1,0 +1,30 @@
+-REFERENCIA A QUE DOCUMENTOS O DOCUMENTOS PERTENECEN PARA HACER EL MOVIMIENTO DE CREAR PEDIDO TOMANDO LOS DATOS DEL TRASPASO
+-en inventario filtrar las que muestre un segundo conteo mayores a uno
+generar entrasdas y salidas en comercial automaticamente
+las entradas y salidas tienen un costo
+calcular
+tomar el ultimo costo del mes
+las diferencias no las vean los usuarios
+el administrador solicita un segundo conteo
+mostrar los montos de entradas salidas existencias
+programacion de eventos general e individual
+-------------
+en el pedido sugerido poner el stock minimo y la rotacion por producto cuando representa en dias la existencia
+- si es producto d no se vayan como pedido que marque solicitar autorizacion de compra que se vaya como pedido especial 
+si el producto es d que diga este producto necesita autorizacion de compra quieres que se envie la autorizacion de compra
+-modulos de autorizaciones de compra
+
+que informacion debe incluir para que se incluya una compra
+generar la compra en compra en comercial o generar el excel para hacer la importacion
+--------------------------------------------------------------------------------------------
+TRASPASOS ENTRE TIENDAS
+una vez aprobado se realice en comercial
+---------------------------------------------------------
+ocultar existencias generales para la tienda
+mostrar la suma de los inventarios de cada area 1
+excluir el almacen de consignacion
+
+mostrar como en uultimos costos codigo de producto y existencias generales
+notificar el sabado
+
+

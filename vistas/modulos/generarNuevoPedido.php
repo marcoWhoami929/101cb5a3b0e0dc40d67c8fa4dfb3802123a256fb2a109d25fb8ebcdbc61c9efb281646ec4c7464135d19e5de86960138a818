@@ -43,7 +43,7 @@
 												if ($_SESSION["Administrador"]) {
 												 	echo 'Monto Pedido :<span id="montoPedido"></span>';
 												 }else{
-												 	
+												 	echo 'Monto Pedido :<span id="montoPedido"></span>';
 												 } 
 												 ?>
 												
